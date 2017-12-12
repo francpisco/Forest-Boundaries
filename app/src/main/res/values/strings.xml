@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ForestBoundaries</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="owner_text">Dono</string>
+    <string name="description_text">Descrição</string>
+    <string name="marker_text">Lat e Lon do primeiro marco</string>
+    <string name="create_new_prop">Criar novo propriedade</string>
+    <string name="settings_action">Definições</string>
+    <string name="owner_spinner_label">Dono:</string>
+    <string name="description_hint">pequena descrição e localização</string>
+    <string name="spprox_size_hint">área aprox.</string>
+    <string name="submit_new_prop">Submeter</string>
+    <string name="instructions_new_prop">Após submeter podes recolher localização de marcos</string>
+</resources>
