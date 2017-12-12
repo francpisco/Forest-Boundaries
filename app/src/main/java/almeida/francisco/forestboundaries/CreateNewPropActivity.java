@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class CreateNewPropActivity extends AppCompatActivity {
+public class CreateNewPropActivity extends AppCompatActivity implements CreateNewPropFragment.Listener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -12,7 +12,8 @@ public class CreateNewPropActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_prop);
     }
 
-    public void submitNewProp(View view) {
-
+    @Override
+    public void onClick() {
+        finish();
     }
 }

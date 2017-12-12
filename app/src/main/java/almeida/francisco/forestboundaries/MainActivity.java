@@ -1,9 +1,10 @@
 package almeida.francisco.forestboundaries;
 
-import android.app.Activity;
+
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.View;
 
 
 public class MainActivity extends AppCompatActivity implements PropertyListFragment.Listener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         if (container != null) {
             PropertyDetailFragment fragment = new PropertyDetailFragment();
             fragment.setPropertyId(id);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_frag_container, fragment)
                     .addToBackStack(null)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

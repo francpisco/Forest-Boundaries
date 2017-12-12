@@ -1,15 +1,16 @@
 package almeida.francisco.forestboundaries;
 
-
-import android.app.Fragment;
 import android.os.Bundle;
-
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.model.PropertyMarker;
 
 public class PropertyDetailFragment extends Fragment {
 
@@ -39,10 +40,11 @@ public class PropertyDetailFragment extends Fragment {
             descriptionView.setText(Property.properties.get((int)propertyId).getLocationAndDescription());
 
             TextView firstMarkerView = (TextView) view.findViewById(R.id.marker_value);
-            firstMarkerView.setText(Double.toString(Property.properties.get((int)propertyId)
-                    .getMarkers().get(0).getAveragedLat()) + " " + Double.toString(Property
-                    .properties.get((int)propertyId).getMarkers().get(0).getAveragedLong()));
-
+            List<PropertyMarker> markers = Property.properties.get((int) propertyId).getMarkers();
+            if (markers.size() > 0) {
+                firstMarkerView.setText(Double.toString(markers.get(0).getAveragedLat()) +
+                        " " + Double.toString(markers.get(0).getAveragedLong()));
+            }
         }
     }
 

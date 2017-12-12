@@ -19,13 +19,14 @@ public class PropertyListFragment extends ListFragment {
     }
 
     private Listener listener;
+    private ArrayAdapter<Property> adapter;
 
     public PropertyListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ArrayAdapter<Property> adapter = new ArrayAdapter<Property>(inflater.getContext(),
+        adapter = new ArrayAdapter<Property>(inflater.getContext(),
                 android.R.layout.simple_list_item_1, Property.properties);
 
         setListAdapter(adapter);
@@ -37,6 +38,12 @@ public class PropertyListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         listener = (Listener) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
