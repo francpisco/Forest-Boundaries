@@ -8,6 +8,8 @@ import java.util.List;
  */
 
 public class Owner {
+
+    private long id;
     private String name;
 
     public static List<Owner> ownerList = new ArrayList<>();
@@ -23,6 +25,10 @@ public class Owner {
 
     public String getName() {
         return name;
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override
