@@ -11,6 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
+import almeida.francisco.forestboundaries.model.Property;
+
 
 public class MainActivity extends AppCompatActivity implements PropertyListFragment.Listener {
 
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         setContentView(R.layout.activity_main);
         Toolbar mToolBar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolBar);
+
     }
 
     @Override

@@ -1,14 +1,20 @@
 package almeida.francisco.forestboundaries.dbhelper;
 
+import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import almeida.francisco.forestboundaries.model.Owner;
+import almeida.francisco.forestboundaries.model.Property;
 
 /**
  * Created by fmpap on 13/12/2017.
  */
 
 public class MyHelper extends SQLiteOpenHelper {
+
+    private Context context;
 
     private static final String DB_NAME = "forest_boundaries";
     private static final int DB_VERSION = 1;
@@ -24,6 +30,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
     public MyHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -37,6 +44,16 @@ public class MyHelper extends SQLiteOpenHelper {
                 P_DESCRIP + " TEXT NOT NULL, " +
                 P_APPROX_SIZE + " INTEGER, " +
                 P_CALC_SIZE + " INTEGER);");
+
+        //pre populate tables
+        PropertyDAO pDAO = new PropertyDAO(context);
+        pDAO.createProperty(Property.properties.get(0));
+        pDAO.createProperty(Property.properties.get(1));
+        pDAO.createProperty(Property.properties.get(2));
+
+        OwnerDAO oDAO = new OwnerDAO(context);
+        oDAO.createOwner(Owner.ownerList.get(0));
+        oDAO.createOwner(Owner.ownerList.get(1));
     }
 
     @Override

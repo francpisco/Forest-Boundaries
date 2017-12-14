@@ -15,12 +15,8 @@ public class Owner {
     public static List<Owner> ownerList = new ArrayList<>();
 
     static {
-        ownerList.add(new Owner("Manel"));
-        ownerList.add(new Owner("Lourdes"));
-    }
-
-    public Owner(String name) {
-        this.name = name;
+        ownerList.add(new Owner().setName("Manel"));
+        ownerList.add(new Owner().setName("Lourdes"));
     }
 
     public String getName() {
@@ -29,6 +25,11 @@ public class Owner {
 
     public long getId() {
         return id;
+    }
+
+    public Owner setName(String name) {
+        this.name = name;
+        return this;
     }
 
     @Override

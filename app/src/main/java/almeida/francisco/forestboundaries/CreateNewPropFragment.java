@@ -40,6 +40,7 @@ public class CreateNewPropFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_create_new_prop, container, false);
     }
 
+    // TODO: 14/12/2017 mudar isto para db
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         owners = (Spinner) view.findViewById(R.id.owner_spinner);
@@ -48,6 +49,7 @@ public class CreateNewPropFragment extends Fragment {
         approxSize = (EditText) view.findViewById(R.id.approx_size_edit_text);
 
         if (isAdded()) {
+            // TODO: 14/12/2017 passar para cursor adapter
             ArrayAdapter<Owner> adapter = new ArrayAdapter<Owner>(getActivity(),
                     android.R.layout.simple_list_item_1, Owner.ownerList);
             owners.setAdapter(adapter);

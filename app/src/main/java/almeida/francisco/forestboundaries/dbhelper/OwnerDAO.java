@@ -41,7 +41,7 @@ public class OwnerDAO {
         Cursor cursor = db.rawQuery("SELECT * FROM " + MyHelper.TABLE_OWNERS + " WHERE " +
                 MyHelper._ID + " = " + id, null);
         if (cursor.moveToFirst()) {
-            owner = new Owner(cursor.getString(1));
+            owner = createOwnerFromCursor(cursor);
         }
         cursor.close();
         db.close();
@@ -54,9 +54,9 @@ public class OwnerDAO {
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + MyHelper.TABLE_OWNERS, null);
         if (cursor.moveToFirst())
-            owners.add(new Owner(cursor.getString(1)));
+            owners.add(createOwnerFromCursor(cursor));
         while (cursor.moveToNext()) {
-            owners.add(new Owner(cursor.getString(1)));
+            owners.add(createOwnerFromCursor(cursor));
         }
         cursor.close();
         db.close();
@@ -71,5 +71,11 @@ public class OwnerDAO {
     //cruD
     public boolean delete(Owner owner) {
         return true;
+    }
+
+    private Owner createOwnerFromCursor(Cursor c) {
+        Owner owner = new Owner()
+                .setName(c.getString(c.getColumnIndex(MyHelper.O_NAME)));
+        return owner;
     }
 }
