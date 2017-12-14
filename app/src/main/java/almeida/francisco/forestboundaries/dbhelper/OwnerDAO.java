@@ -24,15 +24,17 @@ public class OwnerDAO {
         myHelper = new MyHelper(context);
     }
 
+    //Crud
     public long createOwner(Owner owner) {
         SQLiteDatabase db = myHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(MyHelper.OWNERS_NAME, owner.getName());
+        cv.put(MyHelper.O_NAME, owner.getName());
         long id = db.insert(MyHelper.TABLE_OWNERS, null, cv);
         db.close();
         return id;
     }
 
+    //cRud
     public Owner findById(long id) {
         Owner owner = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
@@ -46,6 +48,7 @@ public class OwnerDAO {
         return owner;
     }
 
+    //cRud
     public List<Owner> findAll() {
         List<Owner> owners = new ArrayList<>();
         SQLiteDatabase db = myHelper.getReadableDatabase();
@@ -60,10 +63,12 @@ public class OwnerDAO {
         return owners;
     }
 
+    //crUd
     public boolean update(Owner owner) {
         return true;
     }
 
+    //cruD
     public boolean delete(Owner owner) {
         return true;
     }

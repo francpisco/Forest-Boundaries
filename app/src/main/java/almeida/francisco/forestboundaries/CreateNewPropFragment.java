@@ -66,14 +66,14 @@ public class CreateNewPropFragment extends Fragment {
                     description.setError(getString(R.string.description_error));
                 } else {
                     if (approxSizeValue <= 0) {
-                        Property.properties.add(new Property(
-                                Owner.ownerList.get(owners.getSelectedItemPosition()),
-                                descripStr));
+                        Property.properties.add(new Property()
+                                        .setOwnerId(owners.getSelectedItemPosition())
+                                        .setLocationAndDescription(descripStr));
                     } else {
-                        Property.properties.add(new Property(
-                                Owner.ownerList.get(owners.getSelectedItemPosition()),
-                                descripStr,
-                                approxSizeValue));
+                        Property.properties.add(new Property()
+                                        .setOwnerId(owners.getSelectedItemPosition())
+                                        .setLocationAndDescription(descripStr)
+                                        .setApproxSizeInSquareMeters(approxSizeValue));
                     }
                     listener.onClick();
                 }

@@ -34,7 +34,7 @@ public class PropertyDetailFragment extends Fragment {
         View view = getView();
         if (view != null) {
             TextView ownerView = (TextView) view.findViewById(R.id.owner_value);
-            ownerView.setText(Property.properties.get((int)propertyId).getOwner().toString());
+            ownerView.setText(Long.toString(Property.properties.get((int)propertyId).getOwnerId()));
 
             TextView descriptionView = (TextView) view.findViewById(R.id.description_value);
             descriptionView.setText(Property.properties.get((int)propertyId).getLocationAndDescription());

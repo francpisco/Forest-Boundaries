@@ -15,10 +15,12 @@ public class MyHelper extends SQLiteOpenHelper {
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";
-    public static final String OWNERS_NAME = "name";
+    public static final String O_NAME = "name";
     public static final String TABLE_PROPERTIES = "properties";
-    public static final String PROPS_OWNER_ID = "owner_id";
-    public static final String PROPS_DESCRIP = "description";
+    public static final String P_OWNER_ID = "owner_id";
+    public static final String P_DESCRIP = "description";
+    public static final String P_APPROX_SIZE = "approx_size"; //in sq meters
+    public static final String P_CALC_SIZE = "calc_size";
 
     public MyHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -28,11 +30,13 @@ public class MyHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_OWNERS + " (" + _ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                OWNERS_NAME + " TEXT UNIQUE NOT NULL);");
+                O_NAME + " TEXT UNIQUE NOT NULL);");
         db.execSQL("CREATE TABLE " + TABLE_PROPERTIES + " (" + _ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PROPS_OWNER_ID + " INTEGER NOT NULL, " +
-                PROPS_DESCRIP + " TEXT NOT NULL);");
+                P_OWNER_ID + " INTEGER NOT NULL, " +
+                P_DESCRIP + " TEXT NOT NULL, " +
+                P_APPROX_SIZE + " INTEGER, " +
+                P_CALC_SIZE + " INTEGER);");
     }
 
     @Override

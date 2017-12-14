@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Property {
 
-    private Owner owner;
+    private long ownerId;
     private String locationAndDescription;
     private int approxSizeInSquareMeters;
     private List<PropertyMarker> markers = new ArrayList<>();
@@ -18,7 +18,10 @@ public class Property {
     public static List<Property> properties = new ArrayList<>();
 
     static {
-        Property property = new Property(Owner.ownerList.get(0), "Arneiro", 650);
+        Property property = new Property()
+                .setOwnerId(0)
+                .setLocationAndDescription("Arneiro")
+                .setApproxSizeInSquareMeters(650);
         property.markers.add(new PropertyMarker(40.165101, -8.862450));
         property.markers.add(new PropertyMarker(40.165228, -8.861933));
         property.markers.add(new PropertyMarker(40.165390, -8.862210));
@@ -26,14 +29,20 @@ public class Property {
         property.markers.add(new PropertyMarker(40.165187, -8.862465));
         properties.add(property);
 
-        Property otherProp = new Property(Owner.ownerList.get(0), "Fonte", 10000);
+        Property otherProp = new Property()
+                .setOwnerId(1)
+                .setLocationAndDescription("Fonte")
+                .setApproxSizeInSquareMeters(10000);
         otherProp.markers.add(new PropertyMarker(40.164876, -8.862490));
         otherProp.markers.add(new PropertyMarker(40.165093, -8.862482));
         otherProp.markers.add(new PropertyMarker(40.165066, -8.862680));
         otherProp.markers.add(new PropertyMarker(40.164841, -8.862694));
         properties.add(otherProp);
 
-        Property anotherProp = new Property(Owner.ownerList.get(1), "Castelhanas", 2000);
+        Property anotherProp = new Property()
+                .setOwnerId(1)
+                .setLocationAndDescription("Castelhanas")
+                .setApproxSizeInSquareMeters(2000);
         anotherProp.markers.add(new PropertyMarker(40.165957, -8.865170));
         anotherProp.markers.add(new PropertyMarker(40.166016, -8.864844));
         anotherProp.markers.add(new PropertyMarker(40.166246, -8.864903));
@@ -41,19 +50,8 @@ public class Property {
         properties.add(anotherProp);
     }
 
-    public Property(Owner owner, String locationAndDescription, int approxSizeInSquareMeters) {
-        this.owner = owner;
-        this.locationAndDescription = locationAndDescription;
-        this.approxSizeInSquareMeters = approxSizeInSquareMeters;
-    }
-
-    public Property(Owner owner, String locationAndDescription) {
-        this.owner = owner;
-        this.locationAndDescription = locationAndDescription;
-    }
-
-    public Owner getOwner() {
-        return owner;
+    public long getOwnerId() {
+        return ownerId;
     }
 
     public String getLocationAndDescription() {
@@ -68,10 +66,33 @@ public class Property {
         return markers;
     }
 
+    public Property setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
+        return this;
+    }
+
+    public Property setLocationAndDescription(String locationAndDescription) {
+        this.locationAndDescription = locationAndDescription;
+        return this;
+    }
+
+    public Property setApproxSizeInSquareMeters(int approxSizeInSquareMeters) {
+        this.approxSizeInSquareMeters = approxSizeInSquareMeters;
+        return this;
+    }
+
+    public Property setMarkers(List<PropertyMarker> markers) {
+        this.markers = markers;
+        return this;
+    }
+
+    public void setCalculatedSize(int calculatedSize) {
+        this.calculatedSize = calculatedSize;
+    }
+
     @Override
     public String toString() {
         return locationAndDescription +
-                "\nde: " + owner +
                 "\narea aprox.: " + Integer.toString(approxSizeInSquareMeters);
     }
 }
