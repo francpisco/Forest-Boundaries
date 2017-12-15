@@ -32,6 +32,11 @@ public class Owner {
         return this;
     }
 
+    public Owner setId(long id) {
+        this.id = id;
+        return this;
+    }
+
     @Override
     public String toString() {
         return name;

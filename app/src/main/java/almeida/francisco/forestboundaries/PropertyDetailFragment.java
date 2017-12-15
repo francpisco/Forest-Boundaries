@@ -38,12 +38,13 @@ public class PropertyDetailFragment extends Fragment {
         PropertyDAO pDAO = new PropertyDAO(getActivity());
         OwnerDAO oDAO = new OwnerDAO(getActivity());
         Property p = pDAO.findById(propertyId);
-        long o_id = p.getOwnerId();
+        long o_id = p.getOwner().getId();
         System.out.println("" + o_id + "===============");
         Owner o = oDAO.findById(o_id);
         if (view != null) {
             TextView ownerView = (TextView) view.findViewById(R.id.owner_value);
-            ownerView.setText(o.toString());
+            ownerView.setText(
+                    o.toString());
 
             TextView descriptionView = (TextView) view.findViewById(R.id.description_value);
             descriptionView.setText(p.getLocationAndDescription());

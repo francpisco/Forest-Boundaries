@@ -16,6 +16,8 @@ public class MyHelper extends SQLiteOpenHelper {
 
     private Context context;
 
+    private static MyHelper instance;
+
     private static final String DB_NAME = "forest_boundaries";
     private static final int DB_VERSION = 1;
 
@@ -28,32 +30,31 @@ public class MyHelper extends SQLiteOpenHelper {
     public static final String P_APPROX_SIZE = "approx_size"; //in sq meters
     public static final String P_CALC_SIZE = "calc_size";
 
-    public MyHelper(Context context) {
+    private MyHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.context = context;
     }
 
+    public static synchronized MyHelper getHelper(Context context) {
+        if (instance == null) {
+            instance = new MyHelper(context);
+        }
+        return instance;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_OWNERS + " (" + _ID +
-                " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        db.execSQL("CREATE TABLE " + TABLE_OWNERS + " (" +
+                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 O_NAME + " TEXT UNIQUE NOT NULL);");
-        db.execSQL("CREATE TABLE " + TABLE_PROPERTIES + " (" + _ID +
-                " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+        db.execSQL("CREATE TABLE " + TABLE_PROPERTIES + " (" +
+                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 P_OWNER_ID + " INTEGER NOT NULL, " +
                 P_DESCRIP + " TEXT NOT NULL, " +
                 P_APPROX_SIZE + " INTEGER, " +
                 P_CALC_SIZE + " INTEGER);");
 
-        //pre populate tables
-        PropertyDAO pDAO = new PropertyDAO(context);
-        pDAO.createProperty(Property.properties.get(0));
-        pDAO.createProperty(Property.properties.get(1));
-        pDAO.createProperty(Property.properties.get(2));
-
-        OwnerDAO oDAO = new OwnerDAO(context);
-        oDAO.createOwner(Owner.ownerList.get(0));
-        oDAO.createOwner(Owner.ownerList.get(1));
     }
 
     @Override

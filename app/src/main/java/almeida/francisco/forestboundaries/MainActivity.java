@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.Property;
 
@@ -25,6 +26,18 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         Toolbar mToolBar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolBar);
 
+        //popular tabelas aqui
+        OwnerDAO oDAO = new OwnerDAO(this);
+        if (oDAO.findAll().size() <= 0){
+            oDAO.loadOwners();
+            System.out.println("a popular owners");
+        }
+
+        PropertyDAO pDAO = new PropertyDAO(this);
+        if (pDAO.findAll().size() <= 0){
+            pDAO.loadProperties(oDAO);
+            System.out.println("a popular props");
+        }
     }
 
     @Override

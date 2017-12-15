@@ -9,7 +9,8 @@ import java.util.List;
 
 public class Property {
 
-    private long ownerId;
+    private long id;
+    private Owner owner;
     private String locationAndDescription;
     private int approxSizeInSquareMeters;
     private List<PropertyMarker> markers = new ArrayList<>();
@@ -19,7 +20,7 @@ public class Property {
 
     static {
         Property property = new Property()
-                .setOwnerId(0)
+                .setOwner(Owner.ownerList.get(0))
                 .setLocationAndDescription("Arneiro")
                 .setApproxSizeInSquareMeters(650);
         property.markers.add(new PropertyMarker(40.165101, -8.862450));
@@ -30,7 +31,7 @@ public class Property {
         properties.add(property);
 
         Property otherProp = new Property()
-                .setOwnerId(1)
+                .setOwner(Owner.ownerList.get(0))
                 .setLocationAndDescription("Fonte")
                 .setApproxSizeInSquareMeters(10000);
         otherProp.markers.add(new PropertyMarker(40.164876, -8.862490));
@@ -40,7 +41,7 @@ public class Property {
         properties.add(otherProp);
 
         Property anotherProp = new Property()
-                .setOwnerId(1)
+                .setOwner(Owner.ownerList.get(1))
                 .setLocationAndDescription("Castelhanas")
                 .setApproxSizeInSquareMeters(2000);
         anotherProp.markers.add(new PropertyMarker(40.165957, -8.865170));
@@ -50,8 +51,8 @@ public class Property {
         properties.add(anotherProp);
     }
 
-    public long getOwnerId() {
-        return ownerId;
+    public Owner getOwner() {
+        return owner;
     }
 
     public String getLocationAndDescription() {
@@ -66,8 +67,8 @@ public class Property {
         return markers;
     }
 
-    public Property setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
+    public Property setOwner(Owner owner) {
+        this.owner = owner;
         return this;
     }
 
@@ -88,6 +89,11 @@ public class Property {
 
     public void setCalculatedSize(int calculatedSize) {
         this.calculatedSize = calculatedSize;
+    }
+
+    public Property setId(long id) {
+        this.id = id;
+        return this;
     }
 
     @Override

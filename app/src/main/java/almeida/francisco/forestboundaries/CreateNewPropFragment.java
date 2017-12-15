@@ -69,11 +69,11 @@ public class CreateNewPropFragment extends Fragment {
                 } else {
                     if (approxSizeValue <= 0) {
                         Property.properties.add(new Property()
-                                        .setOwnerId(owners.getSelectedItemPosition())
+                                        .setOwner(Owner.ownerList.get(owners.getSelectedItemPosition()))
                                         .setLocationAndDescription(descripStr));
                     } else {
                         Property.properties.add(new Property()
-                                        .setOwnerId(owners.getSelectedItemPosition())
+                                        .setOwner(Owner.ownerList.get(owners.getSelectedItemPosition()))
                                         .setLocationAndDescription(descripStr)
                                         .setApproxSizeInSquareMeters(approxSizeValue));
                     }

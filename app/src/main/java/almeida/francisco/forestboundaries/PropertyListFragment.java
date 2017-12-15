@@ -25,23 +25,21 @@ public class PropertyListFragment extends ListFragment {
 
     private Listener listener;
     private CursorAdapter cAdapter;
+    private Cursor cursor;
 
     public PropertyListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        adapter = new ArrayAdapter<Property>(inflater.getContext(),
-//                android.R.layout.simple_list_item_1, Property.properties);
 
-        //change to cursor adapter
-        MyHelper myHelper = new MyHelper(getActivity());
+        MyHelper myHelper = MyHelper.getHelper(getActivity());
         SQLiteDatabase db = myHelper.getReadableDatabase();
-        Cursor c = db.query(MyHelper.TABLE_PROPERTIES,
+        cursor = db.query(MyHelper.TABLE_PROPERTIES,
                 new String[]{MyHelper._ID, MyHelper.P_DESCRIP},
                 null, null, null, null, null);
         cAdapter = new SimpleCursorAdapter(getActivity(),
-                android.R.layout.simple_list_item_1, c, new String[]{MyHelper.P_DESCRIP},
+                android.R.layout.simple_list_item_1, cursor, new String[]{MyHelper.P_DESCRIP},
                 new int[]{android.R.id.text1}, 0);
 
         setListAdapter(cAdapter);
@@ -59,6 +57,12 @@ public class PropertyListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         cAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        cursor.close();
     }
 
     @Override
