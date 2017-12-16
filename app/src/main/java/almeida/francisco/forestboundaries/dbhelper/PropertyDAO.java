@@ -42,22 +42,25 @@ public class PropertyDAO {
         Property property = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
         String query = "SELECT " + MyHelper._ID + ", ";
+
         Cursor c = db.rawQuery(
-                "SELECT " +
-                "p." + MyHelper._ID + ", " +
-                MyHelper.P_OWNER_ID + ", " +
-                MyHelper.P_DESCRIP + ", " +
-                MyHelper.P_APPROX_SIZE + ", " +
-                MyHelper.P_CALC_SIZE + ", " +
-                "o." + MyHelper.O_NAME +
-                " FROM " +
-                MyHelper.TABLE_PROPERTIES + " AS p, " +
-                MyHelper.TABLE_OWNERS + " AS o" +
-                " WHERE " +
-                MyHelper.P_OWNER_ID + " = " +
-                "o." + MyHelper._ID
-                , null);
-        System.out.println("" + c.getColumnCount() + "ttttttttttttttttttttttttt");
+                        "SELECT " +
+                        "p." + MyHelper._ID + ", " +
+                        MyHelper.P_OWNER_ID + ", " +
+                        MyHelper.P_DESCRIP + ", " +
+                        MyHelper.P_APPROX_SIZE + ", " +
+                        MyHelper.P_CALC_SIZE + ", " +
+                        "o." + MyHelper.O_NAME +
+                        " FROM " +
+                        MyHelper.TABLE_PROPERTIES + " AS p " +
+                        "INNER JOIN " +
+                        MyHelper.TABLE_OWNERS + " AS o" +
+                        " ON " +
+                        "p." + MyHelper.P_OWNER_ID + " = " +
+                        "o." + MyHelper._ID +
+                        " WHERE p." + MyHelper._ID + " = " +
+                        Long.toString(id)
+                        , null);
         if (c.moveToFirst()) {
             property = createPropFromCursor(c);
         }
@@ -108,7 +111,6 @@ public class PropertyDAO {
     private Property createPropFromCursor(Cursor c) {
         Owner owner = new Owner()
                 .setId(c.getInt(1))
-//                .setName("Manel");
                 .setName(c.getString(5));
         Property property = new Property()
                 .setId(c.getInt(0))

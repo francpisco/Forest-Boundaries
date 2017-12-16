@@ -19,7 +19,7 @@ public class MyHelper extends SQLiteOpenHelper {
     private static MyHelper instance;
 
     private static final String DB_NAME = "forest_boundaries";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 3;
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";
@@ -58,7 +58,11 @@ public class MyHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        throw new UnsupportedOperationException("" + i + " to " + i1);
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion < newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_OWNERS + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROPERTIES + ";");
+            onCreate(db);
+        }
     }
 }

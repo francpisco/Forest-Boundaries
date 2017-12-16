@@ -30,13 +30,11 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         OwnerDAO oDAO = new OwnerDAO(this);
         if (oDAO.findAll().size() <= 0){
             oDAO.loadOwners();
-            System.out.println("a popular owners");
         }
 
         PropertyDAO pDAO = new PropertyDAO(this);
         if (pDAO.findAll().size() <= 0){
             pDAO.loadProperties(oDAO);
-            System.out.println("a popular props");
         }
     }
 

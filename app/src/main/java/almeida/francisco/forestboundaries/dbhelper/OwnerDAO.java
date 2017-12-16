@@ -75,6 +75,7 @@ public class OwnerDAO {
 
     private Owner createOwnerFromCursor(Cursor c) {
         Owner owner = new Owner()
+                .setId(c.getInt(c.getColumnIndex(MyHelper._ID)))
                 .setName(c.getString(c.getColumnIndex(MyHelper.O_NAME)));
         return owner;
     }
