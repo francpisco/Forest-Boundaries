@@ -19,7 +19,7 @@ public class MyHelper extends SQLiteOpenHelper {
     private static MyHelper instance;
 
     private static final String DB_NAME = "forest_boundaries";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 9;
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";

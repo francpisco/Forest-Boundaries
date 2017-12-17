@@ -25,6 +25,7 @@ public class PropertyListFragment extends ListFragment {
 
     private Listener listener;
     private CursorAdapter cAdapter;
+    private SQLiteDatabase db;
     private Cursor cursor;
 
     public PropertyListFragment() {}
@@ -32,9 +33,7 @@ public class PropertyListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        MyHelper myHelper = MyHelper.getHelper(getActivity());
-        SQLiteDatabase db = myHelper.getReadableDatabase();
+        db = MyHelper.getHelper(getActivity()).getReadableDatabase();
         cursor = db.query(MyHelper.TABLE_PROPERTIES,
                 new String[]{MyHelper._ID, MyHelper.P_DESCRIP},
                 null, null, null, null, null);
@@ -54,15 +53,10 @@ public class PropertyListFragment extends ListFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        cAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onDestroyView(){
         super.onDestroyView();
         cursor.close();
+        db.close();
     }
 
     @Override
@@ -70,6 +64,15 @@ public class PropertyListFragment extends ListFragment {
         if (listener != null) {
             listener.onItemClicked(id);
         }
+    }
+
+    public void myOnRestart() {
+        db = MyHelper.getHelper(getActivity()).getReadableDatabase();
+        Cursor newCursor = db.rawQuery("SELECT " + MyHelper._ID + ", "
+                        + MyHelper.P_DESCRIP + " FROM " + MyHelper.TABLE_PROPERTIES,
+                null);
+        cAdapter.changeCursor(newCursor);
+        cursor = newCursor;
     }
 
 }

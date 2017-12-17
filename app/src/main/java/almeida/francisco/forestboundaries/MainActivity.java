@@ -3,6 +3,7 @@ package almeida.francisco.forestboundaries;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -18,24 +19,13 @@ import almeida.francisco.forestboundaries.model.Property;
 
 public class MainActivity extends AppCompatActivity implements PropertyListFragment.Listener {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar mToolBar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolBar);
-
-        //popular tabelas aqui
-        OwnerDAO oDAO = new OwnerDAO(this);
-        if (oDAO.findAll().size() <= 0){
-            oDAO.loadOwners();
-        }
-
-        PropertyDAO pDAO = new PropertyDAO(this);
-        if (pDAO.findAll().size() <= 0){
-            pDAO.loadProperties(oDAO);
-        }
+        new PopulateTables().execute();
     }
 
     @Override
@@ -75,5 +65,37 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
             intent.putExtra(DetailActivity.PROP_ID, (int) id);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        ((PropertyListFragment)getFragmentManager()
+                .findFragmentById(R.id.prop_list_frag)).myOnRestart();
+    }
+
+    private class PopulateTables extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            //popular tabelas aqui
+            OwnerDAO oDAO = new OwnerDAO(MainActivity.this);
+            if (oDAO.findAll().size() <= 0){
+                oDAO.loadOwners();
+            }
+
+            PropertyDAO pDAO = new PropertyDAO(MainActivity.this);
+            if (pDAO.findAll().size() <= 0){
+                pDAO.loadProperties(oDAO);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            ((PropertyListFragment)getFragmentManager()
+                    .findFragmentById(R.id.prop_list_frag)).myOnRestart();
+        }
+
     }
 }
