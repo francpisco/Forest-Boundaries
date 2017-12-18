@@ -5,10 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+
 
 public class DetailActivity extends AppCompatActivity {
 
     public static String PROP_ID = "prop_id";
+
+    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +26,12 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(mToolBar);
         int id = (int) getIntent().getExtras().get(PROP_ID);
         fragment.setPropertyId(id);
+        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_frag)).getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+
+            }
+        });
     }
 
     @Override
