@@ -5,9 +5,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import almeida.francisco.forestboundaries.model.Owner;
-import almeida.francisco.forestboundaries.model.Property;
-
 /**
  * Created by fmpap on 13/12/2017.
  */
@@ -19,7 +16,7 @@ public class MyHelper extends SQLiteOpenHelper {
     private static MyHelper instance;
 
     private static final String DB_NAME = "forest_boundaries";
-    private static final int DB_VERSION = 9;
+    private static final int DB_VERSION = 10;
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";

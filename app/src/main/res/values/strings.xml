@@ -14,4 +14,5 @@
     <string name="submit_new_prop">Submeter</string>
     <string name="instructions_new_prop">Após submeter podes recolher localização de marcos</string>
     <string name="description_error">A descrição não pode estar vazia!</string>
+    <string name="edit_prop">Editar</string>
 </resources>

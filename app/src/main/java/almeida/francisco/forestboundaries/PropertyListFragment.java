@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import almeida.francisco.forestboundaries.dbhelper.MyHelper;
+import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.Property;
 
 public class PropertyListFragment extends ListFragment {
@@ -67,12 +69,30 @@ public class PropertyListFragment extends ListFragment {
     }
 
     public void myOnRestart() {
-        db = MyHelper.getHelper(getActivity()).getReadableDatabase();
-        Cursor newCursor = db.rawQuery("SELECT " + MyHelper._ID + ", "
-                        + MyHelper.P_DESCRIP + " FROM " + MyHelper.TABLE_PROPERTIES,
-                null);
-        cAdapter.changeCursor(newCursor);
-        cursor = newCursor;
+        new PopulateView().execute();
     }
 
+    private class PopulateView extends AsyncTask<Void, Void, Boolean> {
+
+        Cursor newCursor;
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            db = MyHelper.getHelper(getActivity()).getReadableDatabase();
+            newCursor = db.rawQuery("SELECT " + MyHelper._ID + ", "
+                            + MyHelper.P_DESCRIP + " FROM " + MyHelper.TABLE_PROPERTIES,
+                    null);
+            if (newCursor.getCount() == cursor.getCount())
+                return false;
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean changeCursor) {
+            if (!changeCursor)
+                return;
+            cAdapter.changeCursor(newCursor);
+            cursor = newCursor;
+        }
+    }
 }

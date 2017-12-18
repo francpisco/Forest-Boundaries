@@ -98,6 +98,19 @@ public class PropertyDAO {
         return properties;
     }
 
+    //cRud
+    public int getCount() {
+        int count = 0;
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + MyHelper._ID
+                            + " FROM " + MyHelper.TABLE_PROPERTIES,
+                            null);
+        count = c.getCount();
+        c.close();
+        db.close();
+        return count;
+    }
+
     //crUd
     public boolean update(Property property) {
         return true;
