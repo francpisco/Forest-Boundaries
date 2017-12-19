@@ -51,6 +51,10 @@ public class Property {
         properties.add(anotherProp);
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Owner getOwner() {
         return owner;
     }

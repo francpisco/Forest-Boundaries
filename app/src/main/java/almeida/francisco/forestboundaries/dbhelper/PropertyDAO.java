@@ -41,8 +41,6 @@ public class PropertyDAO {
     public Property findById(long id) {
         Property property = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
-        String query = "SELECT " + MyHelper._ID + ", ";
-
         Cursor c = db.rawQuery(
                         "SELECT " +
                         "p." + MyHelper._ID + ", " +

@@ -26,6 +26,14 @@ public class MyHelper extends SQLiteOpenHelper {
     public static final String P_DESCRIP = "description";
     public static final String P_APPROX_SIZE = "approx_size"; //in sq meters
     public static final String P_CALC_SIZE = "calc_size";
+    public static final String TABLE_MARKERS = "markers";
+    public static final String M_PROPERTY_ID = "property_id";
+    public static final String M_AVG_LAT = "avg_lat";
+    public static final String M_AVG_LON = "avg_lon";
+    public static final String TABLE_READINGS = "readings";
+    public static final String R_MARKER_ID = "marker_id";
+    public static final String R_LAT = "lat";
+    public static final String R_LON = "lon";
 
     private MyHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -52,6 +60,17 @@ public class MyHelper extends SQLiteOpenHelper {
                 P_APPROX_SIZE + " INTEGER, " +
                 P_CALC_SIZE + " INTEGER);");
 
+        db.execSQL("CREATE TABLE " + TABLE_MARKERS + " (" +
+                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                M_PROPERTY_ID + " INTEGER NOT NULL, " +
+                M_AVG_LAT + " REAL, " +
+                M_AVG_LON + " REAL);");
+
+        db.execSQL("CREATE TABLE " + TABLE_READINGS + " (" +
+                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                R_MARKER_ID + " INTEGR NOT NULL, " +
+                R_LAT + " REAL, " +
+                R_LON + " REAL);");
     }
 
     @Override
@@ -59,6 +78,9 @@ public class MyHelper extends SQLiteOpenHelper {
         if (oldVersion < newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_OWNERS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROPERTIES + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_MARKERS + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_READINGS + ";");
+
             onCreate(db);
         }
     }
