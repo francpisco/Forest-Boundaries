@@ -12,7 +12,7 @@ import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
 
 /**
- * Created by fmpap on 13/12/2017.
+ * Created by Francisco Almeida on 13/12/2017.
  */
 
 public class PropertyDAO {
@@ -85,9 +85,8 @@ public class PropertyDAO {
                         MyHelper.P_OWNER_ID + " = " +
                         "o." + MyHelper._ID
                         , null);
-        if (c.moveToFirst()) {
+        if (c.moveToFirst())
             properties.add(createPropFromCursor(c));
-        }
         while (c.moveToNext()) {
             properties.add(createPropFromCursor(c));
         }

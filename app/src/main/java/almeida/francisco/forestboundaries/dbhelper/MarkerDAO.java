@@ -5,11 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import almeida.francisco.forestboundaries.model.Marker;
 
 
 /**
- * Created by fmpap on 19/12/2017.
+ * Created by Francisco Almeida on 19/12/2017.
  */
 
 public class MarkerDAO {
@@ -38,20 +41,52 @@ public class MarkerDAO {
     public Marker findById(long id) {
         Marker marker = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
-//        Cursor c = db.rawQuery(
-//                "SELECT " +
-//                "m." + MyHelper._ID + ", " +
-//                MyHelper.M_PROPERTY_ID + ", " +
-//                MyHelper.M_AVG_LAT + ", " +
-//                MyHelper.M_AVG_LON + ", "
-//
-//
-//
-//                ,null)
-
+        Cursor c = db.rawQuery("SELECT * FROM " +
+                MyHelper.TABLE_MARKERS + " WHERE " +
+                MyHelper._ID + " = " +
+                Long.toString(id)
+                ,null);
+        if (c.moveToFirst()) {
+            marker = createMarkerFromCursor(c);
+        }
+        c.close();
+        db.close();
         return marker;
     }
 
+    //cRud
+    public List<Marker> findAll() {
+        List<Marker> markers = new ArrayList<>();
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " +
+                MyHelper.TABLE_MARKERS
+                ,null);
+        if (c.moveToFirst())
+            markers.add(createMarkerFromCursor(c));
+        while (c.moveToNext())
+            markers.add(createMarkerFromCursor(c));
+        c.close();
+        db.close();
+        return markers;
+    }
+
+    //crUd
+    public boolean update(Marker property) {
+        return true;
+    }
+
+    //cruD
+    public boolean delete(Marker property) {
+        return true;
+    }
+
+    private Marker createMarkerFromCursor(Cursor c) {
+        Marker marker = new Marker()
+                .setId(c.getLong(0))
+                .setAvgLatitude(c.getDouble(2))
+                .setAvgLongitude(3);
+        return marker;
+    }
 
 
 }

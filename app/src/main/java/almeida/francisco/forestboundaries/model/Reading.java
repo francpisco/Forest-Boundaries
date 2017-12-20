@@ -1,7 +1,7 @@
 package almeida.francisco.forestboundaries.model;
 
 /**
- * Created by fmpap on 19/12/2017.
+ * Created by Francisco Almeida on 19/12/2017.
  */
 
 public class Reading {

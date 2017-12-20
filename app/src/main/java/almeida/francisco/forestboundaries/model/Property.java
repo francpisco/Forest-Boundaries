@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by fmpap on 08/12/2017.
+ * Created by Francisco Almeida on 08/12/2017.
  */
 
 public class Property {

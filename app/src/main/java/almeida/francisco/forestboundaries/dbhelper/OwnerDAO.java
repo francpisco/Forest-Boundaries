@@ -11,7 +11,7 @@ import java.util.List;
 import almeida.francisco.forestboundaries.model.Owner;
 
 /**
- * Created by fmpap on 13/12/2017.
+ * Created by Francisco Almeida on 13/12/2017.
  */
 
 public class OwnerDAO {
