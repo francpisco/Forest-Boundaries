@@ -15,6 +15,8 @@ import almeida.francisco.forestboundaries.model.Property;
 
 public class MarkerService {
 
+    private static final String TAG = MarkerService.class.getName();
+
     private Context context;
 
     public MarkerService(Context context) {

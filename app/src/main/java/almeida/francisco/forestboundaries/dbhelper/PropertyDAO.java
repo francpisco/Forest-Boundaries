@@ -67,6 +67,21 @@ public class PropertyDAO {
         return property;
     }
 
+    public Property findById2(long id) {
+        Property property = null;
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(
+                "SELECT * FROM " + MyHelper.TABLE_PROPERTIES +
+                " WHERE " + MyHelper._ID + " = " + Long.toString(id),
+                null);
+        if (c.moveToFirst()) {
+            property = createPropFromCursor2(c);
+        }
+        c.close();
+        db.close();
+        return property;
+    }
+
     //cRud
     public List<Property> findAll() {
         List<Property> properties = new ArrayList<>();
@@ -83,12 +98,28 @@ public class PropertyDAO {
                         MyHelper.TABLE_OWNERS + " AS o" +
                         " WHERE " +
                         MyHelper.P_OWNER_ID + " = " +
-                        "o." + MyHelper._ID
-                        , null);
+                        "o." + MyHelper._ID,
+                        null);
         if (c.moveToFirst())
             properties.add(createPropFromCursor(c));
         while (c.moveToNext()) {
             properties.add(createPropFromCursor(c));
+        }
+        c.close();
+        db.close();
+        return properties;
+    }
+
+    //cRud
+    public List<Property> findAll2() {
+        List<Property> properties = new ArrayList<>();
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + MyHelper.TABLE_PROPERTIES,
+                null);
+        if (c.moveToFirst())
+            properties.add(createPropFromCursor2(c));
+        while (c.moveToNext()) {
+            properties.add(createPropFromCursor2(c));
         }
         c.close();
         db.close();
@@ -125,6 +156,21 @@ public class PropertyDAO {
         Property property = new Property()
                 .setId(c.getInt(0))
                 .setOwner(owner)
+                .setLocationAndDescription(c.getString(2));
+        Integer approxSize = c.getInt(3);
+        if (approxSize != null) {
+            property.setApproxSizeInSquareMeters(approxSize);
+        }
+        Integer calcSize = c.getInt(4);
+        if (calcSize != null) {
+            property.setCalculatedSize(calcSize);
+        }
+        return property;
+    }
+
+    private Property createPropFromCursor2(Cursor c) {
+        Property property = new Property()
+                .setId(c.getInt(0))
                 .setLocationAndDescription(c.getString(2));
         Integer approxSize = c.getInt(3);
         if (approxSize != null) {

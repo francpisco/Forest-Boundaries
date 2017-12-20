@@ -39,7 +39,7 @@ public class OwnerDAO {
         Owner owner = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + MyHelper.TABLE_OWNERS + " WHERE " +
-                MyHelper._ID + " = " + id, null);
+                MyHelper._ID + " = " + Long.toString(id), null);
         if (cursor.moveToFirst()) {
             owner = createOwnerFromCursor(cursor);
         }
