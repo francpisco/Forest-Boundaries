@@ -70,6 +70,23 @@ public class MarkerDAO {
         return markers;
     }
 
+    //cRud
+    public long getMarkerPropertyId(long id) {
+        long propId = -1;
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " +
+                MyHelper.M_PROPERTY_ID + " FROM " +
+                MyHelper.TABLE_MARKERS + " WHERE " +
+                MyHelper._ID + " = " +
+                Long.toString(id)
+                ,null);
+        if (c.moveToFirst())
+           propId = c.getLong(0);
+        c.close();
+        db.close();
+        return propId;
+    }
+
     //crUd
     public boolean update(Marker property) {
         return true;

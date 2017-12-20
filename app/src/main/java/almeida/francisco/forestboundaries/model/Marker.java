@@ -15,6 +15,10 @@ public class Marker {
     private double avgLongitude;
     private List<Reading> readings = new ArrayList<>();
 
+    public long getId() {
+        return id;
+    }
+
     public Property getProperty() {
         return property;
     }
