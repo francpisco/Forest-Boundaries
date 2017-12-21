@@ -71,7 +71,7 @@ public class MarkerDAO {
     }
 
     //cRud
-    public long getMarkerPropertyId(long id) {
+    public long getPropertyId(long id) {
         long propId = -1;
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT " +

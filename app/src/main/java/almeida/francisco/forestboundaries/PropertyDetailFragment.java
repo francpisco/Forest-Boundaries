@@ -26,6 +26,8 @@ import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
 import almeida.francisco.forestboundaries.model.PropertyMarker;
+import almeida.francisco.forestboundaries.service.OwnerService;
+import almeida.francisco.forestboundaries.service.PropertyService;
 
 public class PropertyDetailFragment extends Fragment implements OnMapReadyCallback{
 
@@ -62,13 +64,13 @@ public class PropertyDetailFragment extends Fragment implements OnMapReadyCallba
     public void onStart() {
         super.onStart();
         View view = getView();
-        PropertyDAO pDAO = new PropertyDAO(getActivity());
-        OwnerDAO oDAO = new OwnerDAO(getActivity());
-        Property p = pDAO.findById(propertyId);
+        PropertyService propertyService = new PropertyService(getActivity());
+        OwnerService ownerService = new OwnerService(getActivity());
+        Property p = propertyService.findById(propertyId);
         long o_id = p
                 .getOwner()
                 .getId();
-        Owner o = oDAO.findById(o_id);
+        Owner o = ownerService.findById(o_id);
         if (view != null) {
             TextView ownerView = (TextView) view.findViewById(R.id.owner_value);
             ownerView.setText(

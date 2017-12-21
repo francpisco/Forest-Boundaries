@@ -15,6 +15,8 @@ import android.view.View;
 import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.service.OwnerService;
+import almeida.francisco.forestboundaries.service.PropertyService;
 
 
 public class MainActivity extends AppCompatActivity implements PropertyListFragment.Listener {
@@ -79,14 +81,15 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         @Override
         protected Void doInBackground(Void... voids) {
             //popular tabelas aqui
-            OwnerDAO oDAO = new OwnerDAO(MainActivity.this);
-            if (oDAO.findAll().size() <= 0){
-                oDAO.loadOwners();
+            OwnerService ownerService = new OwnerService(MainActivity.this);
+            if (ownerService.findAll().size() <= 0){
+                ownerService.loadOwners();
             }
 
+            PropertyService propertyService = new PropertyService(MainActivity.this);
             PropertyDAO pDAO = new PropertyDAO(MainActivity.this);
-            if (pDAO.findAll().size() <= 0){
-                pDAO.loadProperties(oDAO);
+            if (propertyService.findAll().size() <= 0){
+                propertyService.loadProperties();
             }
             return null;
         }

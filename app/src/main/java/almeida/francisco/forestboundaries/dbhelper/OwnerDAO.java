@@ -79,11 +79,4 @@ public class OwnerDAO {
                 .setName(c.getString(c.getColumnIndex(MyHelper.O_NAME)));
         return owner;
     }
-
-    public void loadOwners() {
-        Owner owner1 = new Owner().setName("Manel");
-        Owner owner2 = new Owner().setName("Lourdes");
-        createOwner(owner1);
-        createOwner(owner2);
-    }
 }

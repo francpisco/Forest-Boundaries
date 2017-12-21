@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
 
 /**
@@ -37,37 +36,7 @@ public class PropertyDAO {
         return id;
     }
 
-    //cRud
     public Property findById(long id) {
-        Property property = null;
-        SQLiteDatabase db = myHelper.getReadableDatabase();
-        Cursor c = db.rawQuery(
-                        "SELECT " +
-                        "p." + MyHelper._ID + ", " +
-                        MyHelper.P_OWNER_ID + ", " +
-                        MyHelper.P_DESCRIP + ", " +
-                        MyHelper.P_APPROX_SIZE + ", " +
-                        MyHelper.P_CALC_SIZE + ", " +
-                        "o." + MyHelper.O_NAME +
-                        " FROM " +
-                        MyHelper.TABLE_PROPERTIES + " AS p " +
-                        "INNER JOIN " +
-                        MyHelper.TABLE_OWNERS + " AS o" +
-                        " ON " +
-                        "p." + MyHelper.P_OWNER_ID + " = " +
-                        "o." + MyHelper._ID +
-                        " WHERE p." + MyHelper._ID + " = " +
-                        Long.toString(id)
-                        , null);
-        if (c.moveToFirst()) {
-            property = createPropFromCursor(c);
-        }
-        c.close();
-        db.close();
-        return property;
-    }
-
-    public Property findById2(long id) {
         Property property = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor c = db.rawQuery(
@@ -75,7 +44,7 @@ public class PropertyDAO {
                 " WHERE " + MyHelper._ID + " = " + Long.toString(id),
                 null);
         if (c.moveToFirst()) {
-            property = createPropFromCursor2(c);
+            property = createPropFromCursor(c);
         }
         c.close();
         db.close();
@@ -86,20 +55,8 @@ public class PropertyDAO {
     public List<Property> findAll() {
         List<Property> properties = new ArrayList<>();
         SQLiteDatabase db = myHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT " +
-                        "p." + MyHelper._ID + ", " +
-                        MyHelper.P_OWNER_ID + ", " +
-                        MyHelper.P_DESCRIP + ", " +
-                        MyHelper.P_APPROX_SIZE + ", " +
-                        MyHelper.P_CALC_SIZE + ", " +
-                        "o." + MyHelper.O_NAME +
-                        " FROM " +
-                        MyHelper.TABLE_PROPERTIES + " AS p, " +
-                        MyHelper.TABLE_OWNERS + " AS o" +
-                        " WHERE " +
-                        MyHelper.P_OWNER_ID + " = " +
-                        "o." + MyHelper._ID,
-                        null);
+        Cursor c = db.rawQuery("SELECT * FROM " + MyHelper.TABLE_PROPERTIES,
+                null);
         if (c.moveToFirst())
             properties.add(createPropFromCursor(c));
         while (c.moveToNext()) {
@@ -110,20 +67,18 @@ public class PropertyDAO {
         return properties;
     }
 
-    //cRud
-    public List<Property> findAll2() {
-        List<Property> properties = new ArrayList<>();
+    public long getOwnerId(long id) {
+        long ownerId = -1;
         SQLiteDatabase db = myHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + MyHelper.TABLE_PROPERTIES,
+        Cursor c = db.rawQuery("SELECT " + MyHelper.P_OWNER_ID + " FROM " +
+                MyHelper.TABLE_PROPERTIES + " WHERE " + MyHelper._ID + " = " +
+                Long.toString(id),
                 null);
         if (c.moveToFirst())
-            properties.add(createPropFromCursor2(c));
-        while (c.moveToNext()) {
-            properties.add(createPropFromCursor2(c));
-        }
+            ownerId = c.getLong(0);
         c.close();
         db.close();
-        return properties;
+        return ownerId;
     }
 
     //cRud
@@ -150,25 +105,6 @@ public class PropertyDAO {
     }
 
     private Property createPropFromCursor(Cursor c) {
-        Owner owner = new Owner()
-                .setId(c.getInt(1))
-                .setName(c.getString(5));
-        Property property = new Property()
-                .setId(c.getInt(0))
-                .setOwner(owner)
-                .setLocationAndDescription(c.getString(2));
-        Integer approxSize = c.getInt(3);
-        if (approxSize != null) {
-            property.setApproxSizeInSquareMeters(approxSize);
-        }
-        Integer calcSize = c.getInt(4);
-        if (calcSize != null) {
-            property.setCalculatedSize(calcSize);
-        }
-        return property;
-    }
-
-    private Property createPropFromCursor2(Cursor c) {
         Property property = new Property()
                 .setId(c.getInt(0))
                 .setLocationAndDescription(c.getString(2));
@@ -183,23 +119,5 @@ public class PropertyDAO {
         return property;
     }
 
-    public void loadProperties(OwnerDAO oDAO) {
 
-        List<Owner> owners = oDAO.findAll();
-        Property property1 = new Property()
-                .setOwner(owners.get(0))
-                .setLocationAndDescription("Arneiro")
-                .setApproxSizeInSquareMeters(650);
-        createProperty(property1);
-        Property property2 = new Property()
-                .setOwner(owners.get(0))
-                .setLocationAndDescription("Fonte")
-                .setApproxSizeInSquareMeters(10000);
-        createProperty(property2);
-        Property property3 = new Property()
-                .setOwner(owners.get(1))
-                .setLocationAndDescription("Castelhanas")
-                .setApproxSizeInSquareMeters(2000);
-        createProperty(property3);
-    }
 }

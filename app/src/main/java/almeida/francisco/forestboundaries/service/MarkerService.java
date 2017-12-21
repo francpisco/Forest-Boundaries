@@ -33,7 +33,7 @@ public class MarkerService {
         Marker marker = markerDAO.findById(id);
         if (marker.getProperty() != null)
             return marker;
-        long propId = markerDAO.getMarkerPropertyId(id);
+        long propId = markerDAO.getPropertyId(id);
         PropertyDAO propertyDAO = new PropertyDAO(context);
         Property property = propertyDAO.findById(propId);
         marker.setProperty(property);
@@ -45,10 +45,9 @@ public class MarkerService {
         PropertyDAO propertyDAO = new PropertyDAO(context);
         List<Marker> markers = markerDAO.findAll();
         for (Marker m : markers) {
-            if (m.getProperty() != null) {
+            if (m.getProperty() != null)
                 continue;
-            }
-            long propId = markerDAO.getMarkerPropertyId(m.getId());
+            long propId = markerDAO.getPropertyId(m.getId());
             Property property = propertyDAO.findById(propId);
             m.setProperty(property);
         }
