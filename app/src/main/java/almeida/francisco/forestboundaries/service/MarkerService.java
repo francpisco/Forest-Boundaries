@@ -32,13 +32,20 @@ public class MarkerService {
 
     public Marker findById(long id) {
         MarkerDAO markerDAO = new MarkerDAO(context);
+        Marker marker = markerDAO.findById(id);
+
+        long propertyId = markerDAO.getPropertyId(id);
         PropertyDAO propertyDAO = new PropertyDAO(context);
+        Property property = propertyDAO.findById(propertyId);
+
+        long ownerId = propertyDAO.getOwnerId(propertyId);
         OwnerDAO ownerDAO = new OwnerDAO(context);
+        Owner owner = ownerDAO.findById(ownerId);
 
+        property.setOwner(owner);
+        marker.setProperty(property);
 
-
-
-        return null;
+        return marker;
     }
 
     public List<Marker> findAll() {
@@ -47,23 +54,13 @@ public class MarkerService {
         OwnerDAO ownerDAO = new OwnerDAO(context);
         List<Marker> markers = markerDAO.findAll();
         for (Marker m : markers) {
-            if (m.getProperty() != null)
-                if (m.getProperty().getOwner() != null)
-                    continue;
+            long propertyId = markerDAO.getPropertyId(m.getId());
+            Property property = propertyDAO.findById(propertyId);
 
-            long propId = markerDAO.getPropertyId(m.getId());
-            Property property = ServiceObjects.PROPERTIES.get(propId);
-            if (property == null) {
-                property = propertyDAO.findById(propId);
-                long ownerId = propertyDAO.getOwnerId(propId);
-                Owner owner = ServiceObjects.OWNERS.get(ownerId);
-                if (owner == null) {
-                    owner = ownerDAO.findById(ownerId);
-                    ServiceObjects.OWNERS.put(ownerId, owner);
-                }
-                property.setOwner(owner);
-                ServiceObjects.PROPERTIES.put(propId, property);
-            }
+            long ownerId = propertyDAO.getOwnerId(propertyId);
+            Owner owner = ownerDAO.findById(ownerId);
+
+            property.setOwner(owner);
             m.setProperty(property);
         }
         return markers;
