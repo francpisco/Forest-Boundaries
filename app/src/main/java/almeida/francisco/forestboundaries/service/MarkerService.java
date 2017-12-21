@@ -5,8 +5,10 @@ import android.content.Context;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.dbhelper.MarkerDAO;
+import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.Marker;
+import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
 
 /**
@@ -30,25 +32,38 @@ public class MarkerService {
 
     public Marker findById(long id) {
         MarkerDAO markerDAO = new MarkerDAO(context);
-        Marker marker = markerDAO.findById(id);
-        if (marker.getProperty() != null)
-            return marker;
-        long propId = markerDAO.getPropertyId(id);
         PropertyDAO propertyDAO = new PropertyDAO(context);
-        Property property = propertyDAO.findById(propId);
-        marker.setProperty(property);
-        return marker;
+        OwnerDAO ownerDAO = new OwnerDAO(context);
+
+
+
+
+        return null;
     }
 
     public List<Marker> findAll() {
         MarkerDAO markerDAO = new MarkerDAO(context);
         PropertyDAO propertyDAO = new PropertyDAO(context);
+        OwnerDAO ownerDAO = new OwnerDAO(context);
         List<Marker> markers = markerDAO.findAll();
         for (Marker m : markers) {
             if (m.getProperty() != null)
-                continue;
+                if (m.getProperty().getOwner() != null)
+                    continue;
+
             long propId = markerDAO.getPropertyId(m.getId());
-            Property property = propertyDAO.findById(propId);
+            Property property = ServiceObjects.PROPERTIES.get(propId);
+            if (property == null) {
+                property = propertyDAO.findById(propId);
+                long ownerId = propertyDAO.getOwnerId(propId);
+                Owner owner = ServiceObjects.OWNERS.get(ownerId);
+                if (owner == null) {
+                    owner = ownerDAO.findById(ownerId);
+                    ServiceObjects.OWNERS.put(ownerId, owner);
+                }
+                property.setOwner(owner);
+                ServiceObjects.PROPERTIES.put(propId, property);
+            }
             m.setProperty(property);
         }
         return markers;

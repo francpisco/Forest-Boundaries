@@ -25,7 +25,9 @@ public class PropertyService {
 
     public long createProperty(Property property){
         PropertyDAO propertyDAO = new PropertyDAO(context);
-        return propertyDAO.createProperty(property);
+        long id = propertyDAO.createProperty(property);
+        ServiceObjects.PROPERTIES.put(id, property);
+        return id;
     }
 
     public Property findById(long id) {
@@ -34,9 +36,14 @@ public class PropertyService {
         if (property.getOwner() != null)
             return property;
         long ownerId = propertyDAO.getOwnerId(id);
-        OwnerDAO ownerDAO = new OwnerDAO(context);
-        Owner owner = ownerDAO.findById(ownerId);
+        Owner owner = ServiceObjects.OWNERS.get(ownerId);
+        if (owner == null) {
+            OwnerDAO ownerDAO = new OwnerDAO(context);
+            owner = ownerDAO.findById(ownerId);
+            ServiceObjects.OWNERS.put(ownerId, owner);
+        }
         property.setOwner(owner);
+        ServiceObjects.PROPERTIES.put(id, property);
         return property;
     }
 
