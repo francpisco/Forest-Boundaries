@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import almeida.francisco.forestboundaries.model.Marker;
+import almeida.francisco.forestboundaries.model.MyMarker;
 
 
 /**
@@ -26,7 +26,7 @@ public class MarkerDAO {
     }
 
     //Crud
-    public long createMarker(Marker marker) {
+    public long createMarker(MyMarker marker) {
         SQLiteDatabase db = myHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(MyHelper.M_PROPERTY_ID, marker.getProperty().getId());
@@ -38,8 +38,8 @@ public class MarkerDAO {
     }
 
     //cRud
-    public Marker findById(long id) {
-        Marker marker = null;
+    public MyMarker findById(long id) {
+        MyMarker marker = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " +
                 MyHelper.TABLE_MARKERS + " WHERE " +
@@ -55,8 +55,8 @@ public class MarkerDAO {
     }
 
     //cRud
-    public List<Marker> findAll() {
-        List<Marker> markers = new ArrayList<>();
+    public List<MyMarker> findAll() {
+        List<MyMarker> markers = new ArrayList<>();
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " +
                 MyHelper.TABLE_MARKERS
@@ -88,17 +88,17 @@ public class MarkerDAO {
     }
 
     //crUd
-    public boolean update(Marker property) {
+    public boolean update(MyMarker property) {
         return true;
     }
 
     //cruD
-    public boolean delete(Marker property) {
+    public boolean delete(MyMarker property) {
         return true;
     }
 
-    private Marker createMarkerFromCursor(Cursor c) {
-        Marker marker = new Marker()
+    private MyMarker createMarkerFromCursor(Cursor c) {
+        MyMarker marker = new MyMarker()
                 .setId(c.getLong(0))
                 .setAvgLatitude(c.getDouble(2))
                 .setAvgLongitude(3);

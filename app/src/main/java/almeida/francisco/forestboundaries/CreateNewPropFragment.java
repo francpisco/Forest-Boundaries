@@ -24,12 +24,14 @@ import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.service.OwnerService;
+import almeida.francisco.forestboundaries.service.PropertyService;
 
 
 public class CreateNewPropFragment extends Fragment {
 
     public interface Listener {
-        void onClick();
+        void onClick(long propId);
     }
 
     private Listener listener;
@@ -84,25 +86,16 @@ public class CreateNewPropFragment extends Fragment {
                 if (descripStr.isEmpty()) {
                     description.setError(getString(R.string.description_error));
                 } else {
-                    if (approxSizeValue <= 0) {
-                        OwnerDAO oDAO = new OwnerDAO(getActivity());
-                        PropertyDAO pDAO = new PropertyDAO(getActivity());
-                        Owner o = oDAO.findById(owners.getSelectedItemId());
-                        Property p = new Property()
-                                .setOwner(o)
-                                .setLocationAndDescription(descripStr);
-                        pDAO.createProperty(p);
-                    } else {
-                        OwnerDAO oDAO = new OwnerDAO(getActivity());
-                        PropertyDAO pDAO = new PropertyDAO(getActivity());
-                        Owner o = oDAO.findById(owners.getSelectedItemId());
-                        Property p = new Property()
-                                .setOwner(o)
-                                .setLocationAndDescription(descripStr)
-                                .setApproxSizeInSquareMeters(approxSizeValue);
-                        pDAO.createProperty(p);
-                    }
-                    listener.onClick();
+                    OwnerService ownerService = new OwnerService(getActivity());
+                    PropertyService propertyService = new PropertyService(getActivity());
+                    Owner o = ownerService.findById(owners.getSelectedItemId());
+                    Property p = new Property()
+                            .setOwner(o)
+                            .setLocationAndDescription(descripStr);
+                    if (approxSizeValue > 0)
+                        p.setApproxSizeInSquareMeters(approxSizeValue);
+                    long propId = propertyService.createProperty(p);
+                    listener.onClick(propId);
                 }
             }
         });

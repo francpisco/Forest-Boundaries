@@ -29,7 +29,8 @@ import almeida.francisco.forestboundaries.model.PropertyMarker;
 import almeida.francisco.forestboundaries.service.OwnerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 
-public class PropertyDetailFragment extends Fragment implements OnMapReadyCallback{
+public class PropertyDetailFragment
+        extends Fragment implements OnMapReadyCallback{
 
     private long propertyId = 0;
 

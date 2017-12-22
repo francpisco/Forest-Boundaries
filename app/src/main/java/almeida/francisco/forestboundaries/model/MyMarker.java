@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Francisco Almeida on 19/12/2017.
  */
 
-public class Marker {
+public class MyMarker {
 
     private long id;
     private Property property;
@@ -31,22 +31,22 @@ public class Marker {
         return avgLongitude;
     }
 
-    public Marker setId(long id) {
+    public MyMarker setId(long id) {
         this.id = id;
         return this;
     }
 
-    public Marker setProperty(Property property) {
+    public MyMarker setProperty(Property property) {
         this.property = property;
         return this;
     }
 
-    public Marker setAvgLatitude(double avgLatitude) {
+    public MyMarker setAvgLatitude(double avgLatitude) {
         this.avgLatitude = avgLatitude;
         return this;
     }
 
-    public Marker setAvgLongitude(double avgLongitude) {
+    public MyMarker setAvgLongitude(double avgLongitude) {
         this.avgLongitude = avgLongitude;
         return this;
     }

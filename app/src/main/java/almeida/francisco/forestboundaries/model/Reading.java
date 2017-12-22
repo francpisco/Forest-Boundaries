@@ -6,7 +6,7 @@ package almeida.francisco.forestboundaries.model;
 
 public class Reading {
 
-    private Marker marker;
+    private MyMarker marker;
     private double latitude;
     private double longitude;
 

@@ -1,10 +1,14 @@
 package almeida.francisco.forestboundaries;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class CreateNewPropActivity extends AppCompatActivity implements CreateNewPropFragment.Listener{
+public class CreateNewPropActivity
+        extends AppCompatActivity implements CreateNewPropFragment.Listener{
+
+    public static final String PROPERTY_ID = "propId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,7 +17,10 @@ public class CreateNewPropActivity extends AppCompatActivity implements CreateNe
     }
 
     @Override
-    public void onClick() {
+    public void onClick(long propId) {
+        Intent intent = new Intent(this, LocatePropertyActivity.class);
+        intent.putExtra(PROPERTY_ID, propId);
+        startActivity(intent);
         finish();
     }
 }

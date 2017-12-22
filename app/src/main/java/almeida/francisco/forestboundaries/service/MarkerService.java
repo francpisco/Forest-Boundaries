@@ -7,7 +7,7 @@ import java.util.List;
 import almeida.francisco.forestboundaries.dbhelper.MarkerDAO;
 import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
-import almeida.francisco.forestboundaries.model.Marker;
+import almeida.francisco.forestboundaries.model.MyMarker;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
 
@@ -25,14 +25,14 @@ public class MarkerService {
         this.context = context;
     }
 
-    public long createMarker(Marker marker) {
+    public long createMarker(MyMarker marker) {
         MarkerDAO markerDAO = new MarkerDAO(context);
         return markerDAO.createMarker(marker);
     }
 
-    public Marker findById(long id) {
+    public MyMarker findById(long id) {
         MarkerDAO markerDAO = new MarkerDAO(context);
-        Marker marker = markerDAO.findById(id);
+        MyMarker marker = markerDAO.findById(id);
 
         long propertyId = markerDAO.getPropertyId(id);
         PropertyDAO propertyDAO = new PropertyDAO(context);
@@ -48,12 +48,12 @@ public class MarkerService {
         return marker;
     }
 
-    public List<Marker> findAll() {
+    public List<MyMarker> findAll() {
         MarkerDAO markerDAO = new MarkerDAO(context);
         PropertyDAO propertyDAO = new PropertyDAO(context);
         OwnerDAO ownerDAO = new OwnerDAO(context);
-        List<Marker> markers = markerDAO.findAll();
-        for (Marker m : markers) {
+        List<MyMarker> markers = markerDAO.findAll();
+        for (MyMarker m : markers) {
             long propertyId = markerDAO.getPropertyId(m.getId());
             Property property = propertyDAO.findById(propertyId);
 
