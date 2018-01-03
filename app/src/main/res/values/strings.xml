@@ -19,4 +19,5 @@
     <string name="locate_later_b">Agora não</string>
     <string name="locate_finished_b">Guardar</string>
     <string name="save_marker_locate">Guardar marco</string>
+    <string name="close_polyline">Fechar Linha</string>
 </resources>

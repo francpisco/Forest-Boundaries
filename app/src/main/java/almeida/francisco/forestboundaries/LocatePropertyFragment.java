@@ -18,6 +18,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -32,17 +34,20 @@ public class LocatePropertyFragment
         extends Fragment implements OnMapReadyCallback {
 
     private TextView propertyName;
-    private Button locateMarkerBtn;
-    private Button locateLaterBtn;
+    private Button createNewMarkerBtn;
+    private Button leaveForLaterBtn;
     private Button saveMarkerBtn;
+    private Button closeLineBtn;
     private Button saveBtn;
 
     private long propertyId;
     private GoogleMap map;
 
-    private Marker marker;
+    private Marker currentMarker;
+    private List<Marker> savedMarkers = new ArrayList<>();
     private List<LatLng> points = new ArrayList<>();
-    private Polyline polyline = null;
+    private Polyline polyline;
+    private Polygon polygon;
     private Boolean isPolylineOnMap = false;
 
     @Override
@@ -70,21 +75,24 @@ public class LocatePropertyFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         propertyName = view.findViewById(R.id.prop_name_loc);
-        locateMarkerBtn = view.findViewById(R.id.create_new_marker);
-        locateLaterBtn = view.findViewById(R.id.locate_later);
+        createNewMarkerBtn = view.findViewById(R.id.create_new_marker);
+        leaveForLaterBtn = view.findViewById(R.id.locate_later);
         saveMarkerBtn = view.findViewById(R.id.save_marker_locate);
+        closeLineBtn = view.findViewById(R.id.close_polyline);
         saveBtn = view.findViewById(R.id.save_locate);
 
-        locateMarkerBtn.setOnClickListener(new View.OnClickListener() {
+        createNewMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LatLng centerLatLng = map.getCameraPosition().target;
-                marker = map.addMarker(new MarkerOptions()
+                if (currentMarker != null)
+                    currentMarker.remove();
+                currentMarker = map.addMarker(new MarkerOptions()
                         .position(centerLatLng).draggable(true));
             }
         });
 
-        locateLaterBtn.setOnClickListener(new View.OnClickListener() {
+        leaveForLaterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -95,8 +103,10 @@ public class LocatePropertyFragment
             @Override
             public void onClick(View view) {
 
-                points.add(marker.getPosition());
-//                marker.remove();
+                savedMarkers.add(map.addMarker(new MarkerOptions()
+                        .position(currentMarker.getPosition())));
+                currentMarker.remove();
+                points.add(currentMarker.getPosition());
 
                 if (points.size() > 1) {
                     if (!isPolylineOnMap) {
@@ -105,10 +115,17 @@ public class LocatePropertyFragment
                     }
                     polyline.setPoints(points);
                 }
+            }
+        });
 
-                if (polyline == null) {
-                    PolylineOptions polylineOptions = new PolylineOptions()
-                            .add(marker.getPosition());
+        closeLineBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (polygon != null)
+                    polygon.remove();
+                if (points.size() > 2) {
+                    PolygonOptions polygonOptions = new PolygonOptions().addAll(points);
+                    polygon = map.addPolygon(polygonOptions);
                 }
             }
         });
@@ -133,6 +150,7 @@ public class LocatePropertyFragment
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+        //This is needed to change marker LatLng when marker is dragged
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {}
