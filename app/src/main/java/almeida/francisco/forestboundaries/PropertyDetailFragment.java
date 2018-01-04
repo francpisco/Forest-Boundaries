@@ -113,5 +113,11 @@ public class PropertyDetailFragment
             PolygonOptions polygonOptions = new PolygonOptions().addAll(points);
             map.addPolygon(polygonOptions);
         }
+        //debugging
+        PolygonOptions pO = new PolygonOptions()
+                .add(new LatLng(39.977, -8.7506))
+                .add(new LatLng(39.978, -8.7509))
+                .add(new LatLng(39.975, -8.7507));
+        map.addPolygon(pO);
     }
 }
