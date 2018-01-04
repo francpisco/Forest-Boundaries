@@ -77,14 +77,11 @@ public class PropertyDetailFragment
 
         ((SupportMapFragment) mapFragment).getMapAsync(this);
 
-        long o_id = property
-                .getOwner()
-                .getId();
+        long o_id = property.getOwner().getId();
         Owner o = ownerService.findById(o_id);
         if (view != null) {
             TextView ownerView = (TextView) view.findViewById(R.id.owner_value);
-            ownerView.setText(
-                    o.toString());
+            ownerView.setText(o.toString());
 
             TextView descriptionView = (TextView) view.findViewById(R.id.description_value);
             descriptionView.setText(property.getLocationAndDescription());
@@ -106,18 +103,25 @@ public class PropertyDetailFragment
     public void onMapReady(GoogleMap map) {
         List<MyMarker> markers = property.getMarkers();
         List<LatLng> points = new ArrayList<>();
+        double centerLat = 0.0;
+        double centerLon = 0.0;
         for (MyMarker m : markers) {
-            points.add(new LatLng(m.getMarkedLatitude(), m.getMarkedLongitude()));
+            double lat = m.getMarkedLatitude();
+            double lon = m.getMarkedLongitude();
+            points.add(new LatLng(lat, lon));
+            centerLat += lat;
+            centerLon += lon;
         }
-        if (points.size() > 0) {
+        int numOfPoints = points.size();
+        if (numOfPoints > 0) {
+            centerLat = centerLat/numOfPoints;
+            centerLon = centerLon/numOfPoints;
+            if ((centerLat + centerLon) > 0.1 || (centerLat + centerLon) < -0.1) {
+                LatLng center = new LatLng(centerLat, centerLon);
+                map.moveCamera(CameraUpdateFactory.newLatLng(center));
+            }
             PolygonOptions polygonOptions = new PolygonOptions().addAll(points);
             map.addPolygon(polygonOptions);
         }
-        //debugging
-        PolygonOptions pO = new PolygonOptions()
-                .add(new LatLng(39.977, -8.7506))
-                .add(new LatLng(39.978, -8.7509))
-                .add(new LatLng(39.975, -8.7507));
-        map.addPolygon(pO);
     }
 }

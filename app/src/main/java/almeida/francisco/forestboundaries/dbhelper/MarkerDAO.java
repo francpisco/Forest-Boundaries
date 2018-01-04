@@ -119,7 +119,7 @@ public class MarkerDAO {
         MyMarker marker = new MyMarker()
                 .setId(c.getLong(0))
                 .setMarkedLatitude(c.getDouble(2))
-                .setMarkedLongitude(3);
+                .setMarkedLongitude(c.getDouble(3));
         return marker;
     }
 
