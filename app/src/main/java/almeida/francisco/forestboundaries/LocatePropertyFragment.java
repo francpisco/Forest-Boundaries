@@ -131,19 +131,13 @@ public class LocatePropertyFragment
         saveMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                savedMarkers.add(map.addMarker(new MarkerOptions()
-                        .position(currentMarker.getPosition())));
-                currentMarker.remove();
-                LatLng position = currentMarker.getPosition();
-                points.add(position);
-
-                MyMarker myMarker = new MyMarker()
-                        .setMarkedLatitude(position.latitude)
-                        .setMarkedLongitude(position.longitude)
-                        .setProperty(property);
-                markerService.createMarker(myMarker);
-
+                if (currentMarker != null) {
+                    savedMarkers.add(map.addMarker(new MarkerOptions()
+                            .position(currentMarker.getPosition())));
+                    currentMarker.remove();
+                    LatLng position = currentMarker.getPosition();
+                    points.add(position);
+                }
                 if (points.size() > 1) {
                     if (!isPolylineOnMap) {
                         polyline = map.addPolyline(new PolylineOptions());
@@ -169,6 +163,12 @@ public class LocatePropertyFragment
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                for (LatLng l : points) {
+                    markerService.createMarker(new MyMarker()
+                            .setMarkedLatitude(l.latitude)
+                            .setMarkedLongitude(l.longitude)
+                            .setProperty(property));
+                }
                 listener.saveOnClick();
             }
         });

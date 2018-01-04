@@ -71,6 +71,24 @@ public class MarkerDAO {
     }
 
     //cRud
+    public List<MyMarker> findByPropertyId(long propId) {
+        List<MyMarker> markers = new ArrayList<>();
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " +
+                MyHelper.TABLE_MARKERS + " WHERE " +
+                MyHelper.M_PROPERTY_ID + " = " +
+                Long.toString(propId),
+                null);
+        if (c.moveToFirst())
+            markers.add(createMarkerFromCursor(c));
+        while (c.moveToNext())
+            markers.add(createMarkerFromCursor(c));
+        c.close();
+        db.close();
+        return markers;
+    }
+
+    //cRud
     public long getPropertyId(long id) {
         long propId = -1;
         SQLiteDatabase db = myHelper.getReadableDatabase();

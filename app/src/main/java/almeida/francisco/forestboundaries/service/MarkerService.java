@@ -65,4 +65,9 @@ public class MarkerService {
         }
         return markers;
     }
+
+    public List<MyMarker> findListByPropertyId(long propId) {
+        MarkerDAO markerDAO = new MarkerDAO(context);
+        return markerDAO.findByPropertyId(propId);
+    }
 }

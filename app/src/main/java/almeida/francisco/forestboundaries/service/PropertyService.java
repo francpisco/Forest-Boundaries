@@ -2,10 +2,13 @@ package almeida.francisco.forestboundaries.service;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import almeida.francisco.forestboundaries.dbhelper.MarkerDAO;
 import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
+import almeida.francisco.forestboundaries.model.MyMarker;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
 
@@ -30,7 +33,10 @@ public class PropertyService {
 
     public Property findById(long id) {
         PropertyDAO propertyDAO = new PropertyDAO(context);
+        MarkerDAO markerDAO = new MarkerDAO(context);
         Property property = propertyDAO.findById(id);
+        List<MyMarker> markers = markerDAO.findByPropertyId(id);
+        property.setMarkers(markers);
         if (property.getOwner() != null)
             return property;
         long ownerId = propertyDAO.getOwnerId(id);
