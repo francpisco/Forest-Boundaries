@@ -3,7 +3,8 @@ package almeida.francisco.forestboundaries;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class LocatePropertyActivity extends AppCompatActivity {
+public class LocatePropertyActivity extends AppCompatActivity
+        implements LocatePropertyFragment.Listener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,5 +14,15 @@ public class LocatePropertyActivity extends AppCompatActivity {
         LocatePropertyFragment fragment = (LocatePropertyFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.locate_p_frag);
         fragment.setPropertyId(propId);
+    }
+
+    @Override
+    public void leaveForLaterOnClick() {
+        finish();
+    }
+
+    @Override
+    public void saveOnClick() {
+        finish();
     }
 }

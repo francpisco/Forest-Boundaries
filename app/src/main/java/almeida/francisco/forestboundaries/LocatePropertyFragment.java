@@ -1,6 +1,8 @@
 package almeida.francisco.forestboundaries;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -26,12 +28,20 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import almeida.francisco.forestboundaries.model.MyMarker;
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.service.MarkerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 
 
 public class LocatePropertyFragment
         extends Fragment implements OnMapReadyCallback {
+
+    public interface Listener {
+        void leaveForLaterOnClick();
+        void saveOnClick();
+    }
+    private Listener listener;
 
     private TextView propertyName;
     private Button createNewMarkerBtn;
@@ -41,6 +51,9 @@ public class LocatePropertyFragment
     private Button saveBtn;
 
     private long propertyId;
+    private Property property;
+    private MarkerService markerService;
+
     private GoogleMap map;
 
     private Marker currentMarker;
@@ -49,6 +62,12 @@ public class LocatePropertyFragment
     private Polyline polyline;
     private Polygon polygon;
     private Boolean isPolylineOnMap = false;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (Listener) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +88,8 @@ public class LocatePropertyFragment
                 .commit();
         ((SupportMapFragment) mapFragment).getMapAsync(this);
 
+        markerService = new MarkerService(getActivity());
+
         return inflater.inflate(R.layout.fragment_locate_property, container, false);
     }
 
@@ -80,6 +101,14 @@ public class LocatePropertyFragment
         saveMarkerBtn = view.findViewById(R.id.save_marker_locate);
         closeLineBtn = view.findViewById(R.id.close_polyline);
         saveBtn = view.findViewById(R.id.save_locate);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+
+        PropertyService propertyService = new PropertyService(getActivity());
+        property = propertyService.findById(propertyId);
 
         createNewMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +124,7 @@ public class LocatePropertyFragment
         leaveForLaterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                listener.leaveForLaterOnClick();
             }
         });
 
@@ -106,7 +135,14 @@ public class LocatePropertyFragment
                 savedMarkers.add(map.addMarker(new MarkerOptions()
                         .position(currentMarker.getPosition())));
                 currentMarker.remove();
-                points.add(currentMarker.getPosition());
+                LatLng position = currentMarker.getPosition();
+                points.add(position);
+
+                MyMarker myMarker = new MyMarker()
+                        .setMarkedLatitude(position.latitude)
+                        .setMarkedLongitude(position.longitude)
+                        .setProperty(property);
+                markerService.createMarker(myMarker);
 
                 if (points.size() > 1) {
                     if (!isPolylineOnMap) {
@@ -133,7 +169,7 @@ public class LocatePropertyFragment
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                listener.saveOnClick();
             }
         });
     }
@@ -141,8 +177,6 @@ public class LocatePropertyFragment
     @Override
     public void onStart(){
         super.onStart();
-        PropertyService propertyService = new PropertyService(getActivity());
-        Property property = propertyService.findById(propertyId);
         propertyName.setText(property.toString());
     }
 

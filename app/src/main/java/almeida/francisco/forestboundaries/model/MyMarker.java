@@ -11,6 +11,8 @@ public class MyMarker {
 
     private long id;
     private Property property;
+    private double markedLatitude;
+    private double markedLongitude;
     private double avgLatitude;
     private double avgLongitude;
     private List<Reading> readings = new ArrayList<>();
@@ -21,6 +23,14 @@ public class MyMarker {
 
     public Property getProperty() {
         return property;
+    }
+
+    public double getMarkedLatitude() {
+        return markedLatitude;
+    }
+
+    public double getMarkedLongitude() {
+        return markedLongitude;
     }
 
     public double getAvgLatitude() {
@@ -38,6 +48,16 @@ public class MyMarker {
 
     public MyMarker setProperty(Property property) {
         this.property = property;
+        return this;
+    }
+
+    public MyMarker setMarkedLatitude(double markedLatitude) {
+        this.markedLatitude = markedLatitude;
+        return this;
+    }
+
+    public MyMarker setMarkedLongitude(double markedLongitude) {
+        this.markedLongitude = markedLongitude;
         return this;
     }
 
