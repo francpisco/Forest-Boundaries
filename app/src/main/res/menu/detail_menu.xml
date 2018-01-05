@@ -10,6 +10,12 @@
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/print_prop"
+        android:title="@string/print_prop"
+        android:icon="@drawable/ic_print_black_24dp"
+        android:orderInCategory="99"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/settings_action"
         android:title="@string/settings_action"
         android:orderInCategory="1"

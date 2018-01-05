@@ -1,6 +1,11 @@
 package almeida.francisco.forestboundaries;
 
 import android.os.Bundle;
+import android.os.CancellationSignal;
+import android.os.ParcelFileDescriptor;
+import android.print.PageRange;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -101,6 +106,7 @@ public class PropertyDetailFragment
 
     @Override
     public void onMapReady(GoogleMap map) {
+
         List<MyMarker> markers = property.getMarkers();
         List<LatLng> points = new ArrayList<>();
         double centerLat = 0.0;
@@ -122,6 +128,26 @@ public class PropertyDetailFragment
             }
             PolygonOptions polygonOptions = new PolygonOptions().addAll(points);
             map.addPolygon(polygonOptions);
+        }
+    }
+
+    private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
+
+        @Override
+        public void onLayout(PrintAttributes printAttributes,
+                             PrintAttributes printAttributes1,
+                             CancellationSignal cancellationSignal,
+                             LayoutResultCallback layoutResultCallback,
+                             Bundle bundle) {
+
+        }
+
+        @Override
+        public void onWrite(PageRange[] pageRanges,
+                            ParcelFileDescriptor parcelFileDescriptor,
+                            CancellationSignal cancellationSignal,
+                            WriteResultCallback writeResultCallback) {
+
         }
     }
 }
