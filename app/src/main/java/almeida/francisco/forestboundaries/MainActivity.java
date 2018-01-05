@@ -5,16 +5,13 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
-import almeida.francisco.forestboundaries.model.Property;
 import almeida.francisco.forestboundaries.service.OwnerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 
@@ -63,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         } else {
-            Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(DetailActivity.PROP_ID, (int) id);
+            Intent intent = new Intent(this, PropertyDetailActivity.class);
+            intent.putExtra(PropertyDetailActivity.PROP_ID, (int) id);
             startActivity(intent);
         }
     }

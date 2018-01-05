@@ -6,15 +6,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class DetailActivity extends AppCompatActivity {
+public class PropertyDetailActivity extends AppCompatActivity {
 
     public static String PROP_ID = "prop_id";
+    PropertyDetailFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        PropertyDetailFragment fragment = (PropertyDetailFragment) getSupportFragmentManager()
+        fragment = (PropertyDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_frag);
         Toolbar mToolBar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(mToolBar);
@@ -34,8 +35,7 @@ public class DetailActivity extends AppCompatActivity {
             case R.id.edit_prop:
                 return true;
             case R.id.print_prop:
-
-
+                fragment.printDocument();
                 return true;
             case R.id.settings_action:
                 return true;

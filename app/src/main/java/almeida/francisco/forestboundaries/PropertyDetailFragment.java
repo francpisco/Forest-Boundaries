@@ -1,11 +1,19 @@
 package almeida.francisco.forestboundaries;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
+import android.print.PrintDocumentInfo;
+import android.print.PrintManager;
+import android.print.pdf.PrintedPdfDocument;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -26,6 +34,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,21 +143,92 @@ public class PropertyDetailFragment
 
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
 
+        private PrintedPdfDocument pdfDocument;
+        private int totalpages = 1;
+
         @Override
-        public void onLayout(PrintAttributes printAttributes,
-                             PrintAttributes printAttributes1,
+        public void onLayout(PrintAttributes oldAttributes,
+                             PrintAttributes newAttributes,
                              CancellationSignal cancellationSignal,
-                             LayoutResultCallback layoutResultCallback,
+                             LayoutResultCallback callback,
                              Bundle bundle) {
 
+            pdfDocument = new PrintedPdfDocument(getActivity(), newAttributes);
+
+            if (cancellationSignal.isCanceled()) {
+                callback.onLayoutCancelled();
+                return;
+            }
+
+            int numOfPages = computeNumOfPages(newAttributes);
+            if (numOfPages > 0) {
+                PrintDocumentInfo info = new PrintDocumentInfo
+                        .Builder("print_output.pdf")
+                        .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+                        .setPageCount(numOfPages)
+                        .build();
+                callback.onLayoutFinished(info,true);
+            } else {
+                callback.onLayoutFailed("Page count is zero.");
+            }
+        }
+
+        private int computeNumOfPages(PrintAttributes newAttributes) {
+            return 1;
         }
 
         @Override
         public void onWrite(PageRange[] pageRanges,
-                            ParcelFileDescriptor parcelFileDescriptor,
+                            ParcelFileDescriptor destination,
                             CancellationSignal cancellationSignal,
-                            WriteResultCallback writeResultCallback) {
+                            WriteResultCallback callback) {
+            if (containsPage(pageRanges)) {
 
+                PdfDocument.Page page = pdfDocument.startPage(0);
+
+                if (cancellationSignal.isCanceled()) {
+                    pdfDocument.close();
+                    pdfDocument = null;
+                    callback.onWriteCancelled();
+                    return;
+                }
+
+                drawPage(page);
+                pdfDocument.finishPage(page);
+            }
+
+            try {
+                pdfDocument.writeTo(new FileOutputStream(destination.getFileDescriptor()));
+            } catch (IOException e) {
+                callback.onWriteFailed(e.toString());
+                return;
+            } finally {
+                pdfDocument.close();
+                pdfDocument = null;
+            }
+            callback.onWriteFinished(pageRanges);
         }
+
+        private void drawPage(PdfDocument.Page page) {
+            Canvas canvas = page.getCanvas();
+            Paint paint = new Paint();
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(30f);
+
+
+            canvas.drawText("Hello!", 80, 80, paint);
+        }
+
+        private boolean containsPage(PageRange[] pageRanges) {
+            return true;
+        }
+    }
+
+    public void printDocument() {
+        PrintManager printManager = (PrintManager) getActivity()
+                .getSystemService(Context.PRINT_SERVICE);
+        String jobName = getActivity().getString(R.string.app_name) + " Document";
+        if (printManager != null)
+            printManager.print(jobName, new MyPrintDocumentAdapter(), null);
     }
 }
