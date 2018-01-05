@@ -1,6 +1,7 @@
 package almeida.francisco.forestboundaries;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -54,6 +55,7 @@ public class PropertyDetailFragment
     private long propertyId = 0;
     private Property property;
     private Fragment mapFragment;
+    private Bitmap mapBitmap;
 
     public PropertyDetailFragment() {}
 
@@ -139,12 +141,20 @@ public class PropertyDetailFragment
             PolygonOptions polygonOptions = new PolygonOptions().addAll(points);
             map.addPolygon(polygonOptions);
         }
+
+        map.snapshot(new GoogleMap.SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(Bitmap bitmap) {
+                mapBitmap = bitmap;
+            }
+        });
     }
 
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
 
         private PrintedPdfDocument pdfDocument;
         private int totalpages = 1;
+
 
         @Override
         public void onLayout(PrintAttributes oldAttributes,
@@ -215,8 +225,8 @@ public class PropertyDetailFragment
             paint.setColor(Color.BLACK);
             paint.setTextSize(30f);
 
-
             canvas.drawText("Hello!", 80, 80, paint);
+            canvas.drawBitmap(mapBitmap, 80f, 200f, null);
         }
 
         private boolean containsPage(PageRange[] pageRanges) {
