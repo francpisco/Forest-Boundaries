@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -22,10 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-
 
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -33,19 +32,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
-import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.MyMarker;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
-import almeida.francisco.forestboundaries.model.PropertyMarker;
 import almeida.francisco.forestboundaries.service.OwnerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 
@@ -55,6 +50,7 @@ public class PropertyDetailFragment
     private long propertyId = 0;
     private Property property;
     private Fragment mapFragment;
+    private GoogleMap map;
     private Bitmap mapBitmap;
 
     public PropertyDetailFragment() {}
@@ -118,7 +114,7 @@ public class PropertyDetailFragment
 
     @Override
     public void onMapReady(GoogleMap map) {
-
+        this.map = map;
         List<MyMarker> markers = property.getMarkers();
         List<LatLng> points = new ArrayList<>();
         double centerLat = 0.0;
@@ -142,19 +138,12 @@ public class PropertyDetailFragment
             map.addPolygon(polygonOptions);
         }
 
-        map.snapshot(new GoogleMap.SnapshotReadyCallback() {
-            @Override
-            public void onSnapshotReady(Bitmap bitmap) {
-                mapBitmap = bitmap;
-            }
-        });
+
     }
 
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
 
         private PrintedPdfDocument pdfDocument;
-        private int totalpages = 1;
-
 
         @Override
         public void onLayout(PrintAttributes oldAttributes,
@@ -164,27 +153,16 @@ public class PropertyDetailFragment
                              Bundle bundle) {
 
             pdfDocument = new PrintedPdfDocument(getActivity(), newAttributes);
-
             if (cancellationSignal.isCanceled()) {
                 callback.onLayoutCancelled();
                 return;
             }
-
-            int numOfPages = computeNumOfPages(newAttributes);
-            if (numOfPages > 0) {
-                PrintDocumentInfo info = new PrintDocumentInfo
-                        .Builder("print_output.pdf")
-                        .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
-                        .setPageCount(numOfPages)
-                        .build();
-                callback.onLayoutFinished(info,true);
-            } else {
-                callback.onLayoutFailed("Page count is zero.");
-            }
-        }
-
-        private int computeNumOfPages(PrintAttributes newAttributes) {
-            return 1;
+            PrintDocumentInfo info = new PrintDocumentInfo
+                    .Builder("print_output.pdf")
+                    .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+                    .setPageCount(1)
+                    .build();
+            callback.onLayoutFinished(info,true);
         }
 
         @Override
@@ -192,20 +170,16 @@ public class PropertyDetailFragment
                             ParcelFileDescriptor destination,
                             CancellationSignal cancellationSignal,
                             WriteResultCallback callback) {
-            if (containsPage(pageRanges)) {
 
-                PdfDocument.Page page = pdfDocument.startPage(0);
-
-                if (cancellationSignal.isCanceled()) {
-                    pdfDocument.close();
-                    pdfDocument = null;
-                    callback.onWriteCancelled();
-                    return;
-                }
-
-                drawPage(page);
-                pdfDocument.finishPage(page);
+            PdfDocument.Page page = pdfDocument.startPage(0);
+            if (cancellationSignal.isCanceled()) {
+                pdfDocument.close();
+                pdfDocument = null;
+                callback.onWriteCancelled();
+                return;
             }
+            drawPage(page);
+            pdfDocument.finishPage(page);
 
             try {
                 pdfDocument.writeTo(new FileOutputStream(destination.getFileDescriptor()));
@@ -224,17 +198,19 @@ public class PropertyDetailFragment
             Paint paint = new Paint();
             paint.setColor(Color.BLACK);
             paint.setTextSize(30f);
-
             canvas.drawText("Hello!", 80, 80, paint);
-            canvas.drawBitmap(mapBitmap, 80f, 200f, null);
-        }
-
-        private boolean containsPage(PageRange[] pageRanges) {
-            return true;
+            canvas.drawBitmap(mapBitmap, new Rect(0, 0, 1000, 2000),
+                    new Rect(10, 80, 300, 500), null);
         }
     }
 
     public void printDocument() {
+        map.snapshot(new GoogleMap.SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(Bitmap bitmap) {
+                mapBitmap = bitmap;
+            }
+        });
         PrintManager printManager = (PrintManager) getActivity()
                 .getSystemService(Context.PRINT_SERVICE);
         String jobName = getActivity().getString(R.string.app_name) + " Document";
