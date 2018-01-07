@@ -11,7 +11,7 @@ public class PropertyDetailActivity extends AppCompatActivity {
 
     public static String PROP_ID = "prop_id";
     PropertyDetailFragment fragment;
-    int id;
+    long id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class PropertyDetailActivity extends AppCompatActivity {
                 .findFragmentById(R.id.detail_frag);
         Toolbar mToolBar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(mToolBar);
-        id = (int) getIntent().getExtras().get(PROP_ID);
+        id = (long) getIntent().getExtras().get(PROP_ID);
         fragment.setPropertyId(id);
     }
 

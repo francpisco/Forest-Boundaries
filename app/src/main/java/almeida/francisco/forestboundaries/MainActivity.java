@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
                     .commit();
         } else {
             Intent intent = new Intent(this, PropertyDetailActivity.class);
-            intent.putExtra(PropertyDetailActivity.PROP_ID, (int) id);
+            intent.putExtra(PropertyDetailActivity.PROP_ID, id);
             startActivity(intent);
         }
     }
