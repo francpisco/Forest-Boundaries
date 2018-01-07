@@ -4,10 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
+        android:id="@+id/locate_marker"
+        android:title="@string/locate_marker"
+        android:icon="@drawable/ic_gps_fixed_black_24dp"
+        android:orderInCategory="97"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/edit_prop"
         android:title="@string/edit_prop"
         android:icon="@drawable/ic_mode_edit_black_24dp"
-        android:orderInCategory="100"
+        android:orderInCategory="98"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/print_prop"

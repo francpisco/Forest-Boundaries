@@ -1,5 +1,6 @@
 package almeida.francisco.forestboundaries;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ public class PropertyDetailActivity extends AppCompatActivity {
 
     public static String PROP_ID = "prop_id";
     PropertyDetailFragment fragment;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +21,7 @@ public class PropertyDetailActivity extends AppCompatActivity {
                 .findFragmentById(R.id.detail_frag);
         Toolbar mToolBar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(mToolBar);
-        int id = (int) getIntent().getExtras().get(PROP_ID);
+        id = (int) getIntent().getExtras().get(PROP_ID);
         fragment.setPropertyId(id);
     }
 
@@ -32,6 +34,10 @@ public class PropertyDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.locate_marker:
+                Intent intent = new Intent(this, MarkInSituActivity.class);
+                intent.putExtra(PROP_ID, id);
+                startActivity(intent);
             case R.id.edit_prop:
                 return true;
             case R.id.print_prop:
