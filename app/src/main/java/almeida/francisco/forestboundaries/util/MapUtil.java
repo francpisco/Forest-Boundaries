@@ -17,7 +17,7 @@ import almeida.francisco.forestboundaries.model.Property;
 
 public class MapUtil {
 
-    public static GoogleMap centerMap(Property property, GoogleMap map) {
+    public static void centerMap(Property property, GoogleMap map) {
         List<MyMarker> markers = property.getMarkers();
         List<LatLng> points = new ArrayList<>();
         double centerLat = 0.0;
@@ -40,6 +40,5 @@ public class MapUtil {
             PolygonOptions polygonOptions = new PolygonOptions().addAll(points);
             map.addPolygon(polygonOptions);
         }
-        return map;
     }
 }

@@ -114,9 +114,9 @@ public class PropertyDetailFragment
     }
 
     @Override
-    public void onMapReady(GoogleMap map) {
-        this.map = MapUtil.centerMap(property, map);
-
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        MapUtil.centerMap(property, map);
     }
 
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
