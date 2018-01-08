@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +46,7 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
     private Property property;
     private String prefLocationProvider;
     private LocationManager locMgr;
+    private GoogleMap map;
 
     public MarkInSituFragment() {}
 
@@ -120,13 +122,14 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
                         MIN_DIST_IN_METERS, new LocationListener() {
                             @Override
                             public void onLocationChanged(Location location) {
-                                String lat = Double.toString(location.getLatitude());
-                                String lon = Double.toString(location.getLongitude());
-                                Toast
-                                        .makeText(
-                                        getActivity(), lat + lon, Toast
-                                                        .LENGTH_SHORT)
-                                        .show();
+                                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+//                                String lat = Double.toString(location.getLatitude());
+//                                String lon = Double.toString(location.getLongitude());
+//                                Toast
+//                                        .makeText(
+//                                        getActivity(), lat + lon, Toast
+//                                                        .LENGTH_SHORT)
+//                                        .show();
                             }
 
                             @Override
@@ -152,7 +155,8 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        MapUtil.centerMap(property, googleMap);
+        map = googleMap;
+        MapUtil.centerMap(property, map);
 
     }
 }
