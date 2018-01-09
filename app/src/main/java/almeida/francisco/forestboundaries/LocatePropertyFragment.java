@@ -57,7 +57,6 @@ public class LocatePropertyFragment
     private GoogleMap map;
 
     private Marker currentMarker;
-    private List<Marker> savedMarkers = new ArrayList<>();
     private List<LatLng> points = new ArrayList<>();
     private Polyline polyline;
     private Polygon polygon;
@@ -132,10 +131,9 @@ public class LocatePropertyFragment
             @Override
             public void onClick(View view) {
                 if (currentMarker != null) {
-                    savedMarkers.add(map.addMarker(new MarkerOptions()
-                            .position(currentMarker.getPosition())));
-                    currentMarker.remove();
                     LatLng position = currentMarker.getPosition();
+                    currentMarker.remove();
+                    map.addMarker(new MarkerOptions().position(position));
                     points.add(position);
                 }
                 if (points.size() > 1) {

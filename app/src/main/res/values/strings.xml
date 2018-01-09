@@ -23,5 +23,7 @@
     <string name="print_prop">Imprimir</string>
     <string name="locate_marker">marcar in situ</string>
     <string name="create_new_marker_in_situ">Novo Marco</string>
-    <string name="save_marker_in_situ">Gravar</string>
+    <string name="save_marker_in_situ">Guardar Marco</string>
+    <string name="close_polyline_in_situ">Fechar Linha</string>
+    <string name="save_in_situ">Guardar</string>
 </resources>

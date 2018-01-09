@@ -28,9 +28,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Dot;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.model.Property;
@@ -54,9 +65,16 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private Button newMarkerBtn;
     private Button saveMarkerBtn;
+    private Button closeLineBtn;
+    private Button saveBtn;
     private LatLng currentPosition;
     private Circle centerCircle;
     private float radiusAccuracy;
+    private Marker currentMarker;
+    private List<LatLng> points = new ArrayList<>();
+    private boolean isPolylineOnMap = false;
+    private Polyline polyline;
+    private Polygon polygon;
 
     public MarkInSituFragment() {}
 
@@ -114,6 +132,8 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
         propertyNameTxt = view.findViewById(R.id.prop_name_mark_in_s);
         newMarkerBtn = view.findViewById(R.id.create_new_marker_in_situ);
         saveMarkerBtn = view.findViewById(R.id.save_marker_in_situ);
+        closeLineBtn = view.findViewById(R.id.close_polyline_in_situ);
+        saveBtn = view.findViewById(R.id.save_in_situ);
     }
 
     @Override
@@ -123,11 +143,51 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
         newMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                map.addMarker(new MarkerOptions().position(currentPosition));
+                if (currentMarker !=  null)
+                    currentMarker.remove();
+                currentMarker = map.addMarker(new MarkerOptions().position(currentPosition));
             }
         });
 
         saveMarkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentMarker != null) {
+                    LatLng latLng = currentMarker.getPosition();
+                    currentMarker.remove();
+                    map.addMarker(new MarkerOptions().position(latLng));
+                    points.add(latLng);
+                }
+                if (points.size() > 1) {
+                    if (!isPolylineOnMap) {
+                        List<PatternItem> pattern = Arrays.<PatternItem>asList(
+                                new Gap(10f), new Dash(10f), new Gap(10f));
+                        polyline = map.addPolyline(new PolylineOptions().width(6f));
+                        polyline.setPattern(pattern);
+                        isPolylineOnMap = true;
+                    }
+                    polyline.setPoints(points);
+                }
+            }
+        });
+
+        closeLineBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (polygon != null)
+                    polygon.remove();
+                if (points.size() > 2) {
+                    List<PatternItem> pattern = Arrays.<PatternItem>asList(
+                            new Gap(10f), new Dash(10f), new Gap(10f));
+                    PolygonOptions polygonOptions = new PolygonOptions()
+                            .addAll(points).strokeWidth(6f);
+                    polygon = map.addPolygon(polygonOptions);
+                    polygon.setStrokePattern(pattern);
+                }
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

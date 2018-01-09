@@ -28,5 +28,17 @@
         android:layout_height="wrap_content"
         android:text="@string/save_marker_in_situ"/>
 
+    <Button
+        android:id="@+id/close_polyline_in_situ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/close_polyline_in_situ"/>
+
+    <Button
+        android:id="@+id/save_in_situ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_in_situ"/>
+
 </LinearLayout>
 
