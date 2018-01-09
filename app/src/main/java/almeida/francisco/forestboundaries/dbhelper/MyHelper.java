@@ -31,6 +31,7 @@ public class MyHelper extends SQLiteOpenHelper {
     public static final String M_AVG_LAT = "avg_lat";
     public static final String M_AVG_LON = "avg_lon";
     public static final String TABLE_READINGS = "readings";
+    public static final String R_PROPERTY_ID = "property_id";
     public static final String R_MARKER_ID = "marker_id";
     public static final String R_LAT = "lat";
     public static final String R_LON = "lon";
@@ -68,7 +69,8 @@ public class MyHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + TABLE_READINGS + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                R_MARKER_ID + " INTEGR NOT NULL, " +
+                R_PROPERTY_ID + " INTEGER, " +
+                R_MARKER_ID + " INTEGER, " +
                 R_LAT + " REAL, " +
                 R_LON + " REAL);");
     }

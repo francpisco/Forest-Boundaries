@@ -44,8 +44,8 @@ public class MarkerDAO {
         Cursor c = db.rawQuery("SELECT * FROM " +
                 MyHelper.TABLE_MARKERS + " WHERE " +
                 MyHelper._ID + " = " +
-                Long.toString(id)
-                ,null);
+                Long.toString(id),
+                null);
         if (c.moveToFirst()) {
             marker = createMarkerFromCursor(c);
         }
@@ -59,8 +59,8 @@ public class MarkerDAO {
         List<MyMarker> markers = new ArrayList<>();
         SQLiteDatabase db = myHelper.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " +
-                MyHelper.TABLE_MARKERS
-                ,null);
+                MyHelper.TABLE_MARKERS,
+                null);
         if (c.moveToFirst())
             markers.add(createMarkerFromCursor(c));
         while (c.moveToNext())
@@ -96,8 +96,8 @@ public class MarkerDAO {
                 MyHelper.M_PROPERTY_ID + " FROM " +
                 MyHelper.TABLE_MARKERS + " WHERE " +
                 MyHelper._ID + " = " +
-                Long.toString(id)
-                ,null);
+                Long.toString(id),
+                null);
         if (c.moveToFirst())
            propId = c.getLong(0);
         c.close();

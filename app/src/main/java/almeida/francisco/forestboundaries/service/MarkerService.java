@@ -42,8 +42,10 @@ public class MarkerService {
         OwnerDAO ownerDAO = new OwnerDAO(context);
         Owner owner = ownerDAO.findById(ownerId);
 
-        property.setOwner(owner);
-        marker.setProperty(property);
+        if (property != null)
+            property.setOwner(owner);
+        if (marker != null)
+            marker.setProperty(property);
 
         return marker;
     }
@@ -60,7 +62,8 @@ public class MarkerService {
             long ownerId = propertyDAO.getOwnerId(propertyId);
             Owner owner = ownerDAO.findById(ownerId);
 
-            property.setOwner(owner);
+            if (property != null)
+                property.setOwner(owner);
             m.setProperty(property);
         }
         return markers;
