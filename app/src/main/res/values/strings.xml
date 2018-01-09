@@ -22,4 +22,6 @@
     <string name="close_polyline">Fechar Linha</string>
     <string name="print_prop">Imprimir</string>
     <string name="locate_marker">marcar in situ</string>
+    <string name="create_new_marker_in_situ">Novo Marco</string>
+    <string name="save_marker_in_situ">Gravar</string>
 </resources>

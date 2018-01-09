@@ -13,14 +13,20 @@
     <FrameLayout
         android:id="@+id/map_container_mark_in_S"
         android:layout_width="match_parent"
-        android:layout_height="500dp">
+        android:layout_height="300dp">
     </FrameLayout>
 
-    <!--Button
-        android:id="@+id/"
+    <Button
+        android:id="@+id/create_new_marker_in_situ"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/"/-->
+        android:text="@string/create_new_marker_in_situ"/>
+
+    <Button
+        android:id="@+id/save_marker_in_situ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_marker_in_situ"/>
 
 </LinearLayout>
 

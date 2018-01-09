@@ -3,6 +3,7 @@ package almeida.francisco.forestboundaries;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,10 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
@@ -47,6 +52,11 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
     private String prefLocationProvider;
     private LocationManager locMgr;
     private GoogleMap map;
+    private Button newMarkerBtn;
+    private Button saveMarkerBtn;
+    private LatLng currentPosition;
+    private Circle centerCircle;
+    private float radiusAccuracy;
 
     public MarkInSituFragment() {}
 
@@ -102,6 +112,27 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         propertyNameTxt = view.findViewById(R.id.prop_name_mark_in_s);
+        newMarkerBtn = view.findViewById(R.id.create_new_marker_in_situ);
+        saveMarkerBtn = view.findViewById(R.id.save_marker_in_situ);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+
+        newMarkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                map.addMarker(new MarkerOptions().position(currentPosition));
+            }
+        });
+
+        saveMarkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
@@ -122,14 +153,18 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
                         MIN_DIST_IN_METERS, new LocationListener() {
                             @Override
                             public void onLocationChanged(Location location) {
-                                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-//                                String lat = Double.toString(location.getLatitude());
-//                                String lon = Double.toString(location.getLongitude());
-//                                Toast
-//                                        .makeText(
-//                                        getActivity(), lat + lon, Toast
-//                                                        .LENGTH_SHORT)
-//                                        .show();
+                                radiusAccuracy = location.getAccuracy();
+                                currentPosition = new LatLng(location.getLatitude(),
+                                        location.getLongitude());
+                                if (centerCircle != null)
+                                    centerCircle.remove();
+                                centerCircle = map.addCircle(new CircleOptions()
+                                        .center(currentPosition)
+                                        .radius(radiusAccuracy)
+                                        .strokeColor(Color.argb(255, 0, 0, 255))
+                                        .strokeWidth(3f)
+                                        .fillColor(Color.argb(128, 0, 0, 255)));
+                                map.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
                             }
 
                             @Override
