@@ -30,12 +30,17 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.model.MyMarker;
@@ -115,19 +120,7 @@ public class PropertyDetailFragment
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         MapUtil.centerMap(property, map);
-
-        List<Reading> readings = property.getReadings();
-        List<LatLng> readingPoints = new ArrayList<>();
-        for (Reading r : readings) {
-            double lat = r.getLatitude();
-            double lon = r.getLongitude();
-            readingPoints.add(new LatLng(lat, lon));
-        }
-        int numOfPoints = readingPoints.size();
-        if (numOfPoints > 0) {
-            PolygonOptions polygonOptions = new PolygonOptions().addAll(readingPoints);
-            map.addPolygon(polygonOptions);
-        }
+        MapUtil.drawPolygonFromReadings(property, map, true);
     }
 
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {

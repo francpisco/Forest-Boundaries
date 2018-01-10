@@ -194,11 +194,11 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
                 if (polygon != null)
                     polygon.remove();
                 if (points.size() > 2) {
-                    List<PatternItem> pattern = Arrays.<PatternItem>asList(
-                            new Gap(10f), new Dash(10f), new Gap(10f));
                     PolygonOptions polygonOptions = new PolygonOptions()
                             .addAll(points).strokeWidth(6f);
                     polygon = map.addPolygon(polygonOptions);
+                    List<PatternItem> pattern = Arrays.<PatternItem>asList(
+                            new Gap(10f), new Dash(10f), new Gap(10f));
                     polygon.setStrokePattern(pattern);
                 }
             }
