@@ -41,6 +41,7 @@ import java.util.List;
 import almeida.francisco.forestboundaries.model.MyMarker;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.model.Reading;
 import almeida.francisco.forestboundaries.service.OwnerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 import almeida.francisco.forestboundaries.util.MapUtil;
@@ -55,7 +56,6 @@ public class PropertyDetailFragment
     private Bitmap mapBitmap;
 
     public PropertyDetailFragment() {}
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,13 +86,11 @@ public class PropertyDetailFragment
         super.onStart();
         View view = getView();
         PropertyService propertyService = new PropertyService(getActivity());
-        OwnerService ownerService = new OwnerService(getActivity());
         property = propertyService.findById(propertyId);
 
         ((SupportMapFragment) mapFragment).getMapAsync(this);
 
-        long o_id = property.getOwner().getId();
-        Owner o = ownerService.findById(o_id);
+        Owner o = property.getOwner();
         if (view != null) {
             TextView ownerView = (TextView) view.findViewById(R.id.owner_value);
             ownerView.setText(o.toString());
@@ -117,6 +115,19 @@ public class PropertyDetailFragment
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         MapUtil.centerMap(property, map);
+
+        List<Reading> readings = property.getReadings();
+        List<LatLng> readingPoints = new ArrayList<>();
+        for (Reading r : readings) {
+            double lat = r.getLatitude();
+            double lon = r.getLongitude();
+            readingPoints.add(new LatLng(lat, lon));
+        }
+        int numOfPoints = readingPoints.size();
+        if (numOfPoints > 0) {
+            PolygonOptions polygonOptions = new PolygonOptions().addAll(readingPoints);
+            map.addPolygon(polygonOptions);
+        }
     }
 
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {

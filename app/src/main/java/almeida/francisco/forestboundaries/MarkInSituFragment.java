@@ -45,10 +45,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.model.Reading;
 import almeida.francisco.forestboundaries.service.PropertyService;
+import almeida.francisco.forestboundaries.service.ReadingService;
 import almeida.francisco.forestboundaries.util.MapUtil;
 
 public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
+
+    public interface Listener {
+        void saveOnClick();
+    }
+
+    private Listener listener;
 
     private final static String LOG_TAG = MarkInSituFragment.class.getName();
 
@@ -75,8 +83,15 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
     private boolean isPolylineOnMap = false;
     private Polyline polyline;
     private Polygon polygon;
+    private ReadingService readingService;
 
     public MarkInSituFragment() {}
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (Listener) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,6 +138,8 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
         } else {
             prefLocationProvider = providers.get(0);
         }
+
+        readingService = new ReadingService(getActivity());
 
         return inflater.inflate(R.layout.fragment_mark_in_situ, container, false);
     }
@@ -190,7 +207,13 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                for (LatLng l : points) {
+                    readingService.createReading(new Reading()
+                            .setLatitude(l.latitude)
+                            .setLongitude(l.longitude)
+                            .setProperty(property));
+                }
+                listener.saveOnClick();
             }
         });
     }

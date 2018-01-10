@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MarkInSituActivity extends AppCompatActivity {
+public class MarkInSituActivity extends AppCompatActivity implements MarkInSituFragment.Listener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,5 +32,10 @@ public class MarkInSituActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void saveOnClick() {
+        finish();
     }
 }

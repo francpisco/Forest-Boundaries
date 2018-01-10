@@ -29,7 +29,8 @@ public class ReadingDAO {
         SQLiteDatabase db = myHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(MyHelper.R_PROPERTY_ID, reading.getProperty().getId());
-        cv.put(MyHelper.R_MARKER_ID, reading.getMarker().getId());
+        if (reading.getMarker() != null)
+            cv.put(MyHelper.R_MARKER_ID, reading.getMarker().getId());
         cv.put(MyHelper.R_LAT, reading.getLatitude());
         cv.put(MyHelper.R_LON, reading.getLongitude());
         long id = db.insert(MyHelper.TABLE_READINGS, null, cv);

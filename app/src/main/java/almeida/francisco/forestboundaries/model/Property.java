@@ -14,6 +14,7 @@ public class Property {
     private String locationAndDescription;
     private int approxSizeInSquareMeters;
     private List<MyMarker> markers = new ArrayList<>();
+    private List<Reading> readings = new ArrayList<>();
     private int calculatedSize;
 
     public long getId() {
@@ -36,6 +37,10 @@ public class Property {
         return markers;
     }
 
+    public List<Reading> getReadings() {
+        return readings;
+    }
+
     public Property setOwner(Owner owner) {
         this.owner = owner;
         return this;
@@ -54,7 +59,12 @@ public class Property {
     public Property setMarkers(List<MyMarker> markers) {
         this.markers = markers;
         return this;
-}
+    }
+
+    public Property setReadings(List<Reading> readings) {
+        this.readings = readings;
+        return this;
+    }
 
     public void setCalculatedSize(int calculatedSize) {
         this.calculatedSize = calculatedSize;

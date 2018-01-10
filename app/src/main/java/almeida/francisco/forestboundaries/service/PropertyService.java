@@ -8,9 +8,11 @@ import java.util.List;
 import almeida.francisco.forestboundaries.dbhelper.MarkerDAO;
 import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
 import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
+import almeida.francisco.forestboundaries.dbhelper.ReadingDAO;
 import almeida.francisco.forestboundaries.model.MyMarker;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.model.Reading;
 
 /**
  * Created by Francisco Almeida on 20/12/2017.
@@ -34,9 +36,12 @@ public class PropertyService {
     public Property findById(long id) {
         PropertyDAO propertyDAO = new PropertyDAO(context);
         MarkerDAO markerDAO = new MarkerDAO(context);
+        ReadingDAO readingDAO = new ReadingDAO(context);
         Property property = propertyDAO.findById(id);
         List<MyMarker> markers = markerDAO.findByPropertyId(id);
         property.setMarkers(markers);
+        List<Reading> readings = readingDAO.findByPropertyId(id);
+        property.setReadings(readings);
         if (property.getOwner() != null)
             return property;
         long ownerId = propertyDAO.getOwnerId(id);
@@ -49,8 +54,14 @@ public class PropertyService {
     public List<Property> findAll() {
         PropertyDAO propertyDAO = new PropertyDAO(context);
         OwnerDAO ownerDAO = new OwnerDAO(context);
+        MarkerDAO markerDAO = new MarkerDAO(context);
+        ReadingDAO readingDAO = new ReadingDAO(context);
         List<Property> properties = propertyDAO.findAll();
         for (Property p : properties) {
+            List<MyMarker> markers = markerDAO.findByPropertyId(p.getId());
+            p.setMarkers(markers);
+            List<Reading> readings = readingDAO.findByPropertyId(p.getId());
+            p.setReadings(readings);
             if (p.getOwner() != null)
                 continue;
             long ownerId = propertyDAO.getOwnerId(p.getId());
