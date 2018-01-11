@@ -1,7 +1,6 @@
 package almeida.francisco.forestboundaries;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -133,7 +133,9 @@ public class LocatePropertyFragment
                 if (currentMarker != null) {
                     LatLng position = currentMarker.getPosition();
                     currentMarker.remove();
-                    map.addMarker(new MarkerOptions().position(position));
+                    Marker m = map.addMarker(new MarkerOptions()
+                            .position(position));
+                    m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ma));
                     points.add(position);
                 }
                 if (points.size() > 1) {
