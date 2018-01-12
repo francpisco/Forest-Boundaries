@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -31,6 +33,14 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
 
     private long propertyId;
     private Property property;
+    private Marker currentMarker;
+    private GoogleMap map;
+
+    private TextView propNameText;
+    private Button newMarkerBtn;
+    private Button saveMarkerBtn;
+    private Button closeLineBtn;
+    private Button saveBtn;
 
     public EditMarkersFragment() {}
 
@@ -56,28 +66,74 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
     }
 
     @Override
+    public void onViewCreated(View view, Bundle bundle) {
+        propNameText = (TextView) view.findViewById(R.id.prop_name_edit_markers);
+        newMarkerBtn = (Button) view.findViewById(R.id.create_new_marker_edit_markers);
+        saveMarkerBtn = (Button) view.findViewById(R.id.save_marker_edit_markers);
+        closeLineBtn = (Button) view.findViewById(R.id.close_polyline_edit_markers);
+        saveBtn = (Button) view.findViewById(R.id.save_edit_markers);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+
+        newMarkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentMarker != null)
+                    currentMarker.remove();
+                currentMarker = map.addMarker(new MarkerOptions()
+                        .position(map.getCameraPosition().target).draggable(true));
+            }
+        });
+
+        saveMarkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        closeLineBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        View view = getView();
         PropertyService propertyService = new PropertyService(getActivity());
         property = propertyService.findById(propertyId);
+        propNameText.setText(property.getLocationAndDescription());
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
         List<LatLng> markersLatLng = property.fromMarkersToLatLng();
         List<LatLng> readingsLatLng = property.fromReadingsToLatLng();
         if (markersLatLng.size() > 0) {
-            MapUtil.centerMap(markersLatLng, googleMap);
-            MapUtil.drawPolygon(markersLatLng, googleMap, 10f, Color.BLUE, false);
+            MapUtil.centerMap(markersLatLng, map);
+            MapUtil.drawPolygon(markersLatLng, map, 10f, Color.BLUE, false);
         } else if (readingsLatLng.size() > 0) {
-            MapUtil.centerMap(readingsLatLng, googleMap);
+            MapUtil.centerMap(readingsLatLng, map);
         }
         if (readingsLatLng.size() > 0) {
-            MapUtil.drawPolygon(readingsLatLng, googleMap, 8f, Color.GREEN, true);
+            MapUtil.drawPolygon(readingsLatLng, map, 8f, Color.GREEN, true);
         }
         for (int i = 0; i < markersLatLng.size(); i++) {
-            Marker m = googleMap.addMarker(new MarkerOptions().position(markersLatLng.get(i)));
+            Marker m = map.addMarker(new MarkerOptions().position(markersLatLng.get(i)));
             m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory.fromInt(i)));
         }
     }

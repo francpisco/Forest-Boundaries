@@ -106,9 +106,6 @@ public class LocatePropertyFragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        PropertyService propertyService = new PropertyService(getActivity());
-        property = propertyService.findById(propertyId);
-
         createNewMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,6 +174,8 @@ public class LocatePropertyFragment
     @Override
     public void onStart(){
         super.onStart();
+        PropertyService propertyService = new PropertyService(getActivity());
+        property = propertyService.findById(propertyId);
         propertyName.setText(property.toString());
     }
 
