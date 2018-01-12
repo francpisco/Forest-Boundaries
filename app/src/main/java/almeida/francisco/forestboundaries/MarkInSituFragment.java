@@ -274,7 +274,7 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        MapUtil.centerMap(property, map);
+        MapUtil.centerMap(property.fromMarkersToLatLng(), map);
 
     }
 }

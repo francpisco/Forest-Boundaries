@@ -119,7 +119,8 @@ public class PropertyDetailFragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        MapUtil.centerMap(property, map);
+        MapUtil.centerMap(property.fromMarkersToLatLng(), map);
+        MapUtil.drawPolygon(property.fromMarkersToLatLng(), map);
         MapUtil.drawPolygonFromReadings(property, map, true);
     }
 
