@@ -1,5 +1,7 @@
 package almeida.francisco.forestboundaries.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,22 @@ public class Property {
     private List<MyMarker> markers = new ArrayList<>();
     private List<Reading> readings = new ArrayList<>();
     private int calculatedSize;
+
+    public List<LatLng> fromMarkersToLatLng() {
+        List<LatLng> points = new ArrayList<>();
+        for (MyMarker m : markers) {
+            points.add(new LatLng(m.getMarkedLatitude(), m.getMarkedLongitude()));
+        }
+        return points;
+    }
+
+    public List<LatLng> fromReadingsToLatLng() {
+        List<LatLng> points = new ArrayList<>();
+        for (Reading r : readings) {
+            points.add(new LatLng(r.getLatitude(), r.getLongitude()));
+        }
+        return points;
+    }
 
     public long getId() {
         return id;
