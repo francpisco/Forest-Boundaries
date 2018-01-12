@@ -39,7 +39,8 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".LocatePropertyActivity" />
-        <activity android:name=".MarkInSituActivity"></activity>
+        <activity android:name=".MarkInSituActivity" />
+        <activity android:name=".EditMarkersActivity"></activity>
     </application>
 
 </manifest>

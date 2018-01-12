@@ -125,9 +125,15 @@ public class PropertyDetailFragment
         map = googleMap;
         List<LatLng> markersLatLng = property.fromMarkersToLatLng();
         List<LatLng> readingsLatLng = property.fromReadingsToLatLng();
-        MapUtil.centerMap(markersLatLng, map);
-        MapUtil.drawPolygon(markersLatLng, map, 10f, Color.BLUE, false);
-        MapUtil.drawPolygon(readingsLatLng, map, 8f, Color.GREEN, true);
+        if (markersLatLng.size() > 0) {
+            MapUtil.centerMap(markersLatLng, map);
+            MapUtil.drawPolygon(markersLatLng, map, 10f, Color.BLUE, false);
+        } else if (readingsLatLng.size() > 0) {
+            MapUtil.centerMap(readingsLatLng, map);
+        }
+        if (readingsLatLng.size() > 0) {
+            MapUtil.drawPolygon(readingsLatLng, map, 8f, Color.GREEN, true);
+        }
         for (int i = 0; i < markersLatLng.size(); i++) {
             Marker m = map.addMarker(new MarkerOptions().position(markersLatLng.get(i)));
             m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory.fromInt(i)));

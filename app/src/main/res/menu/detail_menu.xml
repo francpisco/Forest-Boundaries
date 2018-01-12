@@ -7,6 +7,12 @@
         android:id="@+id/locate_marker"
         android:title="@string/locate_marker"
         android:icon="@drawable/ic_gps_fixed_black_24dp"
+        android:orderInCategory="96"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/edit_markers"
+        android:title="@string/edit_markers"
+        android:icon="@drawable/ic_edit_location_black_24dp"
         android:orderInCategory="97"
         app:showAsAction="ifRoom" />
     <item
@@ -24,6 +30,6 @@
     <item
         android:id="@+id/settings_action"
         android:title="@string/settings_action"
-        android:orderInCategory="1"
+        android:orderInCategory="100"
         app:showAsAction="never"/>
 </menu>

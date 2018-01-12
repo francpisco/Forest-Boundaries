@@ -38,6 +38,12 @@ public class PropertyDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MarkInSituActivity.class);
                 intent.putExtra(PROP_ID, id);
                 startActivity(intent);
+                return true;
+            case R.id.edit_markers:
+                Intent intent1 = new Intent(this, EditMarkersActivity.class);
+                intent1.putExtra(PROP_ID, id);
+                startActivity(intent1);
+                return true;
             case R.id.edit_prop:
                 return true;
             case R.id.print_prop:
