@@ -275,6 +275,7 @@ public class MarkInSituFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         MapUtil.centerMap(property.fromMarkersToLatLng(), map);
-
+        MapUtil.drawPolygon(property.fromMarkersToLatLng(),
+                map, 8f, Color.BLUE, false);
     }
 }

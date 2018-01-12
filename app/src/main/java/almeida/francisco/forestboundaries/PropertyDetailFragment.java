@@ -29,10 +29,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -50,6 +53,7 @@ import almeida.francisco.forestboundaries.model.Reading;
 import almeida.francisco.forestboundaries.service.OwnerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 import almeida.francisco.forestboundaries.util.MapUtil;
+import almeida.francisco.forestboundaries.util.MarkerIconFactory;
 
 public class PropertyDetailFragment
         extends Fragment implements OnMapReadyCallback{
@@ -119,10 +123,17 @@ public class PropertyDetailFragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        MapUtil.centerMap(property.fromMarkersToLatLng(), map);
-        MapUtil.drawPolygon(property.fromMarkersToLatLng(), map);
-        MapUtil.drawPolygonFromReadings(property, map, true);
+        List<LatLng> markersLatLng = property.fromMarkersToLatLng();
+        List<LatLng> readingsLatLng = property.fromReadingsToLatLng();
+        MapUtil.centerMap(markersLatLng, map);
+        MapUtil.drawPolygon(markersLatLng, map, 10f, Color.BLUE, false);
+        MapUtil.drawPolygon(readingsLatLng, map, 8f, Color.GREEN, true);
+        for (int i = 0; i < markersLatLng.size(); i++) {
+            Marker m = map.addMarker(new MarkerOptions().position(markersLatLng.get(i)));
+            m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory.fromInt(i)));
+        }
     }
+
 
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
 
