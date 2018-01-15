@@ -20,11 +20,18 @@ import almeida.francisco.forestboundaries.model.MyMarker;
 
 public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkersAdapter.ViewHolder> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CardView cardView;
         public ViewHolder(CardView v) {
             super(v);
             cardView = v;
+            cardView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            view.setBackgroundColor(Color.BLUE);
+            System.out.println("-----------" + this.getLayoutPosition());
         }
     }
 
@@ -54,12 +61,6 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
         TextView descriptionText = (TextView) cardView.findViewById(R.id.card_text);
         descriptionText.setText(Double.toString(markers.get(position).getMarkedLatitude()) + " " +
                 Double.toString(markers.get(position).getMarkedLongitude()));
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.setBackgroundColor(Color.BLACK);
-            }
-        });
     }
 
     @Override
