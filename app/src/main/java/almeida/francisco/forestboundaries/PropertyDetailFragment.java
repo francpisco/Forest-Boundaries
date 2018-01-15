@@ -112,6 +112,13 @@ public class PropertyDetailFragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (map != null)
+            map.clear();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle onSavedInstanceState) {
         onSavedInstanceState.putLong("property_id", propertyId);
     }

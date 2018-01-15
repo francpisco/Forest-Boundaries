@@ -106,13 +106,23 @@ public class MarkerDAO {
     }
 
     //crUd
-    public boolean update(MyMarker property) {
+    public boolean update(MyMarker marker) {
         return true;
     }
 
     //cruD
-    public boolean delete(MyMarker property) {
-        return true;
+    public boolean deleteById(long id) {
+        boolean result;
+        SQLiteDatabase db = myHelper.getWritableDatabase();
+        Cursor c = db.rawQuery("DELETE FROM " +
+                        MyHelper.TABLE_MARKERS + " WHERE " +
+                        MyHelper._ID + " = " +
+                        Long.toString(id),
+                        null);
+        result = c.moveToFirst();
+        c.close();
+        db.close();
+        return result;
     }
 
     private MyMarker createMarkerFromCursor(Cursor c) {

@@ -42,7 +42,11 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap map;
     private int selectedItemFromList = -1;
     private MarkerService markerService;
+    private PropertyService propertyService;
     private List<MyMarker> markers;
+    private RecyclerView recyclerView;
+    private LabelledMarkersAdapter labelledMarkersAdapter;
+    private View selectedCard;
 
     private TextView propNameText;
     private Button newMarkerBtn;
@@ -89,10 +93,12 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.edit_recycler_view);
+        propertyService = new PropertyService(getActivity());
+
+        recyclerView = (RecyclerView) getView().findViewById(R.id.edit_recycler_view);
         markerService = new MarkerService(getActivity());
         markers = markerService.findListByPropertyId(propertyId);
-        LabelledMarkersAdapter labelledMarkersAdapter = new LabelledMarkersAdapter(markers,
+        labelledMarkersAdapter = new LabelledMarkersAdapter(markers,
                 getActivity(), this);
         recyclerView.setAdapter(labelledMarkersAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -113,6 +119,15 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
             public void onClick(View view) {
                 if (selectedItemFromList > 0) {
                     markerService.deleteById(markers.get(selectedItemFromList).getId());
+                    property = propertyService.findById(propertyId);
+                    map.clear();
+                    drawShapesAndCenterMap();
+                    markers.remove(selectedItemFromList);
+                    recyclerView.removeViewAt(selectedItemFromList);
+                    labelledMarkersAdapter.notifyItemRemoved(selectedItemFromList);
+                    labelledMarkersAdapter.notifyItemRangeChanged(selectedItemFromList,
+                            markers.size());
+                    selectedItemFromList = -1;
                 }
             }
         });
@@ -142,7 +157,6 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onStart() {
         super.onStart();
-        PropertyService propertyService = new PropertyService(getActivity());
         property = propertyService.findById(propertyId);
         propNameText.setText(property.getLocationAndDescription());
     }
@@ -150,6 +164,10 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        drawShapesAndCenterMap();
+    }
+
+    private void drawShapesAndCenterMap() {
         List<LatLng> markersLatLng = property.fromMarkersToLatLng();
         List<LatLng> readingsLatLng = property.fromReadingsToLatLng();
         if (markersLatLng.size() > 0) {
@@ -173,7 +191,10 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onItemClicked(View view, int position) {
+        if (selectedCard != null)
+            selectedCard.setBackgroundColor(Color.TRANSPARENT);
         view.setBackgroundColor(Color.BLUE);
+        selectedCard = view;
         selectedItemFromList = position;
     }
 }

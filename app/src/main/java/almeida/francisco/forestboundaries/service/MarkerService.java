@@ -76,6 +76,7 @@ public class MarkerService {
 
     public boolean deleteById(long id) {
         System.out.println("============ deleting " + id);
-        return true;
+        MarkerDAO markerDAO = new MarkerDAO(context);
+        return markerDAO.deleteById(id);
     }
 }
