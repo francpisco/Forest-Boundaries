@@ -1,6 +1,7 @@
 package almeida.francisco.forestboundaries;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,12 +31,11 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
     private final char[] NUM_TO_CHAR = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-//    private List<MyMarker> markers = new ArrayList<>();
-    private List<String> testStr = new ArrayList<>();
+    private List<MyMarker> markers = new ArrayList<>();
     private Context context;
 
-    public LabelledMarkersAdapter(List<String> markers, Context context) {
-        this.testStr = markers;
+    public LabelledMarkersAdapter(List<MyMarker> markers, Context context) {
+        this.markers = markers;
         this.context = context;
     }
 
@@ -52,13 +52,18 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
         TextView idText = (TextView) cardView.findViewById(R.id.card_id);
         idText.setText("" + NUM_TO_CHAR[position]);
         TextView descriptionText = (TextView) cardView.findViewById(R.id.card_text);
-        descriptionText.setText(testStr.get(position));
-//        descriptionText.setText(Double.toString(markers.get(position).getMarkedLatitude()) + " " +
-//                Double.toString(markers.get(position).getMarkedLongitude()));
+        descriptionText.setText(Double.toString(markers.get(position).getMarkedLatitude()) + " " +
+                Double.toString(markers.get(position).getMarkedLongitude()));
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setBackgroundColor(Color.BLACK);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return testStr.size();
+        return markers.size();
     }
 }

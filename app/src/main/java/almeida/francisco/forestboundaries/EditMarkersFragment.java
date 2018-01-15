@@ -75,19 +75,7 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.edit_recycler_view);
-        MarkerService markerService = new MarkerService(getActivity());
-//        List<MyMarker> markers = markerService.findListByPropertyId(propertyId);
-//        LabelledMarkersAdapter labelledMarkersAdapter = new LabelledMarkersAdapter(markers);
-        List<String> strings = new ArrayList<>();
-        strings.add("uma");
-        strings.add("outra");
-        strings.add("mais uma");
-        LabelledMarkersAdapter labelledMarkersAdapter = new LabelledMarkersAdapter(strings,
-                getActivity());
-        recyclerView.setAdapter(labelledMarkersAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+
 
         propNameText = (TextView) view.findViewById(R.id.prop_name_edit_markers);
         newMarkerBtn = (Button) view.findViewById(R.id.create_new_marker_edit_markers);
@@ -99,6 +87,15 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.edit_recycler_view);
+        MarkerService markerService = new MarkerService(getActivity());
+        List<MyMarker> markers = markerService.findListByPropertyId(propertyId);
+        LabelledMarkersAdapter labelledMarkersAdapter = new LabelledMarkersAdapter(markers,
+                getActivity());
+        recyclerView.setAdapter(labelledMarkersAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
 
         newMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
