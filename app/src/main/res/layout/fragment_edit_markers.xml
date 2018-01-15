@@ -22,6 +22,12 @@
         android:layout_height="250dp">
     </FrameLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/edit_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scrollbars="vertical"/>
+
     <Button
         android:id="@+id/save_marker_edit_markers"
         android:layout_width="wrap_content"

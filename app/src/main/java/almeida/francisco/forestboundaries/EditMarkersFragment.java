@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +23,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import almeida.francisco.forestboundaries.model.MyMarker;
 import almeida.francisco.forestboundaries.model.Property;
+import almeida.francisco.forestboundaries.service.MarkerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 import almeida.francisco.forestboundaries.util.MapUtil;
 import almeida.francisco.forestboundaries.util.MarkerIconFactory;
@@ -62,11 +67,28 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
         ((SupportMapFragment) mapFragment).getMapAsync(this);
+
+
+
         return inflater.inflate(R.layout.fragment_edit_markers, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.edit_recycler_view);
+        MarkerService markerService = new MarkerService(getActivity());
+//        List<MyMarker> markers = markerService.findListByPropertyId(propertyId);
+//        LabelledMarkersAdapter labelledMarkersAdapter = new LabelledMarkersAdapter(markers);
+        List<String> strings = new ArrayList<>();
+        strings.add("uma");
+        strings.add("outra");
+        strings.add("mais uma");
+        LabelledMarkersAdapter labelledMarkersAdapter = new LabelledMarkersAdapter(strings,
+                getActivity());
+        recyclerView.setAdapter(labelledMarkersAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
         propNameText = (TextView) view.findViewById(R.id.prop_name_edit_markers);
         newMarkerBtn = (Button) view.findViewById(R.id.create_new_marker_edit_markers);
         saveMarkerBtn = (Button) view.findViewById(R.id.save_marker_edit_markers);
