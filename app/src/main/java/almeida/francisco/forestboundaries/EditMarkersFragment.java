@@ -34,15 +34,19 @@ import almeida.francisco.forestboundaries.util.MapUtil;
 import almeida.francisco.forestboundaries.util.MarkerIconFactory;
 
 
-public class EditMarkersFragment extends Fragment implements OnMapReadyCallback {
+public class EditMarkersFragment extends Fragment implements OnMapReadyCallback, LabelledMarkersAdapter.RecyclerViewClickListener {
 
     private long propertyId;
     private Property property;
     private Marker currentMarker;
     private GoogleMap map;
+    private int selectedItemFromList = -1;
+    private MarkerService markerService;
+    private List<MyMarker> markers;
 
     private TextView propNameText;
     private Button newMarkerBtn;
+    private Button deleteMarkerBtn;
     private Button saveMarkerBtn;
     private Button closeLineBtn;
     private Button saveBtn;
@@ -68,17 +72,14 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
                 .commit();
         ((SupportMapFragment) mapFragment).getMapAsync(this);
 
-
-
         return inflater.inflate(R.layout.fragment_edit_markers, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
-
-
         propNameText = (TextView) view.findViewById(R.id.prop_name_edit_markers);
         newMarkerBtn = (Button) view.findViewById(R.id.create_new_marker_edit_markers);
+        deleteMarkerBtn = (Button) view.findViewById(R.id.delete_marker_edit_markers);
         saveMarkerBtn = (Button) view.findViewById(R.id.save_marker_edit_markers);
         closeLineBtn = (Button) view.findViewById(R.id.close_polyline_edit_markers);
         saveBtn = (Button) view.findViewById(R.id.save_edit_markers);
@@ -89,10 +90,10 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
         super.onActivityCreated(bundle);
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.edit_recycler_view);
-        MarkerService markerService = new MarkerService(getActivity());
-        List<MyMarker> markers = markerService.findListByPropertyId(propertyId);
+        markerService = new MarkerService(getActivity());
+        markers = markerService.findListByPropertyId(propertyId);
         LabelledMarkersAdapter labelledMarkersAdapter = new LabelledMarkersAdapter(markers,
-                getActivity());
+                getActivity(), this);
         recyclerView.setAdapter(labelledMarkersAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -104,6 +105,15 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
                     currentMarker.remove();
                 currentMarker = map.addMarker(new MarkerOptions()
                         .position(map.getCameraPosition().target).draggable(true));
+            }
+        });
+
+        deleteMarkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selectedItemFromList > 0) {
+                    markerService.deleteById(markers.get(selectedItemFromList).getId());
+                }
             }
         });
 
@@ -159,5 +169,11 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback 
 
     public void setPropertyId(long propertyId) {
         this.propertyId = propertyId;
+    }
+
+    @Override
+    public void onItemClicked(View view, int position) {
+        view.setBackgroundColor(Color.BLUE);
+        selectedItemFromList = position;
     }
 }

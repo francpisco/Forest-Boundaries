@@ -20,6 +20,10 @@ import almeida.francisco.forestboundaries.model.MyMarker;
 
 public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkersAdapter.ViewHolder> {
 
+    public interface RecyclerViewClickListener {
+        void onItemClicked(View view, int position);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CardView cardView;
         public ViewHolder(CardView v) {
@@ -30,20 +34,22 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
 
         @Override
         public void onClick(View view) {
-            view.setBackgroundColor(Color.BLUE);
-            System.out.println("-----------" + this.getLayoutPosition());
+            listener.onItemClicked(view, this.getAdapterPosition());
         }
     }
 
+    private static RecyclerViewClickListener listener;
     private final char[] NUM_TO_CHAR = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
     private List<MyMarker> markers = new ArrayList<>();
     private Context context;
 
-    public LabelledMarkersAdapter(List<MyMarker> markers, Context context) {
+    public LabelledMarkersAdapter(List<MyMarker> markers, Context context,
+                                  RecyclerViewClickListener listener) {
         this.markers = markers;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override

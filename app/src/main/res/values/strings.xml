@@ -27,4 +27,5 @@
     <string name="close_polyline_in_situ">Fechar Linha</string>
     <string name="save_in_situ">Guardar</string>
     <string name="edit_markers">Editar marcos</string>
+    <string name="delete_marker_locate">Apagar marco</string>
 </resources>

@@ -73,4 +73,9 @@ public class MarkerService {
         MarkerDAO markerDAO = new MarkerDAO(context);
         return markerDAO.findByPropertyId(propId);
     }
+
+    public boolean deleteById(long id) {
+        System.out.println("============ deleting " + id);
+        return true;
+    }
 }

@@ -29,6 +29,12 @@
         android:scrollbars="vertical"/>
 
     <Button
+        android:id="@+id/delete_marker_edit_markers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_marker_locate"/>
+
+    <Button
         android:id="@+id/save_marker_edit_markers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
