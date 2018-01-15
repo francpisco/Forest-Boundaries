@@ -135,7 +135,22 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
         saveMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (currentMarker != null) {
+                    LatLng position = currentMarker.getPosition();
+                    currentMarker.remove();
+                    MyMarker marker = new MyMarker()
+                            .setMarkedLatitude(position.latitude)
+                            .setMarkedLongitude(position.longitude)
+                            .setProperty(property);
+                    markerService.createMarker(marker);
+                    map.clear();
+                    drawShapesAndCenterMap();
+                    markers.add(marker);
+                    labelledMarkersAdapter.notifyDataSetChanged();
+                    property = propertyService.findById(propertyId);
+                    map.clear();
+                    drawShapesAndCenterMap();
+                }
             }
         });
 
@@ -165,6 +180,16 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         drawShapesAndCenterMap();
+
+        //This is needed to change marker LatLng when marker is dragged
+        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {}
+            @Override
+            public void onMarkerDrag(Marker marker) {}
+            @Override
+            public void onMarkerDragEnd(Marker marker) {}
+        });
     }
 
     private void drawShapesAndCenterMap() {
