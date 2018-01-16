@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -50,6 +51,7 @@ public class EditMarkersFragment extends Fragment
     private LabelledMarkersAdapter labelledMarkersAdapter;
     private View selectedCard;
 
+    private CardView cardView;
     private TextView propNameText;
     private Button newMarkerBtn;
     private Button deleteMarkerBtn;
@@ -153,8 +155,8 @@ public class EditMarkersFragment extends Fragment
             @Override
             public void onClick(View view) {
                 if (selectedItemFromList >= 0) {
-                    if (selectedCard != null)
-                        selectedCard.setBackgroundColor(Color.TRANSPARENT);
+                    if (cardView != null)
+                        cardView.setCardBackgroundColor(Color.WHITE);
                     markerService.deleteById(markers.get(selectedItemFromList).getId());
                     property = propertyService.findById(propertyId);
                     map.clear();
@@ -170,8 +172,8 @@ public class EditMarkersFragment extends Fragment
             @Override
             public void onClick(View view) {
                 if (currentMarker != null) {
-                    if (selectedCard != null)
-                        selectedCard.setBackgroundColor(Color.TRANSPARENT);
+                    if (cardView != null)
+                        cardView.setCardBackgroundColor(Color.WHITE);
                     LatLng position = currentMarker.getPosition();
                     currentMarker.remove();
                     MyMarker marker = new MyMarker()
@@ -253,9 +255,11 @@ public class EditMarkersFragment extends Fragment
 
     @Override
     public void onItemClicked(View view, int position) {
-        if (selectedCard != null)
-            selectedCard.setBackgroundColor(Color.TRANSPARENT);
-        view.setBackgroundColor(Color.BLUE);
+        if (cardView != null)
+            cardView.setCardBackgroundColor(Color.WHITE);
+//        view.setBackgroundColor(Color.BLUE);
+        cardView = (CardView) view.findViewById(R.id.card_view);
+        cardView.setCardBackgroundColor(Color.GREEN);
         selectedCard = view;
         selectedItemFromList = position;
     }
