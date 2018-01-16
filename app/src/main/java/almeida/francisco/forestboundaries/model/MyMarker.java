@@ -1,5 +1,7 @@
 package almeida.francisco.forestboundaries.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -9,9 +11,10 @@ import java.util.List;
  * Created by Francisco Almeida on 19/12/2017.
  */
 
-public class MyMarker {
+public class MyMarker implements Comparable<MyMarker> {
 
     private long id;
+    private double index;
     private Property property;
     private double markedLatitude;
     private double markedLongitude;
@@ -21,6 +24,10 @@ public class MyMarker {
 
     public long getId() {
         return id;
+    }
+
+    public double getIndex() {
+        return index;
     }
 
     public Property getProperty() {
@@ -48,6 +55,11 @@ public class MyMarker {
         return this;
     }
 
+    public MyMarker setIndex(double index) {
+        this.index = index;
+        return this;
+    }
+
     public MyMarker setProperty(Property property) {
         this.property = property;
         return this;
@@ -71,5 +83,12 @@ public class MyMarker {
     public MyMarker setAvgLongitude(double avgLongitude) {
         this.avgLongitude = avgLongitude;
         return this;
+    }
+
+    @Override
+    public int compareTo(@NonNull MyMarker marker) {
+        if (index == marker.getIndex())
+            return 0;
+        return (index < marker.getIndex() ? -1 : 1);
     }
 }

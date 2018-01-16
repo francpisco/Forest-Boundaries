@@ -139,12 +139,11 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
                     LatLng position = currentMarker.getPosition();
                     currentMarker.remove();
                     MyMarker marker = new MyMarker()
+                            .setIndex((double) markers.size())
                             .setMarkedLatitude(position.latitude)
                             .setMarkedLongitude(position.longitude)
                             .setProperty(property);
                     markerService.createMarker(marker);
-                    map.clear();
-                    drawShapesAndCenterMap();
                     markers.add(marker);
                     labelledMarkersAdapter.notifyDataSetChanged();
                     property = propertyService.findById(propertyId);

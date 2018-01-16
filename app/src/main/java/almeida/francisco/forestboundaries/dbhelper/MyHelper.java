@@ -16,7 +16,7 @@ public class MyHelper extends SQLiteOpenHelper {
     private static MyHelper instance;
 
     private static final String DB_NAME = "forest_boundaries";
-    private static final int DB_VERSION = 15;
+    private static final int DB_VERSION = 17;
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";
@@ -28,6 +28,7 @@ public class MyHelper extends SQLiteOpenHelper {
     public static final String P_CALC_SIZE = "calc_size";
     public static final String TABLE_MARKERS = "markers";
     public static final String M_PROPERTY_ID = "property_id";
+    public static final String M_INDEX = "indexed";
     public static final String M_AVG_LAT = "avg_lat";
     public static final String M_AVG_LON = "avg_lon";
     public static final String TABLE_READINGS = "readings";
@@ -63,6 +64,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + TABLE_MARKERS + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                M_INDEX + " REAL NOT NULL, " +
                 M_PROPERTY_ID + " INTEGER NOT NULL, " +
                 M_AVG_LAT + " REAL, " +
                 M_AVG_LON + " REAL);");

@@ -2,6 +2,8 @@ package almeida.francisco.forestboundaries.service;
 
 import android.content.Context;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.dbhelper.MarkerDAO;
@@ -71,11 +73,12 @@ public class MarkerService {
 
     public List<MyMarker> findListByPropertyId(long propId) {
         MarkerDAO markerDAO = new MarkerDAO(context);
-        return markerDAO.findByPropertyId(propId);
+        List<MyMarker> markers = markerDAO.findByPropertyId(propId);
+        Collections.sort(markers);
+        return markers;
     }
 
     public boolean deleteById(long id) {
-        System.out.println("============ deleting " + id);
         MarkerDAO markerDAO = new MarkerDAO(context);
         return markerDAO.deleteById(id);
     }

@@ -160,10 +160,11 @@ public class LocatePropertyFragment
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (LatLng l : points) {
+                for (int i = 0; i < points.size(); i++) {
                     markerService.createMarker(new MyMarker()
-                            .setMarkedLatitude(l.latitude)
-                            .setMarkedLongitude(l.longitude)
+                            .setIndex((double) i)
+                            .setMarkedLatitude(points.get(i).latitude)
+                            .setMarkedLongitude(points.get(i).longitude)
                             .setProperty(property));
                 }
                 listener.saveOnClick();

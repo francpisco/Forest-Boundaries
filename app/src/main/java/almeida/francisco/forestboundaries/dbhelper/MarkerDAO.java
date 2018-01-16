@@ -30,6 +30,7 @@ public class MarkerDAO {
         SQLiteDatabase db = myHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(MyHelper.M_PROPERTY_ID, marker.getProperty().getId());
+        cv.put(MyHelper.M_INDEX, marker.getIndex());
         cv.put(MyHelper.M_AVG_LAT, marker.getMarkedLatitude());
         cv.put(MyHelper.M_AVG_LON, marker.getMarkedLongitude());
         long id = db.insert(MyHelper.TABLE_MARKERS, null, cv);
@@ -128,8 +129,9 @@ public class MarkerDAO {
     private MyMarker createMarkerFromCursor(Cursor c) {
         MyMarker marker = new MyMarker()
                 .setId(c.getLong(0))
-                .setMarkedLatitude(c.getDouble(2))
-                .setMarkedLongitude(c.getDouble(3));
+                .setIndex(c.getDouble(1))
+                .setMarkedLatitude(c.getDouble(3))
+                .setMarkedLongitude(c.getDouble(4));
         return marker;
     }
 
