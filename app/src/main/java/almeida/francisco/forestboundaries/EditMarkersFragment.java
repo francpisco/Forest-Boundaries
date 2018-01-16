@@ -35,7 +35,8 @@ import almeida.francisco.forestboundaries.util.MapUtil;
 import almeida.francisco.forestboundaries.util.MarkerIconFactory;
 
 
-public class EditMarkersFragment extends Fragment implements OnMapReadyCallback, LabelledMarkersAdapter.RecyclerViewClickListener {
+public class EditMarkersFragment extends Fragment
+        implements OnMapReadyCallback, LabelledMarkersAdapter.RecyclerViewClickListener {
 
     private long propertyId;
     private Property property;
@@ -151,16 +152,15 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
         deleteMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedItemFromList > 0) {
+                if (selectedItemFromList >= 0) {
+                    if (selectedCard != null)
+                        selectedCard.setBackgroundColor(Color.TRANSPARENT);
                     markerService.deleteById(markers.get(selectedItemFromList).getId());
                     property = propertyService.findById(propertyId);
                     map.clear();
                     drawShapesAndCenterMap();
                     markers.remove(selectedItemFromList);
-                    recyclerView.removeViewAt(selectedItemFromList);
-                    labelledMarkersAdapter.notifyItemRemoved(selectedItemFromList);
-                    labelledMarkersAdapter.notifyItemRangeChanged(selectedItemFromList,
-                            markers.size());
+                    labelledMarkersAdapter.notifyDataSetChanged();
                     selectedItemFromList = -1;
                 }
             }
@@ -170,19 +170,23 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onClick(View view) {
                 if (currentMarker != null) {
+                    if (selectedCard != null)
+                        selectedCard.setBackgroundColor(Color.TRANSPARENT);
                     LatLng position = currentMarker.getPosition();
                     currentMarker.remove();
                     MyMarker marker = new MyMarker()
-                            .setIndex((double) markers.size())
+                            .setIndex((double) markers.size()) //isto esta mal
                             .setMarkedLatitude(position.latitude)
                             .setMarkedLongitude(position.longitude)
                             .setProperty(property);
-                    markerService.createMarker(marker);
+                    long mId = markerService.createMarker(marker);
+                    marker.setId(mId);
                     markers.add(marker);
+                    property.getMarkers().add(marker);
                     labelledMarkersAdapter.notifyDataSetChanged();
-                    property = propertyService.findById(propertyId);
                     map.clear();
                     drawShapesAndCenterMap();
+                    selectedItemFromList = -1;
                 }
             }
         });
