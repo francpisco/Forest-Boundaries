@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +104,39 @@ public class EditMarkersFragment extends Fragment implements OnMapReadyCallback,
         recyclerView.setAdapter(labelledMarkersAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+//            @Override
+//            public int getMovementFlags(RecyclerView recyclerView,
+//                                        RecyclerView.ViewHolder viewHolder) {
+//                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+//                        ItemTouchHelper.DOWN | ItemTouchHelper.UP |
+//                                ItemTouchHelper.START | ItemTouchHelper.END);
+//            }
+//
+//            @Override
+//            public boolean onMove(RecyclerView recyclerView,
+//                                  RecyclerView.ViewHolder viewHolder,
+//                                  RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//
+//            }
+//
+//            @Override
+//            public boolean isLongPressDragEnabled() {
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean isItemViewSwipeEnabled() {
+//                return true;
+//            }
+//        });
+//        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         newMarkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
