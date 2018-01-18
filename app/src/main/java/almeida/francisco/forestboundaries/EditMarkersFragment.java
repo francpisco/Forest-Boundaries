@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.model.MyMarker;
@@ -153,51 +154,12 @@ public class EditMarkersFragment extends Fragment
 
     private class CloseLineBtnListener implements View.OnClickListener {
         @Override
-        public void onClick(View view) {
-        }
+        public void onClick(View view) {}
     }
 
     private class SaveBtnListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {}
-    }
-
-    @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
-
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-//            @Override
-//            public int getMovementFlags(RecyclerView recyclerView,
-//                                        RecyclerView.ViewHolder viewHolder) {
-//                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-//                        ItemTouchHelper.DOWN | ItemTouchHelper.UP |
-//                                ItemTouchHelper.START | ItemTouchHelper.END);
-//            }
-//
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView,
-//                                  RecyclerView.ViewHolder viewHolder,
-//                                  RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//
-//            }
-//
-//            @Override
-//            public boolean isLongPressDragEnabled() {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean isItemViewSwipeEnabled() {
-//                return true;
-//            }
-//        });
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -211,6 +173,44 @@ public class EditMarkersFragment extends Fragment
         recyclerView.setAdapter(labelledMarkersAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new MyCallback());
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private class MyCallback extends ItemTouchHelper.Callback {
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                    ItemTouchHelper.LEFT);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView,
+                              RecyclerView.ViewHolder viewHolder,
+                              RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(markers, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(markers, i, i - 1);
+                }
+            }
+            labelledMarkersAdapter.notifyItemMoved(fromPosition, toPosition);
+            map.clear();
+            drawShapesAndCenterMap();
+            // TODO: 18/01/2018 save to db 
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
     }
 
     @Override

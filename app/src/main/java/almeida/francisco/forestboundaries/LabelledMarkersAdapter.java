@@ -42,7 +42,7 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
     private final char[] NUM_TO_CHAR = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-    private List<MyMarker> markers = new ArrayList<>();
+    private List<MyMarker> markers;
     private Context context;
 
     public LabelledMarkersAdapter(List<MyMarker> markers, Context context,
