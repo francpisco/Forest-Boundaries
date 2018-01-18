@@ -79,6 +79,8 @@ public class EditMarkersFragment extends Fragment
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
         ((SupportMapFragment) mapFragment).getMapAsync(this);
+        propertyService = new PropertyService(getActivity());
+        markerService = new MarkerService(getActivity());
 
         return inflater.inflate(R.layout.fragment_edit_markers, container, false);
     }
@@ -87,26 +89,82 @@ public class EditMarkersFragment extends Fragment
     public void onViewCreated(View view, Bundle bundle) {
         propNameText = (TextView) view.findViewById(R.id.prop_name_edit_markers);
         newMarkerBtn = (Button) view.findViewById(R.id.create_new_marker_edit_markers);
+        newMarkerBtn.setOnClickListener(new NewMarkerBtnListener());
         deleteMarkerBtn = (Button) view.findViewById(R.id.delete_marker_edit_markers);
+        deleteMarkerBtn.setOnClickListener(new DeleteMarkerBtnListener());
         saveMarkerBtn = (Button) view.findViewById(R.id.save_marker_edit_markers);
+        saveMarkerBtn.setOnClickListener(new SaveMarkerBtnListener());
         closeLineBtn = (Button) view.findViewById(R.id.close_polyline_edit_markers);
+        closeLineBtn.setOnClickListener(new CloseLineBtnListener());
         saveBtn = (Button) view.findViewById(R.id.save_edit_markers);
+        saveBtn.setOnClickListener(new SaveBtnListener());
+        recyclerView = (RecyclerView) view.findViewById(R.id.edit_recycler_view);
+    }
+
+    private class NewMarkerBtnListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if (currentMarker != null)
+                currentMarker.remove();
+            currentMarker = map.addMarker(new MarkerOptions()
+                    .position(map.getCameraPosition().target).draggable(true));
+        }
+    }
+
+    private class DeleteMarkerBtnListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if (selectedItemFromList >= 0) {
+                if (cardView != null)
+                    cardView.setCardBackgroundColor(Color.WHITE);
+                markerService.deleteById(markers.get(selectedItemFromList).getId());
+                markers.remove(selectedItemFromList);
+                map.clear();
+                drawShapesAndCenterMap();
+                labelledMarkersAdapter.notifyDataSetChanged();
+                selectedItemFromList = -1;
+            }
+        }
+    }
+
+    private class SaveMarkerBtnListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if (currentMarker != null) {
+                if (cardView != null)
+                    cardView.setCardBackgroundColor(Color.WHITE);
+                LatLng position = currentMarker.getPosition();
+                currentMarker.remove();
+                MyMarker marker = new MyMarker()
+                        .setIndex((double) markers.size()) //isto esta mal
+                        .setMarkedLatitude(position.latitude)
+                        .setMarkedLongitude(position.longitude)
+                        .setProperty(property);
+                long mId = markerService.createMarker(marker);
+                marker.setId(mId);
+                markers.add(marker);
+                labelledMarkersAdapter.notifyDataSetChanged();
+                map.clear();
+                drawShapesAndCenterMap();
+                selectedItemFromList = -1;
+            }
+        }
+    }
+
+    private class CloseLineBtnListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+        }
+    }
+
+    private class SaveBtnListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {}
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-
-        propertyService = new PropertyService(getActivity());
-
-        recyclerView = (RecyclerView) getView().findViewById(R.id.edit_recycler_view);
-        markerService = new MarkerService(getActivity());
-        markers = markerService.findListByPropertyId(propertyId);
-        labelledMarkersAdapter = new LabelledMarkersAdapter(markers,
-                getActivity(), this);
-        recyclerView.setAdapter(labelledMarkersAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
 
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
 //            @Override
@@ -140,72 +198,6 @@ public class EditMarkersFragment extends Fragment
 //            }
 //        });
 //        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        newMarkerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentMarker != null)
-                    currentMarker.remove();
-                currentMarker = map.addMarker(new MarkerOptions()
-                        .position(map.getCameraPosition().target).draggable(true));
-            }
-        });
-
-        deleteMarkerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedItemFromList >= 0) {
-                    if (cardView != null)
-                        cardView.setCardBackgroundColor(Color.WHITE);
-                    markerService.deleteById(markers.get(selectedItemFromList).getId());
-                    property = propertyService.findById(propertyId);
-                    map.clear();
-                    drawShapesAndCenterMap();
-                    markers.remove(selectedItemFromList);
-                    labelledMarkersAdapter.notifyDataSetChanged();
-                    selectedItemFromList = -1;
-                }
-            }
-        });
-
-        saveMarkerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentMarker != null) {
-                    if (cardView != null)
-                        cardView.setCardBackgroundColor(Color.WHITE);
-                    LatLng position = currentMarker.getPosition();
-                    currentMarker.remove();
-                    MyMarker marker = new MyMarker()
-                            .setIndex((double) markers.size()) //isto esta mal
-                            .setMarkedLatitude(position.latitude)
-                            .setMarkedLongitude(position.longitude)
-                            .setProperty(property);
-                    long mId = markerService.createMarker(marker);
-                    marker.setId(mId);
-                    markers.add(marker);
-                    property.getMarkers().add(marker);
-                    labelledMarkersAdapter.notifyDataSetChanged();
-                    map.clear();
-                    drawShapesAndCenterMap();
-                    selectedItemFromList = -1;
-                }
-            }
-        });
-
-        closeLineBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     @Override
@@ -213,6 +205,12 @@ public class EditMarkersFragment extends Fragment
         super.onStart();
         property = propertyService.findById(propertyId);
         propNameText.setText(property.getLocationAndDescription());
+        markers = property.getMarkers();
+        labelledMarkersAdapter = new LabelledMarkersAdapter(markers,
+                getActivity(), this);
+        recyclerView.setAdapter(labelledMarkersAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -220,7 +218,7 @@ public class EditMarkersFragment extends Fragment
         map = googleMap;
         drawShapesAndCenterMap();
 
-        //This is needed to change marker LatLng when marker is dragged
+        //For some reason this is needed to change marker LatLng when marker is dragged
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {}
@@ -257,7 +255,6 @@ public class EditMarkersFragment extends Fragment
     public void onItemClicked(View view, int position) {
         if (cardView != null)
             cardView.setCardBackgroundColor(Color.WHITE);
-//        view.setBackgroundColor(Color.BLUE);
         cardView = (CardView) view.findViewById(R.id.card_view);
         cardView.setCardBackgroundColor(Color.GREEN);
         selectedCard = view;
