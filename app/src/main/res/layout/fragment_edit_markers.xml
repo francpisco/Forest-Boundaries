@@ -1,64 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
+    <LinearLayout
 
-    <TextView
-        android:id="@+id/prop_name_edit_markers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/create_new_marker_edit_markers"
+        <TextView
+            android:id="@+id/prop_name_edit_markers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:id="@+id/map_container_edit_markers"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/edit_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:scrollbars="vertical"/>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/delete_marker_floating_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_new_marker_b"/>
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="184dp"
+        android:src="@drawable/ic_delete_black_24dp"/>
 
-    <FrameLayout
-        android:id="@+id/map_container_edit_markers"
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
-    </FrameLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/edit_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:scrollbars="vertical"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_marker_floating_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/ic_add_black_24dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/save_marker_floating_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="10dp"
+        android:layout_margin="16dp"
         android:src="@drawable/ic_done_black_24dp"/>
-
-    <Button
-        android:id="@+id/delete_marker_edit_markers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/delete_marker_locate"/>
-
-    <Button
-        android:id="@+id/save_marker_edit_markers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save_marker_locate"/>
-
-    <Button
-        android:id="@+id/close_polyline_edit_markers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/close_polyline"/>
-
-    <Button
-        android:id="@+id/save_edit_markers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/locate_finished_b"/>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

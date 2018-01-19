@@ -4,6 +4,7 @@ package almeida.francisco.forestboundaries;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -55,11 +56,9 @@ public class EditMarkersFragment extends Fragment
 
     private CardView cardView;
     private TextView propNameText;
-    private Button newMarkerBtn;
-    private Button deleteMarkerBtn;
-    private Button saveMarkerBtn;
-    private Button closeLineBtn;
-    private Button saveBtn;
+    private FloatingActionButton addMarkerFab;
+    private FloatingActionButton deleteMarkerFab;
+    private FloatingActionButton saveFab;
 
     public EditMarkersFragment() {}
 
@@ -89,16 +88,16 @@ public class EditMarkersFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         propNameText = (TextView) view.findViewById(R.id.prop_name_edit_markers);
-        newMarkerBtn = (Button) view.findViewById(R.id.create_new_marker_edit_markers);
-        newMarkerBtn.setOnClickListener(new NewMarkerBtnListener());
-        deleteMarkerBtn = (Button) view.findViewById(R.id.delete_marker_edit_markers);
-        deleteMarkerBtn.setOnClickListener(new DeleteMarkerBtnListener());
-        saveMarkerBtn = (Button) view.findViewById(R.id.save_marker_edit_markers);
-        saveMarkerBtn.setOnClickListener(new SaveMarkerBtnListener());
-        closeLineBtn = (Button) view.findViewById(R.id.close_polyline_edit_markers);
-        closeLineBtn.setOnClickListener(new CloseLineBtnListener());
-        saveBtn = (Button) view.findViewById(R.id.save_edit_markers);
-        saveBtn.setOnClickListener(new SaveBtnListener());
+
+        addMarkerFab = (FloatingActionButton) view.findViewById(R.id.add_marker_floating_btn);
+        addMarkerFab.setOnClickListener(new NewMarkerBtnListener());
+
+        deleteMarkerFab = (FloatingActionButton) view.findViewById(R.id.delete_marker_floating_btn);
+        deleteMarkerFab.setOnClickListener(new DeleteMarkerBtnListener());
+
+        saveFab = (FloatingActionButton) view.findViewById(R.id.save_marker_floating_btn);
+        saveFab.setOnClickListener(new SaveMarkerBtnListener());
+
         recyclerView = (RecyclerView) view.findViewById(R.id.edit_recycler_view);
     }
 
@@ -150,18 +149,6 @@ public class EditMarkersFragment extends Fragment
                 drawShapesAndCenterMap(false);
                 selectedItemFromList = -1;
             }
-        }
-    }
-
-    private class CloseLineBtnListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-        }
-    }
-
-    private class SaveBtnListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
         }
     }
 
