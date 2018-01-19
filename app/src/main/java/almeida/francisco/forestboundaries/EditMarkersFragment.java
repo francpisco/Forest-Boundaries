@@ -61,9 +61,7 @@ public class EditMarkersFragment extends Fragment
     private Button closeLineBtn;
     private Button saveBtn;
 
-    public EditMarkersFragment() {
-    }
-
+    public EditMarkersFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
