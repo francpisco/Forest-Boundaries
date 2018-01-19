@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,12 +45,13 @@ public class EditMarkersFragment extends Fragment
     private Marker currentMarker;
     private GoogleMap map;
     private int selectedItemFromList = -1;
+    private int fromPosition;
+    private int toPosition;
     private MarkerService markerService;
     private PropertyService propertyService;
     private List<MyMarker> markers;
     private RecyclerView recyclerView;
     private LabelledMarkersAdapter labelledMarkersAdapter;
-    private View selectedCard;
 
     private CardView cardView;
     private TextView propNameText;
@@ -61,7 +61,8 @@ public class EditMarkersFragment extends Fragment
     private Button closeLineBtn;
     private Button saveBtn;
 
-    public EditMarkersFragment() {}
+    public EditMarkersFragment() {
+    }
 
 
     @Override
@@ -122,7 +123,7 @@ public class EditMarkersFragment extends Fragment
                 markerService.deleteById(markers.get(selectedItemFromList).getId());
                 markers.remove(selectedItemFromList);
                 map.clear();
-                drawShapesAndCenterMap();
+                drawShapesAndCenterMap(false);
                 labelledMarkersAdapter.notifyDataSetChanged();
                 selectedItemFromList = -1;
             }
@@ -148,7 +149,7 @@ public class EditMarkersFragment extends Fragment
                 markers.add(marker);
                 labelledMarkersAdapter.notifyDataSetChanged();
                 map.clear();
-                drawShapesAndCenterMap();
+                drawShapesAndCenterMap(false);
                 selectedItemFromList = -1;
             }
         }
@@ -156,12 +157,14 @@ public class EditMarkersFragment extends Fragment
 
     private class CloseLineBtnListener implements View.OnClickListener {
         @Override
-        public void onClick(View view) {}
+        public void onClick(View view) {
+        }
     }
 
     private class SaveBtnListener implements View.OnClickListener {
         @Override
-        public void onClick(View view) {}
+        public void onClick(View view) {
+        }
     }
 
     @Override
@@ -191,80 +194,90 @@ public class EditMarkersFragment extends Fragment
         public boolean onMove(RecyclerView recyclerView,
                               RecyclerView.ViewHolder viewHolder,
                               RecyclerView.ViewHolder target) {
-            final int fromPosition = viewHolder.getAdapterPosition();
-            final int toPosition = target.getAdapterPosition();
-
-            if (fromPosition < toPosition) {
-                for (int i = fromPosition; i < toPosition; i++) {
-                    Collections.swap(markers, i, i + 1);
-                }
-            } else {
-                for (int i = fromPosition; i > toPosition; i--) {
-                    Collections.swap(markers, i, i - 1);
-                }
-            }
-
-            if (fromPosition < toPosition) {
-                for (int i = fromPosition; i <= toPosition; i++) {
-                    markers.get(i).setIndex(i);
-                }
-            } else {
-                for (int i = fromPosition; i >= toPosition; i--) {
-                    markers.get(i).setIndex(i);
-                }
-            }
-
+            fromPosition = viewHolder.getAdapterPosition();
+            toPosition = target.getAdapterPosition();
+            reorderList();
+            updateIndexes();
             labelledMarkersAdapter.notifyItemMoved(fromPosition, toPosition);
             map.clear();
-            drawShapesAndCenterMap();
-
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    if (fromPosition < toPosition) {
-                        for (int i = fromPosition; i <= toPosition; i++) {
-                            markerService.updateIndex(markers.get(i));
-                        }
-                    } else {
-                        for (int i = fromPosition; i >= toPosition; i--) {
-                            markerService.updateIndex(markers.get(i));
-                        }
-                    }
-                }
-            });
-
+            drawShapesAndCenterMap(false);
+            new Handler().post(new UpdateIndexesInDb());
             return true;
         }
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        }
+    }
 
+    private void reorderList() {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(markers, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(markers, i, i - 1);
+            }
+        }
+    }
+
+    private void updateIndexes() {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i <= toPosition; i++) {
+                markers.get(i).setIndex(i);
+            }
+        } else {
+            for (int i = fromPosition; i >= toPosition; i--) {
+                markers.get(i).setIndex(i);
+            }
+        }
+    }
+
+    private class UpdateIndexesInDb implements Runnable {
+        @Override
+        public void run() {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i <= toPosition; i++) {
+                    markerService.updateIndex(markers.get(i));
+                }
+            } else {
+                for (int i = fromPosition; i >= toPosition; i--) {
+                    markerService.updateIndex(markers.get(i));
+                }
+            }
         }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        drawShapesAndCenterMap();
+        drawShapesAndCenterMap(true);
 
         //For some reason this is needed to change marker LatLng when marker is dragged
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
-            public void onMarkerDragStart(Marker marker) {}
+            public void onMarkerDragStart(Marker marker) {
+            }
+
             @Override
-            public void onMarkerDrag(Marker marker) {}
+            public void onMarkerDrag(Marker marker) {
+            }
+
             @Override
-            public void onMarkerDragEnd(Marker marker) {}
+            public void onMarkerDragEnd(Marker marker) {
+            }
         });
     }
 
-    private void drawShapesAndCenterMap() {
+    private void drawShapesAndCenterMap(boolean isToCenterMap) {
         List<LatLng> markersLatLng = property.fromMarkersToLatLng();
         List<LatLng> readingsLatLng = property.fromReadingsToLatLng();
         if (markersLatLng.size() > 0) {
-            MapUtil.centerMap(markersLatLng, map);
+            if (isToCenterMap)
+                MapUtil.centerMap(markersLatLng, map);
             MapUtil.drawPolygon(markersLatLng, map, 10f, Color.BLUE, false);
-        } else if (readingsLatLng.size() > 0) {
+        } else if (readingsLatLng.size() > 0 && isToCenterMap) {
             MapUtil.centerMap(readingsLatLng, map);
         }
         if (readingsLatLng.size() > 0) {
@@ -272,7 +285,6 @@ public class EditMarkersFragment extends Fragment
         }
         for (int i = 0; i < markersLatLng.size(); i++) {
             Marker m = map.addMarker(new MarkerOptions().position(markersLatLng.get(i)));
-//            m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory.fromInt(i)));
             m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory
                     .fromInt(markers.get(i).getTempId())));
         }
@@ -288,9 +300,6 @@ public class EditMarkersFragment extends Fragment
             cardView.setCardBackgroundColor(Color.WHITE);
         cardView = (CardView) view.findViewById(R.id.card_view);
         cardView.setCardBackgroundColor(Color.GREEN);
-        selectedCard = view;
         selectedItemFromList = position;
     }
-
-
 }
