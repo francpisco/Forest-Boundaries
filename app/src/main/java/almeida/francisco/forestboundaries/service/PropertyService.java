@@ -3,6 +3,7 @@ package almeida.francisco.forestboundaries.service;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.dbhelper.MarkerDAO;
@@ -39,6 +40,10 @@ public class PropertyService {
         ReadingDAO readingDAO = new ReadingDAO(context);
         Property property = propertyDAO.findById(id);
         List<MyMarker> markers = markerDAO.findByPropertyId(id);
+        Collections.sort(markers);
+        for (int i = 0; i < markers.size(); i++) {
+            markers.get(i).setTempId(i);
+        }
         property.setMarkers(markers);
         List<Reading> readings = readingDAO.findByPropertyId(id);
         property.setReadings(readings);

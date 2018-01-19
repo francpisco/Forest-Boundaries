@@ -16,7 +16,7 @@ public class MyHelper extends SQLiteOpenHelper {
     private static MyHelper instance;
 
     private static final String DB_NAME = "forest_boundaries";
-    private static final int DB_VERSION = 18;
+    private static final int DB_VERSION = 19;
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";
@@ -64,7 +64,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + TABLE_MARKERS + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                M_INDEX + " REAL NOT NULL, " +
+                M_INDEX + " INTEGER NOT NULL, " +
                 M_PROPERTY_ID + " INTEGER NOT NULL, " +
                 M_AVG_LAT + " REAL, " +
                 M_AVG_LON + " REAL);");

@@ -82,4 +82,9 @@ public class MarkerService {
         MarkerDAO markerDAO = new MarkerDAO(context);
         return markerDAO.deleteById(id);
     }
+
+    public boolean updateIndex(MyMarker marker) {
+        MarkerDAO markerDAO = new MarkerDAO(context);
+        return markerDAO.updateIndex(marker);
+    }
 }

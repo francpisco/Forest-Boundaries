@@ -63,7 +63,7 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
     public void onBindViewHolder(ViewHolder holder, int position) {
         CardView cardView = holder.cardView;
         TextView idText = (TextView) cardView.findViewById(R.id.card_id);
-        idText.setText("" + NUM_TO_CHAR[position]);
+        idText.setText("" + NUM_TO_CHAR[markers.get(position).getTempId()]);
         TextView descriptionText = (TextView) cardView.findViewById(R.id.card_text);
         descriptionText.setText(Double.toString(markers.get(position).getMarkedLatitude()) + " " +
                 Double.toString(markers.get(position).getMarkedLongitude()));

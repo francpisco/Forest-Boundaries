@@ -14,7 +14,8 @@ import java.util.List;
 public class MyMarker implements Comparable<MyMarker> {
 
     private long id;
-    private double index;
+    private int index;
+    private int tempId;
     private Property property;
     private double markedLatitude;
     private double markedLongitude;
@@ -26,8 +27,12 @@ public class MyMarker implements Comparable<MyMarker> {
         return id;
     }
 
-    public double getIndex() {
+    public int getIndex() {
         return index;
+    }
+
+    public int getTempId() {
+        return tempId;
     }
 
     public Property getProperty() {
@@ -55,8 +60,13 @@ public class MyMarker implements Comparable<MyMarker> {
         return this;
     }
 
-    public MyMarker setIndex(double index) {
+    public MyMarker setIndex(int index) {
         this.index = index;
+        return this;
+    }
+
+    public MyMarker setTempId(int tempId) {
+        this.tempId = tempId;
         return this;
     }
 

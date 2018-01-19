@@ -3,6 +3,7 @@ package almeida.francisco.forestboundaries;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -137,7 +138,8 @@ public class EditMarkersFragment extends Fragment
                 LatLng position = currentMarker.getPosition();
                 currentMarker.remove();
                 MyMarker marker = new MyMarker()
-                        .setIndex((double) markers.size()) //isto esta mal
+                        .setIndex(markers.size())
+                        .setTempId(markers.size())
                         .setMarkedLatitude(position.latitude)
                         .setMarkedLongitude(position.longitude)
                         .setProperty(property);
@@ -189,8 +191,9 @@ public class EditMarkersFragment extends Fragment
         public boolean onMove(RecyclerView recyclerView,
                               RecyclerView.ViewHolder viewHolder,
                               RecyclerView.ViewHolder target) {
-            int fromPosition = viewHolder.getAdapterPosition();
-            int toPosition = target.getAdapterPosition();
+            final int fromPosition = viewHolder.getAdapterPosition();
+            final int toPosition = target.getAdapterPosition();
+
             if (fromPosition < toPosition) {
                 for (int i = fromPosition; i < toPosition; i++) {
                     Collections.swap(markers, i, i + 1);
@@ -200,10 +203,36 @@ public class EditMarkersFragment extends Fragment
                     Collections.swap(markers, i, i - 1);
                 }
             }
+
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i <= toPosition; i++) {
+                    markers.get(i).setIndex(i);
+                }
+            } else {
+                for (int i = fromPosition; i >= toPosition; i--) {
+                    markers.get(i).setIndex(i);
+                }
+            }
+
             labelledMarkersAdapter.notifyItemMoved(fromPosition, toPosition);
             map.clear();
             drawShapesAndCenterMap();
-            // TODO: 18/01/2018 save to db 
+
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    if (fromPosition < toPosition) {
+                        for (int i = fromPosition; i <= toPosition; i++) {
+                            markerService.updateIndex(markers.get(i));
+                        }
+                    } else {
+                        for (int i = fromPosition; i >= toPosition; i--) {
+                            markerService.updateIndex(markers.get(i));
+                        }
+                    }
+                }
+            });
+
             return true;
         }
 
@@ -243,7 +272,9 @@ public class EditMarkersFragment extends Fragment
         }
         for (int i = 0; i < markersLatLng.size(); i++) {
             Marker m = map.addMarker(new MarkerOptions().position(markersLatLng.get(i)));
-            m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory.fromInt(i)));
+//            m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory.fromInt(i)));
+            m.setIcon(BitmapDescriptorFactory.fromResource(MarkerIconFactory
+                    .fromInt(markers.get(i).getTempId())));
         }
     }
 
@@ -260,4 +291,6 @@ public class EditMarkersFragment extends Fragment
         selectedCard = view;
         selectedItemFromList = position;
     }
+
+
 }

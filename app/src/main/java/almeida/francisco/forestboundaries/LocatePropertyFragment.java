@@ -162,7 +162,7 @@ public class LocatePropertyFragment
             public void onClick(View view) {
                 for (int i = 0; i < points.size(); i++) {
                     markerService.createMarker(new MyMarker()
-                            .setIndex((double) i)
+                            .setIndex(i)
                             .setMarkedLatitude(points.get(i).latitude)
                             .setMarkedLongitude(points.get(i).longitude)
                             .setProperty(property));

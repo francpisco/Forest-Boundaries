@@ -129,11 +129,25 @@ public class MarkerDAO {
     private MyMarker createMarkerFromCursor(Cursor c) {
         MyMarker marker = new MyMarker()
                 .setId(c.getLong(0))
-                .setIndex(c.getDouble(1))
+                .setIndex(c.getInt(1))
                 .setMarkedLatitude(c.getDouble(3))
                 .setMarkedLongitude(c.getDouble(4));
         return marker;
     }
 
 
+    public boolean updateIndex(MyMarker marker) {
+        boolean result;
+        SQLiteDatabase db = myHelper.getWritableDatabase();
+        Cursor c = db.rawQuery("UPDATE " +
+                        MyHelper.TABLE_MARKERS + " SET " +
+                        MyHelper.M_INDEX + " = " +
+                        Integer.toString(marker.getIndex()) + " WHERE " +
+                        MyHelper._ID + " = " + Long.toString(marker.getId()),
+                        null);
+        result = c.moveToFirst();
+        c.close();
+        db.close();
+        return result;
+    }
 }
