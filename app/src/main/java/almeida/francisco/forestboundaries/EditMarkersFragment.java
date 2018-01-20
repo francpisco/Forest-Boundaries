@@ -7,11 +7,16 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -55,7 +60,6 @@ public class EditMarkersFragment extends Fragment
     private LabelledMarkersAdapter labelledMarkersAdapter;
 
     private CardView cardView;
-    private TextView propNameText;
     private FloatingActionButton addMarkerFab;
     private FloatingActionButton deleteMarkerFab;
     private FloatingActionButton saveFab;
@@ -87,8 +91,6 @@ public class EditMarkersFragment extends Fragment
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
-        propNameText = (TextView) view.findViewById(R.id.prop_name_edit_markers);
-
         addMarkerFab = (FloatingActionButton) view.findViewById(R.id.add_marker_floating_btn);
         addMarkerFab.setOnClickListener(new NewMarkerBtnListener());
 
@@ -99,6 +101,29 @@ public class EditMarkersFragment extends Fragment
         saveFab.setOnClickListener(new SaveMarkerBtnListener());
 
         recyclerView = (RecyclerView) view.findViewById(R.id.edit_recycler_view);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        setHasOptionsMenu(true);
+        Toolbar mToolBar = (Toolbar) getView().findViewById(R.id.edit_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.edit_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_action:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class NewMarkerBtnListener implements View.OnClickListener {
@@ -156,7 +181,7 @@ public class EditMarkersFragment extends Fragment
     public void onStart() {
         super.onStart();
         property = propertyService.findById(propertyId);
-        propNameText.setText(property.getLocationAndDescription());
+        getActivity().setTitle(property.getLocationAndDescription());
         markers = property.getMarkers();
         labelledMarkersAdapter = new LabelledMarkersAdapter(markers,
                 getActivity(), this);
