@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:homeAsUpIndicator">@drawable/ic_keyboard_arrow_left_black_24dp</item>
     </style>
 
 </resources>

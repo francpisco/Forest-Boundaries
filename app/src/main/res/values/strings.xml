@@ -28,4 +28,9 @@
     <string name="save_in_situ">Guardar</string>
     <string name="edit_markers">Editar marcos</string>
     <string name="delete_marker_locate">Apagar marco</string>
+    <string name="property_detail_activity">Detalhe</string>
+    <string name="create_new_prop_activity">Criar nova</string>
+    <string name="locate_prop_activity">Localizar Propriedade</string>
+    <string name="mark_in_situ_activity">Marcar in situ</string>
+    <string name="edit_markers_activity">Editar</string>
 </resources>

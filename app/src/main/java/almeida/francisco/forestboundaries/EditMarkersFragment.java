@@ -19,8 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -45,6 +43,11 @@ import almeida.francisco.forestboundaries.util.MarkerIconFactory;
 
 public class EditMarkersFragment extends Fragment
         implements OnMapReadyCallback, LabelledMarkersAdapter.RecyclerViewClickListener {
+
+    public static interface Listener {
+        public void onUpButtonClick();
+    }
+    private Listener upListener;
 
     private long propertyId;
     private Property property;
@@ -106,9 +109,11 @@ public class EditMarkersFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+        upListener = (Listener) getActivity();
         setHasOptionsMenu(true);
         Toolbar mToolBar = (Toolbar) getView().findViewById(R.id.edit_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -119,6 +124,9 @@ public class EditMarkersFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                upListener.onUpButtonClick();
+                return true;
             case R.id.settings_action:
                 return true;
             default:
