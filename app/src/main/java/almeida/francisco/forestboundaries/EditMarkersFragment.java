@@ -44,8 +44,8 @@ import almeida.francisco.forestboundaries.util.MarkerIconFactory;
 public class EditMarkersFragment extends Fragment
         implements OnMapReadyCallback, LabelledMarkersAdapter.RecyclerViewClickListener {
 
-    public static interface Listener {
-        public void onUpButtonClick();
+    public interface Listener {
+        void onUpButtonClick();
     }
     private Listener upListener;
 

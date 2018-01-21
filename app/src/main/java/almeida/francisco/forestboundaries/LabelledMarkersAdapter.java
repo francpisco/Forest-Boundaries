@@ -1,7 +1,6 @@
 package almeida.francisco.forestboundaries;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.model.MyMarker;
@@ -23,6 +21,7 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
     public interface RecyclerViewClickListener {
         void onItemClicked(View view, int position);
     }
+    private static RecyclerViewClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CardView cardView;
@@ -38,7 +37,6 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
         }
     }
 
-    private static RecyclerViewClickListener listener;
     private final char[] NUM_TO_CHAR = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         setContentView(R.layout.activity_main);
         Toolbar mToolBar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolBar);
-        new PopulateTables().execute();
+//        new PopulateTables().execute();
     }
 
     @Override
@@ -73,29 +73,29 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
                 .findFragmentById(R.id.prop_list_frag)).myOnRestart();
     }
 
-    private class PopulateTables extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            //popular tabelas aqui
-            OwnerService ownerService = new OwnerService(MainActivity.this);
-            if (ownerService.findAll().size() <= 0){
-                ownerService.loadOwners();
-            }
-
-            PropertyService propertyService = new PropertyService(MainActivity.this);
-            PropertyDAO pDAO = new PropertyDAO(MainActivity.this);
-            if (propertyService.findAll().size() <= 0){
-                propertyService.loadProperties();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            ((PropertyListFragment)getFragmentManager()
-                    .findFragmentById(R.id.prop_list_frag)).myOnRestart();
-        }
-
-    }
+//    private class PopulateTables extends AsyncTask<Void, Void, Void> {
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            //popular tabelas aqui
+//            OwnerService ownerService = new OwnerService(MainActivity.this);
+//            if (ownerService.findAll().size() <= 0){
+//                ownerService.loadOwners();
+//            }
+//
+//            PropertyService propertyService = new PropertyService(MainActivity.this);
+//            PropertyDAO pDAO = new PropertyDAO(MainActivity.this);
+//            if (propertyService.findAll().size() <= 0){
+//                propertyService.loadProperties();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void v) {
+//            ((PropertyListFragment)getFragmentManager()
+//                    .findFragmentById(R.id.prop_list_frag)).myOnRestart();
+//        }
+//
+//    }
 }
