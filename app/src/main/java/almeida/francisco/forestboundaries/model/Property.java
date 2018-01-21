@@ -98,4 +98,18 @@ public class Property {
         return locationAndDescription +
                 "\narea aprox.: " + Integer.toString(approxSizeInSquareMeters);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Property) {
+            if (((Property) o).getLocationAndDescription().equals(locationAndDescription)
+                    && ((Property) o).getOwner().getName().equals(owner.getName())
+                    && ((Property) o).getApproxSizeInSquareMeters() == approxSizeInSquareMeters
+                    && ((Property) o).getId() == id) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }

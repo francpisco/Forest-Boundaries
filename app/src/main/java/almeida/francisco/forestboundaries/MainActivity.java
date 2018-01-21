@@ -47,25 +47,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
                 return super.onOptionsItemSelected(item);
         }
     }
-
-//    @Override
-//    public void onItemClicked(long id) {
-//        View container = findViewById(R.id.detail_frag_container);
-//        if (container != null) {
-//            PropertyDetailFragment fragment = new PropertyDetailFragment();
-//            fragment.setPropertyId(id);
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.detail_frag_container, fragment)
-//                    .addToBackStack(null)
-//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                    .commit();
-//        } else {
-//            Intent intent = new Intent(this, PropertyDetailActivity.class);
-//            intent.putExtra(PropertyDetailActivity.PROP_ID, id);
-//            startActivity(intent);
-//        }
-//    }
-
+    
     @Override
     public void onRestart() {
         super.onRestart();

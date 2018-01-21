@@ -19,20 +19,23 @@ import almeida.francisco.forestboundaries.service.PropertyService;
 public class MainRecyclerFragment extends Fragment
         implements MainRecyclerAdapter.MainRecyclerListener{
 
-    public static interface Listener {
-        public void onItemClicked(long propertyId);
+    public interface Listener {
+        void onItemClicked(long propertyId);
     }
     private Listener listener;
 
     private List<Property> properties;
     private MainRecyclerAdapter mainRecyclerAdapter;
+    private PropertyService propertyService;
+    private RecyclerView recyclerView;
 
     public MainRecyclerFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        properties = (new PropertyService(getActivity())).findAll();
+        propertyService = new PropertyService(getActivity());
+        properties = propertyService.findAll();
         listener = (Listener) getActivity();
         return inflater.inflate(R.layout.fragment_main_recycler, container, false);
     }
@@ -40,7 +43,7 @@ public class MainRecyclerFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle bundle) {
 
-        RecyclerView recyclerView = view.findViewById(R.id.main_recycler_view);
+        recyclerView = view.findViewById(R.id.main_recycler_view);
         mainRecyclerAdapter = new MainRecyclerAdapter(properties, getActivity(), this);
         recyclerView.setAdapter(mainRecyclerAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -48,9 +51,7 @@ public class MainRecyclerFragment extends Fragment
     }
 
     public void myOnRestart() {
-//        mainRecyclerAdapter.notifyDataSetChanged();
-        // TODO: 21/01/2018 descomentar isto
-//        new PopulateView().execute();
+        new PopulateView().execute();
     }
 
     @Override
@@ -58,32 +59,25 @@ public class MainRecyclerFragment extends Fragment
         listener.onItemClicked(properties.get(position).getId());
     }
 
-    // TODO: 21/01/2018 estava aqui
-//    private class PopulateView extends AsyncTask<Void, Void, Boolean> {
-//
-//        Cursor newCursor;
-//
-//        @Override
-//        protected Boolean doInBackground(Void... voids) {
-//
-//
-//
-//            db = MyHelper.getHelper(getActivity()).getReadableDatabase();
-//            newCursor = db.rawQuery("SELECT " + MyHelper._ID + ", "
-//                            + MyHelper.P_DESCRIP + " FROM " + MyHelper.TABLE_PROPERTIES,
-//                    null);
-//            if (newCursor.getCount() == cursor.getCount())
-//                return false;
-//            return true;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Boolean changeCursor) {
-//            if (!changeCursor)
-//                return;
-//            cAdapter.changeCursor(newCursor);
-//            cursor = newCursor;
-//        }
-//    }
+    private class PopulateView extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            List<Property> propertiesB = propertyService.findAll();
+            if (propertiesB.equals(properties)) {
+                return true;
+            }
+            properties = propertiesB;
+            mainRecyclerAdapter = new MainRecyclerAdapter(properties,
+                    getActivity(), MainRecyclerFragment.this);
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean areEqual) {
+            if (!areEqual)
+                recyclerView.swapAdapter(mainRecyclerAdapter, false);
+        }
+    }
 
 }
