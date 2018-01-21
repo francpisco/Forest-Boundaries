@@ -16,7 +16,7 @@ import almeida.francisco.forestboundaries.service.OwnerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 
 
-public class MainActivity extends AppCompatActivity implements PropertyListFragment.Listener {
+public class MainActivity extends AppCompatActivity implements MainRecyclerFragment.Listener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         setContentView(R.layout.activity_main);
         Toolbar mToolBar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolBar);
-//        new PopulateTables().execute();
+        new PopulateTables().execute();
     }
 
     @Override
@@ -48,12 +48,37 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
         }
     }
 
+//    @Override
+//    public void onItemClicked(long id) {
+//        View container = findViewById(R.id.detail_frag_container);
+//        if (container != null) {
+//            PropertyDetailFragment fragment = new PropertyDetailFragment();
+//            fragment.setPropertyId(id);
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.detail_frag_container, fragment)
+//                    .addToBackStack(null)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                    .commit();
+//        } else {
+//            Intent intent = new Intent(this, PropertyDetailActivity.class);
+//            intent.putExtra(PropertyDetailActivity.PROP_ID, id);
+//            startActivity(intent);
+//        }
+//    }
+
     @Override
-    public void onItemClicked(long id) {
+    public void onRestart() {
+        super.onRestart();
+        ((MainRecyclerFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.prop_list_frag)).myOnRestart();
+    }
+
+    @Override
+    public void onItemClicked(long propertyId) {
         View container = findViewById(R.id.detail_frag_container);
         if (container != null) {
             PropertyDetailFragment fragment = new PropertyDetailFragment();
-            fragment.setPropertyId(id);
+            fragment.setPropertyId(propertyId);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_frag_container, fragment)
                     .addToBackStack(null)
@@ -61,41 +86,34 @@ public class MainActivity extends AppCompatActivity implements PropertyListFragm
                     .commit();
         } else {
             Intent intent = new Intent(this, PropertyDetailActivity.class);
-            intent.putExtra(PropertyDetailActivity.PROP_ID, id);
+            intent.putExtra(PropertyDetailActivity.PROP_ID, propertyId);
             startActivity(intent);
         }
     }
 
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        ((PropertyListFragment)getFragmentManager()
-                .findFragmentById(R.id.prop_list_frag)).myOnRestart();
-    }
+    private class PopulateTables extends AsyncTask<Void, Void, Void> {
 
-//    private class PopulateTables extends AsyncTask<Void, Void, Void> {
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//            //popular tabelas aqui
-//            OwnerService ownerService = new OwnerService(MainActivity.this);
-//            if (ownerService.findAll().size() <= 0){
-//                ownerService.loadOwners();
-//            }
-//
-//            PropertyService propertyService = new PropertyService(MainActivity.this);
-//            PropertyDAO pDAO = new PropertyDAO(MainActivity.this);
-//            if (propertyService.findAll().size() <= 0){
-//                propertyService.loadProperties();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void v) {
-//            ((PropertyListFragment)getFragmentManager()
-//                    .findFragmentById(R.id.prop_list_frag)).myOnRestart();
-//        }
-//
-//    }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            //popular tabelas aqui
+            OwnerService ownerService = new OwnerService(MainActivity.this);
+            if (ownerService.findAll().size() <= 0){
+                ownerService.loadOwners();
+            }
+
+            PropertyService propertyService = new PropertyService(MainActivity.this);
+            PropertyDAO pDAO = new PropertyDAO(MainActivity.this);
+            if (propertyService.findAll().size() <= 0){
+                propertyService.loadProperties();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            ((MainRecyclerFragment)getSupportFragmentManager()
+                    .findFragmentById(R.id.prop_list_frag)).myOnRestart();
+        }
+
+    }
 }

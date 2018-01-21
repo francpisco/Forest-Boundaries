@@ -21,7 +21,7 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
     public interface RecyclerViewClickListener {
         void onItemClicked(View view, int position);
     }
-    private static RecyclerViewClickListener listener;
+    private static RecyclerViewClickListener recyclerListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CardView cardView;
@@ -33,7 +33,7 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
 
         @Override
         public void onClick(View view) {
-            listener.onItemClicked(view, this.getAdapterPosition());
+            recyclerListener.onItemClicked(view, this.getAdapterPosition());
         }
     }
 
@@ -47,7 +47,7 @@ public class LabelledMarkersAdapter extends RecyclerView.Adapter<LabelledMarkers
                                   RecyclerViewClickListener listener) {
         this.markers = markers;
         this.context = context;
-        this.listener = listener;
+        recyclerListener = listener;
     }
 
     @Override
