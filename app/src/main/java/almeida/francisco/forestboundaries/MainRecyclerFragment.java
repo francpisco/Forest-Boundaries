@@ -35,7 +35,6 @@ public class MainRecyclerFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         propertyService = new PropertyService(getActivity());
-        properties = propertyService.findAll();
         listener = (Listener) getActivity();
         return inflater.inflate(R.layout.fragment_main_recycler, container, false);
     }
@@ -44,8 +43,6 @@ public class MainRecyclerFragment extends Fragment
     public void onViewCreated(View view, Bundle bundle) {
 
         recyclerView = view.findViewById(R.id.main_recycler_view);
-        mainRecyclerAdapter = new MainRecyclerAdapter(properties, getActivity(), this);
-        recyclerView.setAdapter(mainRecyclerAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
     }

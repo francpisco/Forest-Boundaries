@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
                 return super.onOptionsItemSelected(item);
         }
     }
-    
+
     @Override
     public void onRestart() {
         super.onRestart();

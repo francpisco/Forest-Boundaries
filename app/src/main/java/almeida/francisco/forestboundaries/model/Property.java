@@ -3,6 +3,7 @@ package almeida.francisco.forestboundaries.model;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -10,14 +11,30 @@ import java.util.List;
  */
 
 public class Property {
-
+    
     private long id;
     private Owner owner;
     private String locationAndDescription;
     private int approxSizeInSquareMeters;
     private List<MyMarker> markers = new ArrayList<>();
     private List<Reading> readings = new ArrayList<>();
+
     private int calculatedSize;
+
+    private String note;
+    private String landUse;
+    private GregorianCalendar dateOfLastCut;
+    private GregorianCalendar dateOfLastCleaning;
+    private static List<String> landUseList;
+
+    static {
+        landUseList = new ArrayList<>();
+        landUseList.add("Eucaliptal");
+        landUseList.add("Pinhal");
+        landUseList.add("Florestal-outro");
+        landUseList.add("Agrícola");
+        landUseList.add("Outro");
+    }
 
     public List<LatLng> fromMarkersToLatLng() {
         List<LatLng> points = new ArrayList<>();
