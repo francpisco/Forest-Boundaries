@@ -81,10 +81,15 @@ public class CreateNewPropFragment extends Fragment {
                     0);
             owners.setAdapter(adapter);
 
-            ArrayAdapter<String> typeOfUseAdapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_spinner_dropdown_item,
+            MySpinnerAdapter typeAdapter = new MySpinnerAdapter(getActivity(),
+                    R.layout.spinner_layout,
                     getResources().getStringArray(R.array.land_uses));
-            typeOfUseSpn.setAdapter(typeOfUseAdapter);
+            typeOfUseSpn.setAdapter(typeAdapter);
+
+//            ArrayAdapter<String> typeOfUseAdapter = new ArrayAdapter<String>(getActivity(),
+//                    android.R.layout.simple_spinner_dropdown_item,
+//                    getResources().getStringArray(R.array.land_uses));
+//            typeOfUseSpn.setAdapter(typeOfUseAdapter);
 
             ArrayAdapter<Integer> yearOfPlantAdapter = new ArrayAdapter<Integer>(getActivity(),
                     android.R.layout.simple_spinner_dropdown_item, Property.getYears());
@@ -104,33 +109,7 @@ public class CreateNewPropFragment extends Fragment {
             monthOfLastCleanSpn.setAdapter(monthOfLastCleanAdapter);
         }
 
-
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String descripStr = description.getText().toString();
-                String approxSizeStr = approxSize.getText().toString();
-                int approxSizeValue = 0;
-                if (!approxSizeStr.isEmpty()) {
-                    approxSizeValue = Integer.valueOf(approxSizeStr);
-                }
-                if (descripStr.isEmpty()) {
-                    description.setError(getString(R.string.description_error));
-                } else {
-                    OwnerService ownerService = new OwnerService(getActivity());
-                    PropertyService propertyService = new PropertyService(getActivity());
-                    Owner o = ownerService.findById(owners.getSelectedItemId());
-                    Property p = new Property()
-                            .setOwner(o)
-                            .setLocationAndDescription(descripStr);
-                    if (approxSizeValue > 0)
-                        p.setApproxSizeInSquareMeters(approxSizeValue);
-                    long propId = propertyService.createProperty(p);
-                    listener.onClick(propId);
-                }
-            }
-        });
+        submit.setOnClickListener(new SubmitListener());
     }
 
     @Override
@@ -146,5 +125,38 @@ public class CreateNewPropFragment extends Fragment {
         db.close();
     }
 
+    private class SubmitListener implements View.OnClickListener {
 
+        @Override
+        public void onClick(View view) {
+            String descripStr = description.getText().toString();
+            String approxSizeStr = approxSize.getText().toString();
+            int approxSizeValue = 0;
+            if (!approxSizeStr.isEmpty()) {
+                approxSizeValue = Integer.valueOf(approxSizeStr);
+            }
+            if (descripStr.isEmpty()) {
+                description.setError(getString(R.string.description_error));
+            } else {
+                OwnerService ownerService = new OwnerService(getActivity());
+                PropertyService propertyService = new PropertyService(getActivity());
+                Owner o = ownerService.findById(owners.getSelectedItemId());
+                Property p = new Property()
+                        .setOwner(o)
+                        .setLocationAndDescription(descripStr)
+                        .setLandUse(typeOfUseSpn.getSelectedItem().toString())
+                        .setYearOfPlantation(Integer
+                                .valueOf(yearOfPlantSpn.getSelectedItem().toString()))
+                        .setYearOfLastCut(Integer
+                                .valueOf(yearOfLastCutSpn.getSelectedItem().toString()))
+                        .setYearAndMonthOfLastCleaning(Integer.valueOf(yearOfLastCleanSpn
+                                .getSelectedItem().toString().concat(monthOfLastCleanSpn
+                                        .getSelectedItem().toString())));
+                if (approxSizeValue > 0)
+                    p.setApproxSizeInSquareMeters(approxSizeValue);
+                long propId = propertyService.createProperty(p);
+                listener.onClick(propId);
+            }
+        }
+    }
 }
