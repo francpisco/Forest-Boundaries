@@ -2,7 +2,6 @@ package almeida.francisco.forestboundaries;
 
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,9 +18,8 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+
 import almeida.francisco.forestboundaries.dbhelper.MyHelper;
-import almeida.francisco.forestboundaries.dbhelper.OwnerDAO;
-import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.model.Owner;
 import almeida.francisco.forestboundaries.model.Property;
 import almeida.francisco.forestboundaries.service.OwnerService;
@@ -40,6 +38,11 @@ public class CreateNewPropFragment extends Fragment {
     private Button submit;
     private EditText description;
     private EditText approxSize;
+    private Spinner typeOfUseSpn;
+    private Spinner yearOfPlantSpn;
+    private Spinner yearOfLastCutSpn;
+    private Spinner yearOfLastCleanSpn;
+    private Spinner monthOfLastCleanSpn;
 
     private SQLiteDatabase db;
     private Cursor cursor;
@@ -58,6 +61,11 @@ public class CreateNewPropFragment extends Fragment {
         submit = (Button) view.findViewById(R.id.submit_new_prop);
         description = (EditText) view.findViewById(R.id.description_edit_text);
         approxSize = (EditText) view.findViewById(R.id.approx_size_edit_text);
+        typeOfUseSpn = (Spinner) view.findViewById(R.id.type_of_use_spinner);
+        yearOfPlantSpn = (Spinner) view.findViewById(R.id.year_of_plantation_spinner);
+        yearOfLastCutSpn = (Spinner) view.findViewById(R.id.year_of_last_cut_spinner);
+        yearOfLastCleanSpn = (Spinner) view.findViewById(R.id.year_of_last_cleaning);
+        monthOfLastCleanSpn = (Spinner) view.findViewById(R.id.month_of_last_cleaning);
 
         if (isAdded()) {
             db = MyHelper.getHelper(getActivity()).getReadableDatabase();
@@ -66,13 +74,37 @@ public class CreateNewPropFragment extends Fragment {
                             null);
             CursorAdapter adapter = new SimpleCursorAdapter(
                     getActivity(),
-                    android.R.layout.simple_list_item_1,
+                    android.R.layout.simple_spinner_dropdown_item,
                     cursor,
                     new String[]{MyHelper.O_NAME},
                     new int[]{android.R.id.text1},
                     0);
             owners.setAdapter(adapter);
+
+            ArrayAdapter<String> typeOfUseAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    getResources().getStringArray(R.array.land_uses));
+            typeOfUseSpn.setAdapter(typeOfUseAdapter);
+
+            ArrayAdapter<Integer> yearOfPlantAdapter = new ArrayAdapter<Integer>(getActivity(),
+                    android.R.layout.simple_spinner_dropdown_item, Property.getYears());
+            yearOfPlantSpn.setAdapter(yearOfPlantAdapter);
+
+            ArrayAdapter<Integer> yearOfLastCutAdapter = new ArrayAdapter<Integer>(getActivity(),
+                    android.R.layout.simple_spinner_dropdown_item, Property.getYears());
+            yearOfLastCutSpn.setAdapter(yearOfLastCutAdapter);
+
+            ArrayAdapter<Integer> yearOfLastCleanAdapter = new ArrayAdapter<Integer>(getActivity(),
+                    android.R.layout.simple_spinner_dropdown_item, Property.getYears());
+            yearOfLastCleanSpn.setAdapter(yearOfLastCleanAdapter);
+
+            ArrayAdapter<String> monthOfLastCleanAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    getResources().getStringArray(R.array.months));
+            monthOfLastCleanSpn.setAdapter(monthOfLastCleanAdapter);
         }
+
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,7 +2,10 @@ package almeida.francisco.forestboundaries.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -11,7 +14,7 @@ import java.util.List;
  */
 
 public class Property {
-    
+
     private long id;
     private Owner owner;
     private String locationAndDescription;
@@ -23,17 +26,17 @@ public class Property {
 
     private String note;
     private String landUse;
-    private GregorianCalendar dateOfLastCut;
-    private GregorianCalendar dateOfLastCleaning;
-    private static List<String> landUseList;
+    private int yearOfPlantation;
+    private int yearOfLastCut;
+    private int yearAndMonthOfLastCleaning;
+    private static List<Integer> years;
 
     static {
-        landUseList = new ArrayList<>();
-        landUseList.add("Eucaliptal");
-        landUseList.add("Pinhal");
-        landUseList.add("Florestal-outro");
-        landUseList.add("Agrícola");
-        landUseList.add("Outro");
+        years = new ArrayList<>();
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        for (int y = currentYear; y >= 1900; y--) {
+            years.add(y);
+        }
     }
 
     public List<LatLng> fromMarkersToLatLng() {
@@ -76,6 +79,34 @@ public class Property {
         return readings;
     }
 
+    public int getCalculatedSize() {
+        return calculatedSize;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public String getLandUse() {
+        return landUse;
+    }
+
+    public int getYearOfPlantation() {
+        return yearOfPlantation;
+    }
+
+    public int getYearOfLastCut() {
+        return yearOfLastCut;
+    }
+
+    public int getYearAndMonthOfLastCleaning() {
+        return yearAndMonthOfLastCleaning;
+    }
+
+    public static List<Integer> getYears() {
+        return years;
+    }
+
     public Property setOwner(Owner owner) {
         this.owner = owner;
         return this;
@@ -101,12 +132,33 @@ public class Property {
         return this;
     }
 
-    public void setCalculatedSize(int calculatedSize) {
-        this.calculatedSize = calculatedSize;
-    }
-
     public Property setId(long id) {
         this.id = id;
+        return this;
+    }
+
+    public Property setNote(String note) {
+        this.note = note;
+        return this;
+    }
+
+    public Property setLandUse(String landUse) {
+        this.landUse = landUse;
+        return this;
+    }
+
+    public Property setYearOfPlantation(int yearOfPlantation) {
+        this.yearOfPlantation = yearOfPlantation;
+        return this;
+    }
+
+    public Property setYearOfLastCut(int yearOfLastCut) {
+        this.yearOfLastCut = yearOfLastCut;
+        return this;
+    }
+
+    public Property setYearAndMonthOfLastCleaning(int yearAndMonthOfLastCleaning) {
+        this.yearAndMonthOfLastCleaning = yearAndMonthOfLastCleaning;
         return this;
     }
 

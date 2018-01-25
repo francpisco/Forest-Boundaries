@@ -31,6 +31,13 @@ public class PropertyDAO {
         cv.put(MyHelper.P_OWNER_ID, property.getOwner().getId());
         cv.put(MyHelper.P_DESCRIP, property.getLocationAndDescription());
         cv.put(MyHelper.P_APPROX_SIZE, property.getApproxSizeInSquareMeters());
+        //can these values be null?
+        cv.put(MyHelper.P_NOTE, property.getNote());
+        cv.put(MyHelper.P_LAND_USE, property.getLandUse());
+        cv.put(MyHelper.P_YEAR_OF_PLANTATION, property.getYearOfPlantation());
+        cv.put(MyHelper.P_YEAR_OF_LAST_CUT, property.getYearOfLastCut());
+        cv.put(MyHelper.P_YEAR_AND_MONTH_OF_LAST_CLEANING, property.getYearAndMonthOfLastCleaning());
+
         long id = db.insert(MyHelper.TABLE_PROPERTIES, null, cv);
         db.close();
         return id;
@@ -107,15 +114,13 @@ public class PropertyDAO {
     private Property createPropFromCursor(Cursor c) {
         Property property = new Property()
                 .setId(c.getInt(0))
-                .setLocationAndDescription(c.getString(2));
-        Integer approxSize = c.getInt(3);
-        if (approxSize != null) {
-            property.setApproxSizeInSquareMeters(approxSize);
-        }
-        Integer calcSize = c.getInt(4);
-        if (calcSize != null) {
-            property.setCalculatedSize(calcSize);
-        }
+                .setLocationAndDescription(c.getString(2))
+                .setApproxSizeInSquareMeters(c.getInt(3))
+                .setNote(c.getString(4))
+                .setLandUse(c.getString(5))
+                .setYearOfPlantation(c.getInt(6))
+                .setYearOfLastCut(7)
+                .setYearAndMonthOfLastCleaning(8);
         return property;
     }
 

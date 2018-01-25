@@ -16,7 +16,7 @@ public class MyHelper extends SQLiteOpenHelper {
     private static MyHelper instance;
 
     private static final String DB_NAME = "forest_boundaries";
-    private static final int DB_VERSION = 19;
+    private static final int DB_VERSION = 20;
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";
@@ -25,7 +25,11 @@ public class MyHelper extends SQLiteOpenHelper {
     public static final String P_OWNER_ID = "owner_id";
     public static final String P_DESCRIP = "description";
     public static final String P_APPROX_SIZE = "approx_size"; //in sq meters
-    public static final String P_CALC_SIZE = "calc_size";
+    public static final String P_NOTE = "note"; //anything worth of interest
+    public static final String P_LAND_USE = "land_use";
+    public static final String P_YEAR_OF_PLANTATION = "year_of_plantation";
+    public static final String P_YEAR_OF_LAST_CUT = "year_of_last_cut";
+    public static final String P_YEAR_AND_MONTH_OF_LAST_CLEANING = "year_and_month_of_last_cleaning";
     public static final String TABLE_MARKERS = "markers";
     public static final String M_PROPERTY_ID = "property_id";
     public static final String M_INDEX = "indexed";
@@ -60,7 +64,11 @@ public class MyHelper extends SQLiteOpenHelper {
                 P_OWNER_ID + " INTEGER NOT NULL, " +
                 P_DESCRIP + " TEXT NOT NULL, " +
                 P_APPROX_SIZE + " INTEGER, " +
-                P_CALC_SIZE + " INTEGER);");
+                P_NOTE + " TEXT, " +
+                P_LAND_USE + " TEXT, " +
+                P_YEAR_OF_PLANTATION + " INTEGER, " +
+                P_YEAR_OF_LAST_CUT + " INTEGER, " +
+                P_YEAR_AND_MONTH_OF_LAST_CLEANING + " INTEGER);");
 
         db.execSQL("CREATE TABLE " + TABLE_MARKERS + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

@@ -28,6 +28,50 @@
         android:inputType="number"
         android:hint="@string/spprox_size_hint"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/type_of_use"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/type_of_use_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/year_of_plantation"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/year_of_plantation_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/year_of_last_cut"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/year_of_last_cut_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/year_and_month_of_last_cleaning"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/year_of_last_cleaning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/month_of_last_cleaning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/submit_new_prop"
         android:layout_width="wrap_content"

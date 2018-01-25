@@ -33,4 +33,30 @@
     <string name="locate_prop_activity">Localizar Propriedade</string>
     <string name="mark_in_situ_activity">Marcar in situ</string>
     <string name="edit_markers_activity">Editar</string>
+    <string name="year_of_plantation">Ano the plantação</string>
+    <string name="type_of_use">Tipo de uso</string>
+    <string name="year_of_last_cut">Ano de último corte</string>
+    <string name="year_and_month_of_last_cleaning">Ano e mês da última limpeza</string>
+
+    <string-array name="land_uses">
+        <item>Eucaliptal</item>
+        <item>Pinhal</item>
+        <item>Florestal - outro</item>
+        <item>Agrícola</item>
+        <item>outro</item>
+    </string-array>
+    <string-array name="months">
+        <item>Janeiro</item>
+        <item>Fevereiro</item>
+        <item>Marco</item>
+        <item>Abril</item>
+        <item>Maio</item>
+        <item>Junho</item>
+        <item>Julho</item>
+        <item>Agosto</item>
+        <item>Setembro</item>
+        <item>Outubro</item>
+        <item>Novembro</item>
+        <item>Dezembro</item>
+    </string-array>
 </resources>
