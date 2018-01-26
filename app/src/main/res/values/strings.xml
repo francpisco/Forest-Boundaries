@@ -42,6 +42,7 @@
     <string name="year_of_last_cut_hint">ano de último corte</string>
     <string name="year_of_last_clean_hint">ano</string>
     <string name="month_of_last_clean_hint">mês</string>
+    <string name="save_action">Guardar</string>
 
     <string-array name="land_uses">
         <item>hint</item>

@@ -8,11 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
@@ -35,7 +38,6 @@ public class CreateNewPropFragment extends Fragment {
     private Listener listener;
 
     private Spinner owners;
-    private Button submit;
     private EditText description;
     private EditText approxSize;
     private Spinner typeOfUseSpn;
@@ -58,7 +60,6 @@ public class CreateNewPropFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         owners = (Spinner) view.findViewById(R.id.owner_spinner);
-        submit = (Button) view.findViewById(R.id.submit_new_prop);
         description = (EditText) view.findViewById(R.id.description_edit_text);
         approxSize = (EditText) view.findViewById(R.id.approx_size_edit_text);
         typeOfUseSpn = (Spinner) view.findViewById(R.id.type_of_use_spinner);
@@ -112,8 +113,6 @@ public class CreateNewPropFragment extends Fragment {
                     getResources().getString(R.string.month_of_last_clean_hint));
             monthOfLastCleanSpn.setAdapter(monthOfLastCleanAdapter);
         }
-
-        submit.setOnClickListener(new SubmitListener());
     }
 
     @Override
@@ -123,44 +122,69 @@ public class CreateNewPropFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        setHasOptionsMenu(true);
+        Toolbar mToolBar = (Toolbar) getView().findViewById(R.id.create_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActivity().setTitle("");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.create_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return true;
+            case R.id.save_action:
+                return save();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         cursor.close();
         db.close();
     }
 
-    private class SubmitListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            String descripStr = description.getText().toString();
-            String approxSizeStr = approxSize.getText().toString();
-            int approxSizeValue = 0;
-            if (!approxSizeStr.isEmpty()) {
-                approxSizeValue = Integer.valueOf(approxSizeStr);
-            }
-            if (descripStr.isEmpty()) {
-                description.setError(getString(R.string.description_error));
-            } else {
-                OwnerService ownerService = new OwnerService(getActivity());
-                PropertyService propertyService = new PropertyService(getActivity());
-                Owner o = ownerService.findById(owners.getSelectedItemId());
-                Property p = new Property()
-                        .setOwner(o)
-                        .setLocationAndDescription(descripStr)
-                        .setLandUse(typeOfUseSpn.getSelectedItem().toString())
-                        .setYearOfPlantation(Integer
-                                .valueOf(yearOfPlantSpn.getSelectedItem().toString()))
-                        .setYearOfLastCut(Integer
-                                .valueOf(yearOfLastCutSpn.getSelectedItem().toString()))
-                        .setYearAndMonthOfLastCleaning(dateAsValue(yearOfLastCleanSpn
-                                .getSelectedItem(), monthOfLastCleanSpn.getSelectedItemPosition()));
-                if (approxSizeValue > 0)
-                    p.setApproxSizeInSquareMeters(approxSizeValue);
-                long propId = propertyService.createProperty(p);
-                listener.onClick(propId);
-            }
+    private boolean save() {
+        String descripStr = description.getText().toString();
+        String approxSizeStr = approxSize.getText().toString();
+        int approxSizeValue = 0;
+        if (!approxSizeStr.isEmpty()) {
+            approxSizeValue = Integer.valueOf(approxSizeStr);
         }
+        if (descripStr.isEmpty()) {
+            description.setError(getString(R.string.description_error));
+        } else {
+            OwnerService ownerService = new OwnerService(getActivity());
+            PropertyService propertyService = new PropertyService(getActivity());
+            Owner o = ownerService.findById(owners.getSelectedItemId());
+            Property p = new Property()
+                    .setOwner(o)
+                    .setLocationAndDescription(descripStr)
+                    .setLandUse(typeOfUseSpn.getSelectedItem().toString())
+                    .setYearOfPlantation(Integer
+                            .valueOf(yearOfPlantSpn.getSelectedItem().toString()))
+                    .setYearOfLastCut(Integer
+                            .valueOf(yearOfLastCutSpn.getSelectedItem().toString()))
+                    .setYearAndMonthOfLastCleaning(dateAsValue(yearOfLastCleanSpn
+                            .getSelectedItem(), monthOfLastCleanSpn.getSelectedItemPosition()));
+            // TODO: 26/01/2018 se propriedade for agricola nao se pode por ano de plantacao e corte etc
+            if (approxSizeValue > 0)
+                p.setApproxSizeInSquareMeters(approxSizeValue);
+            long propId = propertyService.createProperty(p);
+            listener.onClick(propId);
+        }
+        return true;
     }
 
     private int dateAsValue(Object year, int month) {
