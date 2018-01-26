@@ -84,32 +84,32 @@ public class CreateNewPropFragment extends Fragment {
             MySpinnerAdapter<String> typeAdapter = new MySpinnerAdapter<String>(getActivity(),
                     R.layout.spinner_layout,
                     getResources().getStringArray(R.array.land_uses),
-                    "test");
+                    getResources().getString(R.string.type_spinner_hint));
             typeOfUseSpn.setAdapter(typeAdapter);
 
             MySpinnerAdapter<Integer> yearOfPlantAdapter = new MySpinnerAdapter<Integer>(
                     getActivity(),
                     R.layout.spinner_layout, Property.getYears(),
-                    "test");
+                    getResources().getString(R.string.year_of_plantation_hint));
             yearOfPlantSpn.setAdapter(yearOfPlantAdapter);
 
             MySpinnerAdapter<Integer> yearOfLastCutAdapter = new MySpinnerAdapter<Integer>(
                     getActivity(),
                     R.layout.spinner_layout, Property.getYears(),
-                    "test");
+                    getResources().getString(R.string.year_of_last_cut_hint));
             yearOfLastCutSpn.setAdapter(yearOfLastCutAdapter);
 
             MySpinnerAdapter<Integer> yearOfLastCleanAdapter = new MySpinnerAdapter<Integer>(
                     getActivity(),
                     R.layout.spinner_layout, Property.getYears(),
-                    "test");
+                    getResources().getString(R.string.year_of_last_clean_hint));
             yearOfLastCleanSpn.setAdapter(yearOfLastCleanAdapter);
 
             MySpinnerAdapter<String> monthOfLastCleanAdapter = new MySpinnerAdapter<String>(
                     getActivity(),
                     R.layout.spinner_layout,
                     getResources().getStringArray(R.array.months),
-                    "test");
+                    getResources().getString(R.string.month_of_last_clean_hint));
             monthOfLastCleanSpn.setAdapter(monthOfLastCleanAdapter);
         }
 
@@ -154,8 +154,10 @@ public class CreateNewPropFragment extends Fragment {
                         .setYearOfLastCut(Integer
                                 .valueOf(yearOfLastCutSpn.getSelectedItem().toString()))
                         .setYearAndMonthOfLastCleaning(Integer.valueOf(yearOfLastCleanSpn
-                                .getSelectedItem().toString().concat(monthOfLastCleanSpn
-                                        .getSelectedItem().toString())));
+                                .getSelectedItem().toString()
+                                .concat(Integer.toString(monthOfLastCleanSpn
+                                        .getSelectedItemPosition()))));
+                // TODO: 26/01/2018 rever esta parte para inserir o mes, assim como esta nao sei se da 
                 if (approxSizeValue > 0)
                     p.setApproxSizeInSquareMeters(approxSizeValue);
                 long propId = propertyService.createProperty(p);

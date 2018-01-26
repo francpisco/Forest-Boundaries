@@ -37,9 +37,14 @@
     <string name="type_of_use">Tipo de uso</string>
     <string name="year_of_last_cut">Ano de último corte</string>
     <string name="year_and_month_of_last_cleaning">Ano e mês da última limpeza</string>
+    <string name="type_spinner_hint">tipo de uso</string>
+    <string name="year_of_plantation_hint">Ano de plantação</string>
+    <string name="year_of_last_cut_hint">ano de último corte</string>
+    <string name="year_of_last_clean_hint">ano</string>
+    <string name="month_of_last_clean_hint">mês</string>
 
     <string-array name="land_uses">
-        <item>tipo de uso</item>
+        <item>hint</item>
         <item>Eucaliptal</item>
         <item>Pinhal</item>
         <item>Florestal - outro</item>
@@ -47,7 +52,7 @@
         <item>outro</item>
     </string-array>
     <string-array name="months">
-        <item>mês</item>
+        <item>hint</item>
         <item>Janeiro</item>
         <item>Fevereiro</item>
         <item>Marco</item>

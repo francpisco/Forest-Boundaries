@@ -33,6 +33,7 @@ public class Property {
 
     static {
         years = new ArrayList<>();
+        years.add(0); //placeholder for hint
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         for (int y = currentYear; y >= 1900; y--) {
             years.add(y);

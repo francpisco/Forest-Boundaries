@@ -25,23 +25,23 @@ public class MySpinnerAdapter<T> extends ArrayAdapter<T> {
     private int resource;
     private String hint;
 
-    public MySpinnerAdapter(@NonNull Context context, int resource, @NonNull T[] objects, String hint) {
+    public MySpinnerAdapter(@NonNull Context context,
+                            int resource,
+                            @NonNull T[] objects,
+                            String hint) {
         super(context, resource, objects);
         this.context = context;
-        List<T> auxList = new ArrayList<>(objects.length + 1);
-        auxList.add(null);
-        Collections.addAll(auxList, objects);
-        this.objects = ((T[]) auxList.toArray());
+        this.objects = objects;
         this.resource = resource;
         this.hint = hint;
     }
 
-    public MySpinnerAdapter(@NonNull Context context, int resource, @NonNull List<T> objects, String hint) {
+    public MySpinnerAdapter(@NonNull Context context,
+                            int resource,
+                            @NonNull List<T> objects,
+                            String hint) {
         super(context, resource, objects);
-        List<T> auxList = new ArrayList<>(objects.size() + 1);
-        auxList.add(null);
-        auxList.addAll(objects);
-        this.objects = (T[]) auxList.toArray();
+        this.objects = (T[]) objects.toArray();
         this.context = context;
         this.resource = resource;
         this.hint = hint;
