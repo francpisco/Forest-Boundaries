@@ -153,16 +153,17 @@ public class CreateNewPropFragment extends Fragment {
                                 .valueOf(yearOfPlantSpn.getSelectedItem().toString()))
                         .setYearOfLastCut(Integer
                                 .valueOf(yearOfLastCutSpn.getSelectedItem().toString()))
-                        .setYearAndMonthOfLastCleaning(Integer.valueOf(yearOfLastCleanSpn
-                                .getSelectedItem().toString()
-                                .concat(Integer.toString(monthOfLastCleanSpn
-                                        .getSelectedItemPosition()))));
-                // TODO: 26/01/2018 rever esta parte para inserir o mes, assim como esta nao sei se da 
+                        .setYearAndMonthOfLastCleaning(dateAsValue(yearOfLastCleanSpn
+                                .getSelectedItem(), monthOfLastCleanSpn.getSelectedItemPosition()));
                 if (approxSizeValue > 0)
                     p.setApproxSizeInSquareMeters(approxSizeValue);
                 long propId = propertyService.createProperty(p);
                 listener.onClick(propId);
             }
         }
+    }
+
+    private int dateAsValue(Object year, int month) {
+        return Integer.valueOf(year.toString()) * 100 + month;
     }
 }
