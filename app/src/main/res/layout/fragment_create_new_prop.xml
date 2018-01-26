@@ -28,10 +28,7 @@
         android:inputType="number"
         android:hint="@string/spprox_size_hint"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/type_of_use"/>
+
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/type_of_use_spinner"

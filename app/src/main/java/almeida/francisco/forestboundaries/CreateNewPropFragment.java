@@ -81,31 +81,35 @@ public class CreateNewPropFragment extends Fragment {
                     0);
             owners.setAdapter(adapter);
 
-            MySpinnerAdapter typeAdapter = new MySpinnerAdapter(getActivity(),
+            MySpinnerAdapter<String> typeAdapter = new MySpinnerAdapter<String>(getActivity(),
                     R.layout.spinner_layout,
-                    getResources().getStringArray(R.array.land_uses));
+                    getResources().getStringArray(R.array.land_uses),
+                    "test");
             typeOfUseSpn.setAdapter(typeAdapter);
 
-//            ArrayAdapter<String> typeOfUseAdapter = new ArrayAdapter<String>(getActivity(),
-//                    android.R.layout.simple_spinner_dropdown_item,
-//                    getResources().getStringArray(R.array.land_uses));
-//            typeOfUseSpn.setAdapter(typeOfUseAdapter);
-
-            ArrayAdapter<Integer> yearOfPlantAdapter = new ArrayAdapter<Integer>(getActivity(),
-                    android.R.layout.simple_spinner_dropdown_item, Property.getYears());
+            MySpinnerAdapter<Integer> yearOfPlantAdapter = new MySpinnerAdapter<Integer>(
+                    getActivity(),
+                    R.layout.spinner_layout, Property.getYears(),
+                    "test");
             yearOfPlantSpn.setAdapter(yearOfPlantAdapter);
 
-            ArrayAdapter<Integer> yearOfLastCutAdapter = new ArrayAdapter<Integer>(getActivity(),
-                    android.R.layout.simple_spinner_dropdown_item, Property.getYears());
+            MySpinnerAdapter<Integer> yearOfLastCutAdapter = new MySpinnerAdapter<Integer>(
+                    getActivity(),
+                    R.layout.spinner_layout, Property.getYears(),
+                    "test");
             yearOfLastCutSpn.setAdapter(yearOfLastCutAdapter);
 
-            ArrayAdapter<Integer> yearOfLastCleanAdapter = new ArrayAdapter<Integer>(getActivity(),
-                    android.R.layout.simple_spinner_dropdown_item, Property.getYears());
+            MySpinnerAdapter<Integer> yearOfLastCleanAdapter = new MySpinnerAdapter<Integer>(
+                    getActivity(),
+                    R.layout.spinner_layout, Property.getYears(),
+                    "test");
             yearOfLastCleanSpn.setAdapter(yearOfLastCleanAdapter);
 
-            ArrayAdapter<String> monthOfLastCleanAdapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_spinner_dropdown_item,
-                    getResources().getStringArray(R.array.months));
+            MySpinnerAdapter<String> monthOfLastCleanAdapter = new MySpinnerAdapter<String>(
+                    getActivity(),
+                    R.layout.spinner_layout,
+                    getResources().getStringArray(R.array.months),
+                    "test");
             monthOfLastCleanSpn.setAdapter(monthOfLastCleanAdapter);
         }
 

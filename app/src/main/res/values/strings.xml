@@ -39,6 +39,7 @@
     <string name="year_and_month_of_last_cleaning">Ano e mês da última limpeza</string>
 
     <string-array name="land_uses">
+        <item>tipo de uso</item>
         <item>Eucaliptal</item>
         <item>Pinhal</item>
         <item>Florestal - outro</item>
@@ -46,6 +47,7 @@
         <item>outro</item>
     </string-array>
     <string-array name="months">
+        <item>mês</item>
         <item>Janeiro</item>
         <item>Fevereiro</item>
         <item>Marco</item>
