@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
@@ -40,11 +42,17 @@ public class CreateNewPropFragment extends Fragment {
     private Spinner owners;
     private EditText description;
     private EditText approxSize;
+    private EditText note;
     private Spinner typeOfUseSpn;
     private Spinner yearOfPlantSpn;
     private Spinner yearOfLastCutSpn;
     private Spinner yearOfLastCleanSpn;
     private Spinner monthOfLastCleanSpn;
+    private FloatingActionButton nextFAB;
+    private MySpinnerAdapter<Integer> yearOfPlantAdapter;
+    private MySpinnerAdapter<Integer> yearOfLastCutAdapter;
+    private MySpinnerAdapter<Integer> yearOfLastCleanAdapter;
+    private MySpinnerAdapter<String> monthOfLastCleanAdapter;
 
     private SQLiteDatabase db;
     private Cursor cursor;
@@ -62,11 +70,13 @@ public class CreateNewPropFragment extends Fragment {
         owners = (Spinner) view.findViewById(R.id.owner_spinner);
         description = (EditText) view.findViewById(R.id.description_edit_text);
         approxSize = (EditText) view.findViewById(R.id.approx_size_edit_text);
+        note = (EditText) view.findViewById(R.id.note_text);
         typeOfUseSpn = (Spinner) view.findViewById(R.id.type_of_use_spinner);
         yearOfPlantSpn = (Spinner) view.findViewById(R.id.year_of_plantation_spinner);
         yearOfLastCutSpn = (Spinner) view.findViewById(R.id.year_of_last_cut_spinner);
         yearOfLastCleanSpn = (Spinner) view.findViewById(R.id.year_of_last_cleaning);
         monthOfLastCleanSpn = (Spinner) view.findViewById(R.id.month_of_last_cleaning);
+        nextFAB = (FloatingActionButton) view.findViewById(R.id.save_property_floating_btn);
 
         if (isAdded()) {
             db = MyHelper.getHelper(getActivity()).getReadableDatabase();
@@ -85,33 +95,42 @@ public class CreateNewPropFragment extends Fragment {
             MySpinnerAdapter<String> typeAdapter = new MySpinnerAdapter<String>(getActivity(),
                     R.layout.spinner_layout,
                     getResources().getStringArray(R.array.land_uses),
-                    getResources().getString(R.string.type_spinner_hint));
+                    getResources().getString(R.string.type_spinner_hint),
+                    "--");
+            typeAdapter.setLocked(false);
             typeOfUseSpn.setAdapter(typeAdapter);
+            typeOfUseSpn.setOnItemSelectedListener(new MyOnItemSelectedListener());
 
-            MySpinnerAdapter<Integer> yearOfPlantAdapter = new MySpinnerAdapter<Integer>(
+            yearOfPlantAdapter = new MySpinnerAdapter<Integer>(
                     getActivity(),
                     R.layout.spinner_layout, Property.getYears(),
-                    getResources().getString(R.string.year_of_plantation_hint));
+                    getResources().getString(R.string.year_of_plantation_hint),
+                    "--");
             yearOfPlantSpn.setAdapter(yearOfPlantAdapter);
 
-            MySpinnerAdapter<Integer> yearOfLastCutAdapter = new MySpinnerAdapter<Integer>(
+            yearOfLastCutAdapter = new MySpinnerAdapter<Integer>(
                     getActivity(),
                     R.layout.spinner_layout, Property.getYears(),
-                    getResources().getString(R.string.year_of_last_cut_hint));
+                    getResources().getString(R.string.year_of_last_cut_hint),
+                    "--");
             yearOfLastCutSpn.setAdapter(yearOfLastCutAdapter);
 
-            MySpinnerAdapter<Integer> yearOfLastCleanAdapter = new MySpinnerAdapter<Integer>(
+            yearOfLastCleanAdapter = new MySpinnerAdapter<Integer>(
                     getActivity(),
                     R.layout.spinner_layout, Property.getYears(),
-                    getResources().getString(R.string.year_of_last_clean_hint));
+                    getResources().getString(R.string.year_of_last_clean_hint),
+                    "--");
             yearOfLastCleanSpn.setAdapter(yearOfLastCleanAdapter);
 
-            MySpinnerAdapter<String> monthOfLastCleanAdapter = new MySpinnerAdapter<String>(
+            monthOfLastCleanAdapter = new MySpinnerAdapter<String>(
                     getActivity(),
                     R.layout.spinner_layout,
                     getResources().getStringArray(R.array.months),
-                    getResources().getString(R.string.month_of_last_clean_hint));
+                    getResources().getString(R.string.month_of_last_clean_hint),
+                    "--");
             monthOfLastCleanSpn.setAdapter(monthOfLastCleanAdapter);
+
+            nextFAB.setOnClickListener(new MyOnClickListener());
         }
     }
 
@@ -141,8 +160,6 @@ public class CreateNewPropFragment extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 return true;
-            case R.id.save_action:
-                return save();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -177,8 +194,8 @@ public class CreateNewPropFragment extends Fragment {
                     .setYearOfLastCut(Integer
                             .valueOf(yearOfLastCutSpn.getSelectedItem().toString()))
                     .setYearAndMonthOfLastCleaning(dateAsValue(yearOfLastCleanSpn
-                            .getSelectedItem(), monthOfLastCleanSpn.getSelectedItemPosition()));
-            // TODO: 26/01/2018 se propriedade for agricola nao se pode por ano de plantacao e corte etc
+                            .getSelectedItem(), monthOfLastCleanSpn.getSelectedItemPosition()))
+                    .setNote(note.getText().toString());
             if (approxSizeValue > 0)
                 p.setApproxSizeInSquareMeters(approxSizeValue);
             long propId = propertyService.createProperty(p);
@@ -189,5 +206,54 @@ public class CreateNewPropFragment extends Fragment {
 
     private int dateAsValue(Object year, int month) {
         return Integer.valueOf(year.toString()) * 100 + month;
+    }
+
+    private class MyOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            if (i <= 0 || i > 3) {
+                yearOfPlantAdapter.setLocked(true);
+                yearOfPlantSpn.setEnabled(false);
+                yearOfPlantAdapter.notifyDataSetChanged();
+
+                yearOfLastCutAdapter.setLocked(true);
+                yearOfLastCutSpn.setEnabled(false);
+                yearOfLastCutAdapter.notifyDataSetChanged();
+
+                yearOfLastCleanAdapter.setLocked(true);
+                yearOfLastCleanSpn.setEnabled(false);
+                yearOfLastCleanAdapter.notifyDataSetChanged();
+
+                monthOfLastCleanAdapter.setLocked(true);
+                monthOfLastCleanSpn.setEnabled(false);
+                monthOfLastCleanAdapter.notifyDataSetChanged();
+            } else {
+                yearOfPlantAdapter.setLocked(false);
+                yearOfPlantSpn.setEnabled(true);
+                yearOfPlantAdapter.notifyDataSetChanged();
+
+                yearOfLastCutAdapter.setLocked(false);
+                yearOfLastCutSpn.setEnabled(true);
+                yearOfLastCutAdapter.notifyDataSetChanged();
+
+                yearOfLastCleanAdapter.setLocked(false);
+                yearOfLastCleanSpn.setEnabled(true);
+                yearOfLastCleanAdapter.notifyDataSetChanged();
+
+                monthOfLastCleanAdapter.setLocked(false);
+                monthOfLastCleanSpn.setEnabled(true);
+                monthOfLastCleanAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {}
+    }
+
+    private class MyOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            save();
+        }
     }
 }

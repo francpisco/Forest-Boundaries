@@ -24,27 +24,34 @@ public class MySpinnerAdapter<T> extends ArrayAdapter<T> {
     private T[] objects;
     private int resource;
     private String hint;
+    private boolean isLocked = true;
+    private String lockedStr;
 
     public MySpinnerAdapter(@NonNull Context context,
                             int resource,
                             @NonNull T[] objects,
-                            String hint) {
+                            String hint,
+                            String lockedStr) {
         super(context, resource, objects);
         this.context = context;
         this.objects = objects;
         this.resource = resource;
         this.hint = hint;
+        this.lockedStr = lockedStr;
     }
 
     public MySpinnerAdapter(@NonNull Context context,
                             int resource,
                             @NonNull List<T> objects,
-                            String hint) {
+                            String hint,
+                            String lockedStr) {
         super(context, resource, objects);
         this.objects = (T[]) objects.toArray();
         this.context = context;
         this.resource = resource;
         this.hint = hint;
+        this.lockedStr = lockedStr;
+
     }
 
     @Override
@@ -60,7 +67,7 @@ public class MySpinnerAdapter<T> extends ArrayAdapter<T> {
 
     @Override
     public boolean isEnabled(int position) {
-        return position != 0;
+        return !isLocked && position != 0;
     }
 
     private View helperGetView(int position, View convertView, ViewGroup parent) {
@@ -71,7 +78,12 @@ public class MySpinnerAdapter<T> extends ArrayAdapter<T> {
             v = inflater.inflate(resource, null);
         }
         TextView text = (TextView) v.findViewById(android.R.id.text1);
-        if (position == 0 ){
+        if (isLocked) {
+            text.setTextColor(Color.GRAY);
+            text.setText(lockedStr);
+            return v;
+        }
+        if (position == 0){
             text.setTextColor(Color.GRAY);
             text.setText(hint);
             return v;
@@ -79,5 +91,9 @@ public class MySpinnerAdapter<T> extends ArrayAdapter<T> {
         text.setTextColor(Color.BLACK);
         text.setText(objects[position].toString());
         return v;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 }
