@@ -127,6 +127,9 @@ public class EditMarkersFragment extends Fragment
             case android.R.id.home:
                 upListener.onUpButtonClick();
                 return true;
+            case R.id.save_action:
+                upListener.onUpButtonClick();
+                return true;
             case R.id.settings_action:
                 return true;
             default:

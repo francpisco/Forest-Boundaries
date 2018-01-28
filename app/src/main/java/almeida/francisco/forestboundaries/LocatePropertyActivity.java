@@ -4,25 +4,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class LocatePropertyActivity extends AppCompatActivity
-        implements LocatePropertyFragment.Listener{
+        implements EditMarkersFragment.Listener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate_property);
         long propId = (long) getIntent().getExtras().get(CreateNewPropActivity.PROPERTY_ID);
-        LocatePropertyFragment fragment = (LocatePropertyFragment) getSupportFragmentManager()
+
+        EditMarkersFragment fragment = (EditMarkersFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.locate_p_frag);
         fragment.setPropertyId(propId);
     }
 
     @Override
-    public void leaveForLaterOnClick() {
-        finish();
-    }
-
-    @Override
-    public void saveOnClick() {
+    public void onUpButtonClick() {
         finish();
     }
 }

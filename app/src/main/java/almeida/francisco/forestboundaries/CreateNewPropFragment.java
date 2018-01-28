@@ -35,8 +35,8 @@ public class CreateNewPropFragment extends Fragment {
 
     public interface Listener {
         void onClick(long propId);
+        void onUpClick();
     }
-
     private Listener listener;
 
     private Spinner owners;
@@ -159,6 +159,7 @@ public class CreateNewPropFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                listener.onUpClick();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

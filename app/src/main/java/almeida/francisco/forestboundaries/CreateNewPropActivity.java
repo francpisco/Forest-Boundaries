@@ -23,4 +23,9 @@ public class CreateNewPropActivity
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onUpClick() {
+        finish();
+    }
 }
