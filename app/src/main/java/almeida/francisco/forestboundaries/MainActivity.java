@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,13 +30,28 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     private Cursor cursor;
     private SQLiteDatabase db;
     private long ownerId = -1;
+    private MainRecyclerFragment mainRecyclerFragment;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainRecyclerFragment = ((MainRecyclerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.prop_list_frag));
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        drawerToggle = new ActionBarDrawerToggle(this,
+                drawerLayout, R.string.open_drawer, R.string.close_drawer);
+        drawerLayout.addDrawerListener(drawerToggle);
+
         Toolbar mToolBar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolBar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         new PopulateTables().execute();
         db = MyHelper.getHelper(this).getReadableDatabase();
         cursor = db.rawQuery("SELECT * FROM " +
@@ -50,6 +67,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -57,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         switch (item.getItemId()) {
             case R.id.create_new_prop:
                 Intent intent = new Intent(this, CreateNewPropActivity.class);
@@ -73,8 +99,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     @Override
     public void onRestart() {
         super.onRestart();
-        ((MainRecyclerFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.prop_list_frag)).myOnRestart(ownerId);
+        mainRecyclerFragment.myOnRestart(ownerId);
     }
 
     @Override
@@ -104,8 +129,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
 
     private void selectOwner(long ownerId) {
         this.ownerId = ownerId;
-        ((MainRecyclerFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.prop_list_frag)).myOnRestart(ownerId);
+        mainRecyclerFragment.myOnRestart(ownerId);
+        drawerLayout.closeDrawer(findViewById(R.id.main_drawer));
     }
 
     private class PopulateTables extends AsyncTask<Void, Void, Void> {
@@ -127,8 +152,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         }
         @Override
         protected void onPostExecute(Void v) {
-            ((MainRecyclerFragment)getSupportFragmentManager()
-                    .findFragmentById(R.id.prop_list_frag)).myOnRestart(ownerId);
+            mainRecyclerFragment.myOnRestart(ownerId);
         }
 
     }

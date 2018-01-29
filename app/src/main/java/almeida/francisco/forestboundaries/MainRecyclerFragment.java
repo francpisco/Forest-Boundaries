@@ -42,7 +42,6 @@ public class MainRecyclerFragment extends Fragment
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
-
         recyclerView = view.findViewById(R.id.main_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -65,10 +64,8 @@ public class MainRecyclerFragment extends Fragment
             List<Property> propertiesB;
             if (ownerId == -1) {
                 propertiesB = propertyService.findAll();
-                System.out.println("============== A");
             } else {
                 propertiesB = propertyService.findByOwnerId(ownerId);
-                System.out.println("================ B");
             }
             if (propertiesB.equals(properties)) {
                 return true;

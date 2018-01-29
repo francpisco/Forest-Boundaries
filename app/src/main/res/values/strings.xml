@@ -45,6 +45,8 @@
     <string name="save_action">Guardar</string>
     <string name="note_hint">observações</string>
     <string name="test">teste</string>
+    <string name="open_drawer">Open drawer</string>
+    <string name="close_drawer">Close drawer</string>
 
     <string-array name="land_uses">
         <item></item> <!--placehoder for hint.-->
