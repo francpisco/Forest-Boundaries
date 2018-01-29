@@ -34,6 +34,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="start">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/test"/>
+        <ListView
+            android:id="@+id/owners_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
 
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

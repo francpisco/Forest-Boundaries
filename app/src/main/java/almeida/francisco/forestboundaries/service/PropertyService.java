@@ -56,6 +56,10 @@ public class PropertyService {
         return property;
     }
 
+    public List<Property> findByOwnerId(long ownerId) {
+        return null;
+    }
+
     public List<Property> findAll() {
         PropertyDAO propertyDAO = new PropertyDAO(context);
         OwnerDAO ownerDAO = new OwnerDAO(context);
