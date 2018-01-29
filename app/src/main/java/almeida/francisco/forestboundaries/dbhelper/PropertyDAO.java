@@ -43,6 +43,7 @@ public class PropertyDAO {
         return id;
     }
 
+    //cRud
     public Property findById(long id) {
         Property property = null;
         SQLiteDatabase db = myHelper.getReadableDatabase();
@@ -56,6 +57,23 @@ public class PropertyDAO {
         c.close();
         db.close();
         return property;
+    }
+
+    public List<Property> findByOwnerId(long ownerId) {
+        List<Property> properties = new ArrayList<>();
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " +
+                MyHelper.TABLE_PROPERTIES + " WHERE " +
+                MyHelper.P_OWNER_ID + " = " + Long.toString(ownerId)
+                , null);
+        if (c.moveToFirst())
+            properties.add(createPropFromCursor(c));
+        while (c.moveToNext()) {
+            properties.add(createPropFromCursor(c));
+        }
+        c.close();
+        db.close();
+        return properties;
     }
 
     //cRud
@@ -74,6 +92,7 @@ public class PropertyDAO {
         return properties;
     }
 
+    //cRud
     public long getOwnerId(long id) {
         long ownerId = -1;
         SQLiteDatabase db = myHelper.getReadableDatabase();

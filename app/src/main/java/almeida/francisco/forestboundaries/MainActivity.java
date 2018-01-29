@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     private ListView ownersList;
     private Cursor cursor;
     private SQLiteDatabase db;
+    private long ownerId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     public void onRestart() {
         super.onRestart();
         ((MainRecyclerFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.prop_list_frag)).myOnRestart();
+                .findFragmentById(R.id.prop_list_frag)).myOnRestart(ownerId);
     }
 
     @Override
@@ -101,7 +102,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         }
     }
 
-    private void selectOwner(int position) {
+    private void selectOwner(long ownerId) {
+        this.ownerId = ownerId;
+        ((MainRecyclerFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.prop_list_frag)).myOnRestart(ownerId);
     }
 
     private class PopulateTables extends AsyncTask<Void, Void, Void> {
@@ -124,14 +128,14 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         @Override
         protected void onPostExecute(Void v) {
             ((MainRecyclerFragment)getSupportFragmentManager()
-                    .findFragmentById(R.id.prop_list_frag)).myOnRestart();
+                    .findFragmentById(R.id.prop_list_frag)).myOnRestart(ownerId);
         }
 
     }
     private class OwnersOnItemClickListener implements AdapterView.OnItemClickListener {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            selectOwner(position);
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            selectOwner(id);
         }
     }
 }

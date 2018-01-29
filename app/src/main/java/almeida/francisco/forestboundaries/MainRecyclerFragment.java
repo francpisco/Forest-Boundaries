@@ -24,6 +24,7 @@ public class MainRecyclerFragment extends Fragment
     }
     private Listener listener;
 
+    private long ownerId;
     private List<Property> properties;
     private MainRecyclerAdapter mainRecyclerAdapter;
     private PropertyService propertyService;
@@ -47,7 +48,8 @@ public class MainRecyclerFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    public void myOnRestart() {
+    public void myOnRestart(long ownerId) {
+        this.ownerId = ownerId;
         new PopulateView().execute();
     }
 
@@ -60,7 +62,14 @@ public class MainRecyclerFragment extends Fragment
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            List<Property> propertiesB = propertyService.findAll();
+            List<Property> propertiesB;
+            if (ownerId == -1) {
+                propertiesB = propertyService.findAll();
+                System.out.println("============== A");
+            } else {
+                propertiesB = propertyService.findByOwnerId(ownerId);
+                System.out.println("================ B");
+            }
             if (propertiesB.equals(properties)) {
                 return true;
             }

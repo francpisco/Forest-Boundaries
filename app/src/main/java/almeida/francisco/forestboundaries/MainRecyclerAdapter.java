@@ -59,7 +59,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         CardView cardView = holder.cardView;
         TextView ownerTxt = (TextView) cardView.findViewById(R.id.owner_name_card);
         TextView descriptionTxt = (TextView) cardView.findViewById(R.id.prop_description_card);
-        ownerTxt.setText(properties.get(position).getOwner().getName());
+        ownerTxt.setText(properties
+                .get(position)
+                .getOwner()
+                .getName());
         descriptionTxt.setText(properties.get(position).getLocationAndDescription());
     }
 

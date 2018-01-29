@@ -56,8 +56,24 @@ public class PropertyService {
         return property;
     }
 
+    // TODO: 29/01/2018 refactor this class
     public List<Property> findByOwnerId(long ownerId) {
-        return null;
+        PropertyDAO propertyDAO = new PropertyDAO(context);
+        OwnerDAO ownerDAO = new OwnerDAO(context);
+        MarkerDAO markerDAO = new MarkerDAO(context);
+        ReadingDAO readingDAO = new ReadingDAO(context);
+        List<Property> properties = propertyDAO.findByOwnerId(ownerId);
+        for (Property p : properties) {
+            List<MyMarker> markers = markerDAO.findByPropertyId(p.getId());
+            p.setMarkers(markers);
+            List<Reading> readings = readingDAO.findByPropertyId(p.getId());
+            p.setReadings(readings);
+            if (p.getOwner() != null)
+                continue;
+            Owner owner = ownerDAO.findById(ownerId);
+            p.setOwner(owner);
+        }
+        return properties;
     }
 
     public List<Property> findAll() {
