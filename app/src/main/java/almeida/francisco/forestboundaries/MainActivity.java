@@ -3,6 +3,7 @@ package almeida.francisco.forestboundaries;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -25,6 +26,8 @@ import almeida.francisco.forestboundaries.service.PropertyService;
 
 
 public class MainActivity extends AppCompatActivity implements MainRecyclerFragment.Listener {
+
+    private static final String OWNER_ID = "owner_id";
 
     private ListView ownersList;
     private Cursor cursor;
@@ -52,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        if (savedInstanceState != null) {
+            ownerId = savedInstanceState.getLong(OWNER_ID);
+        }
+
         new PopulateTables().execute();
         db = MyHelper.getHelper(this).getReadableDatabase();
         cursor = db.rawQuery("SELECT * FROM " +
@@ -70,6 +77,32 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        mainRecyclerFragment.myOnRestart(ownerId);
+    }
+
+    //not sure this is needed
+    @Override
+    public void onConfigurationChanged(Configuration config) {
+        super.onConfigurationChanged(config);
+        drawerToggle.onConfigurationChanged(config);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cursor.close();
+        db.close();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle saveThisState) {
+        super.onSaveInstanceState(saveThisState);
+        saveThisState.putLong(OWNER_ID, ownerId);
     }
 
     @Override
@@ -97,19 +130,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     }
 
     @Override
-    public void onRestart() {
-        super.onRestart();
-        mainRecyclerFragment.myOnRestart(ownerId);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        cursor.close();
-        db.close();
-    }
-
-    @Override
     public void onItemClicked(long propertyId) {
         View container = findViewById(R.id.detail_frag_container);
         if (container != null) {
@@ -129,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
 
     private void selectOwner(long ownerId) {
         this.ownerId = ownerId;
+        // TODO: 30/01/2018 por a recycler view num layout à parte para poder adicinar ao backstack, alterar xml, passar de fragment para framelayout 
         mainRecyclerFragment.myOnRestart(ownerId);
         drawerLayout.closeDrawer(findViewById(R.id.main_drawer));
     }
