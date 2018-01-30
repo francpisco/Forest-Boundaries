@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     private Cursor cursor;
     private SQLiteDatabase db;
     private long ownerId = -1;
-    private MainRecyclerFragment mainRecyclerFragment;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
 
@@ -41,8 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainRecyclerFragment = ((MainRecyclerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.prop_list_frag));
+
         drawerLayout = findViewById(R.id.drawer_layout);
 
         drawerToggle = new ActionBarDrawerToggle(this,
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
                 MyHelper.TABLE_OWNERS, null);
         ownersList = (ListView) findViewById(R.id.owners_list);
         ownersList.setAdapter(new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1,
+                android.R.layout.simple_selectable_list_item,
                 cursor,
                 new String[]{MyHelper.O_NAME},
                 new int[]{android.R.id.text1},
@@ -82,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     @Override
     public void onRestart() {
         super.onRestart();
-        mainRecyclerFragment.myOnRestart(ownerId);
+        loadRecyclerFragment();
+
     }
 
     //not sure this is needed
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
             PropertyDetailFragment fragment = new PropertyDetailFragment();
             fragment.setPropertyId(propertyId);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_frag_container, fragment)
+                    .replace(R.id.detail_frag_container, fragment, "visible fragment")
                     .addToBackStack(null)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
@@ -149,9 +148,19 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
 
     private void selectOwner(long ownerId) {
         this.ownerId = ownerId;
-        // TODO: 30/01/2018 por a recycler view num layout à parte para poder adicinar ao backstack, alterar xml, passar de fragment para framelayout 
-        mainRecyclerFragment.myOnRestart(ownerId);
+        loadRecyclerFragment();
         drawerLayout.closeDrawer(findViewById(R.id.main_drawer));
+    }
+
+    // TODO: 30/01/2018 o backstack nao esta a funcionar bem 
+    private void loadRecyclerFragment() {
+        MainRecyclerFragment fragment = new MainRecyclerFragment();
+        fragment.setOwnerId(ownerId);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.recycler_view_frame, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
     }
 
     private class PopulateTables extends AsyncTask<Void, Void, Void> {
@@ -165,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
             }
 
             PropertyService propertyService = new PropertyService(MainActivity.this);
-            PropertyDAO pDAO = new PropertyDAO(MainActivity.this);
             if (propertyService.findAll().size() <= 0){
                 propertyService.loadProperties();
             }
@@ -173,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         }
         @Override
         protected void onPostExecute(Void v) {
-            mainRecyclerFragment.myOnRestart(ownerId);
+            loadRecyclerFragment();
         }
 
     }

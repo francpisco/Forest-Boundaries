@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import almeida.francisco.forestboundaries.model.Property;
@@ -43,12 +44,16 @@ public class MainRecyclerFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         recyclerView = view.findViewById(R.id.main_recycler_view);
+        mainRecyclerAdapter = new MainRecyclerAdapter(new ArrayList<Property>(),
+                getActivity(), MainRecyclerFragment.this);
+        recyclerView.setAdapter(mainRecyclerAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    public void myOnRestart(long ownerId) {
-        this.ownerId = ownerId;
+    @Override
+    public void onStart() {
+        super.onStart();
         new PopulateView().execute();
     }
 
@@ -57,30 +62,27 @@ public class MainRecyclerFragment extends Fragment
         listener.onItemClicked(properties.get(position).getId());
     }
 
-    private class PopulateView extends AsyncTask<Void, Void, Boolean> {
+    private class PopulateView extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-            List<Property> propertiesB;
+        protected Void doInBackground(Void... voids) {
             if (ownerId == -1) {
-                propertiesB = propertyService.findAll();
+                properties = propertyService.findAll();
             } else {
-                propertiesB = propertyService.findByOwnerId(ownerId);
+                properties = propertyService.findByOwnerId(ownerId);
             }
-            if (propertiesB.equals(properties)) {
-                return true;
-            }
-            properties = propertiesB;
             mainRecyclerAdapter = new MainRecyclerAdapter(properties,
                     getActivity(), MainRecyclerFragment.this);
-            return false;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Boolean areEqual) {
-            if (!areEqual)
-                recyclerView.swapAdapter(mainRecyclerAdapter, false);
+        protected void onPostExecute(Void v) {
+            recyclerView.swapAdapter(mainRecyclerAdapter, false);
         }
     }
 
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
+    }
 }
