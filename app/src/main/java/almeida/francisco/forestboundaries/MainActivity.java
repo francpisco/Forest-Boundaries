@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         ownersList = (ListView) findViewById(R.id.owners_list);
 
         listAdapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_selectable_list_item,
+                android.R.layout.simple_list_item_single_choice,
                 cursor,
                 new String[]{MyHelper.O_NAME},
                 new int[]{android.R.id.text1},
@@ -76,27 +76,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         ownersList.setAdapter(listAdapter);
         ownersList.setOnItemClickListener(new OwnersOnItemClickListener());
 
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                Fragment fragment = getSupportFragmentManager()
-                        .findFragmentByTag(FRAGMENT_TAG);
-                if (fragment instanceof MainRecyclerFragment) {
-                    long currentOwnerId = ((MainRecyclerFragment) fragment).getOwnerId();
-                    recyclerFragment.setOwnerId(currentOwnerId);
-                    System.out.println("onBackStackChanged, currentOwnerId " + currentOwnerId);
-                    if (currentOwnerId == -1){
-                        ownersList.requestFocus();
-                        ownersList.clearFocus();
-                    } else {
-//                        ownersList.setItemChecked((int) (currentOwnerId - 1), true);
-//                        ownersList.setItemChecked(0, true);
-                        ownersList.setSelection(0);
-                    }
-                    listAdapter.notifyDataSetChanged();
-                }
-            }
-        });
+        getSupportFragmentManager()
+                .addOnBackStackChangedListener(new MyOnBackStackChangedListener());
 
         loadRecyclerFragment(false);
     }
@@ -234,6 +215,23 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             selectOwner(id);
+        }
+    }
+
+    private class MyOnBackStackChangedListener implements FragmentManager.OnBackStackChangedListener{
+        @Override
+        public void onBackStackChanged() {
+            Fragment fragment = getSupportFragmentManager()
+                    .findFragmentByTag(FRAGMENT_TAG);
+            if (fragment instanceof MainRecyclerFragment) {
+                ownerId = ((MainRecyclerFragment) fragment).getOwnerId();
+                recyclerFragment.setOwnerId(ownerId);
+                if (ownerId == -1){
+                    ownersList.setItemChecked(-1, true);
+                } else {
+                    ownersList.setItemChecked((int) ownerId - 1, true);
+                }
+            }
         }
     }
 }
