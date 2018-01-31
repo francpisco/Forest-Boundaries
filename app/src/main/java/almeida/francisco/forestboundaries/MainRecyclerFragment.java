@@ -25,7 +25,7 @@ public class MainRecyclerFragment extends Fragment
     }
     private Listener listener;
 
-    private long ownerId;
+    private long ownerId = -1;
     private List<Property> properties;
     private MainRecyclerAdapter mainRecyclerAdapter;
     private PropertyService propertyService;
@@ -80,6 +80,10 @@ public class MainRecyclerFragment extends Fragment
         protected void onPostExecute(Void v) {
             recyclerView.swapAdapter(mainRecyclerAdapter, false);
         }
+    }
+
+    public long getOwnerId() {
+        return ownerId;
     }
 
     public void setOwnerId(long ownerId) {

@@ -1,13 +1,15 @@
 package almeida.francisco.forestboundaries;
 
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +22,6 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import almeida.francisco.forestboundaries.dbhelper.MyHelper;
-import almeida.francisco.forestboundaries.dbhelper.PropertyDAO;
 import almeida.francisco.forestboundaries.service.OwnerService;
 import almeida.francisco.forestboundaries.service.PropertyService;
 
@@ -28,6 +29,7 @@ import almeida.francisco.forestboundaries.service.PropertyService;
 public class MainActivity extends AppCompatActivity implements MainRecyclerFragment.Listener {
 
     private static final String OWNER_ID = "owner_id";
+    private static final String FRAGMENT_TAG = "visible_fragment";
 
     private ListView ownersList;
     private Cursor cursor;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     private long ownerId = -1;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
+    private MainRecyclerFragment recyclerFragment;
+    private SimpleCursorAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +66,39 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         cursor = db.rawQuery("SELECT * FROM " +
                 MyHelper.TABLE_OWNERS, null);
         ownersList = (ListView) findViewById(R.id.owners_list);
-        ownersList.setAdapter(new SimpleCursorAdapter(this,
+
+        listAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_selectable_list_item,
                 cursor,
                 new String[]{MyHelper.O_NAME},
                 new int[]{android.R.id.text1},
-                0));
+                0);
+        ownersList.setAdapter(listAdapter);
         ownersList.setOnItemClickListener(new OwnersOnItemClickListener());
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                Fragment fragment = getSupportFragmentManager()
+                        .findFragmentByTag(FRAGMENT_TAG);
+                if (fragment instanceof MainRecyclerFragment) {
+                    long currentOwnerId = ((MainRecyclerFragment) fragment).getOwnerId();
+                    recyclerFragment.setOwnerId(currentOwnerId);
+                    System.out.println("onBackStackChanged, currentOwnerId " + currentOwnerId);
+                    if (currentOwnerId == -1){
+                        ownersList.requestFocus();
+                        ownersList.clearFocus();
+                    } else {
+//                        ownersList.setItemChecked((int) (currentOwnerId - 1), true);
+//                        ownersList.setItemChecked(0, true);
+                        ownersList.setSelection(0);
+                    }
+                    listAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        loadRecyclerFragment(false);
     }
 
     @Override
@@ -80,8 +110,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     @Override
     public void onRestart() {
         super.onRestart();
-        loadRecyclerFragment();
-
+        loadRecyclerFragment(false);
     }
 
     //not sure this is needed
@@ -135,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
             PropertyDetailFragment fragment = new PropertyDetailFragment();
             fragment.setPropertyId(propertyId);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_frag_container, fragment, "visible fragment")
+                    .replace(R.id.detail_frag_container, fragment, FRAGMENT_TAG)
                     .addToBackStack(null)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
@@ -148,43 +177,59 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
 
     private void selectOwner(long ownerId) {
         this.ownerId = ownerId;
-        loadRecyclerFragment();
+        loadRecyclerFragment(true);
         drawerLayout.closeDrawer(findViewById(R.id.main_drawer));
     }
 
-    // TODO: 30/01/2018 o backstack nao esta a funcionar bem 
-    private void loadRecyclerFragment() {
-        MainRecyclerFragment fragment = new MainRecyclerFragment();
-        fragment.setOwnerId(ownerId);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.recycler_view_frame, fragment)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+    private void loadRecyclerFragment(boolean addToBackStack) {
+        if (isSameOwner())
+            return;
+        recyclerFragment = new MainRecyclerFragment();
+        recyclerFragment.setOwnerId(ownerId);
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.recycler_view_frame, recyclerFragment, FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if (addToBackStack)
+            transaction.addToBackStack(null);
+        transaction.commit();
     }
 
-    private class PopulateTables extends AsyncTask<Void, Void, Void> {
+    private boolean isSameOwner() {
+        if (recyclerFragment != null) {
+            if (recyclerFragment.getOwnerId() == ownerId)
+                return true;
+        }
+        return false;
+    }
+
+    private class PopulateTables extends AsyncTask<Void, Void, Boolean> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             //popular tabelas aqui
+            Boolean isNewDB = false;
             OwnerService ownerService = new OwnerService(MainActivity.this);
             if (ownerService.findAll().size() <= 0){
                 ownerService.loadOwners();
+                isNewDB = true;
             }
 
             PropertyService propertyService = new PropertyService(MainActivity.this);
             if (propertyService.findAll().size() <= 0){
                 propertyService.loadProperties();
+                isNewDB = true;
             }
-            return null;
+            return isNewDB;
         }
         @Override
-        protected void onPostExecute(Void v) {
-            loadRecyclerFragment();
+        protected void onPostExecute(Boolean isNewDB) {
+            if (isNewDB)
+                onRestart();
         }
 
     }
+
     private class OwnersOnItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
