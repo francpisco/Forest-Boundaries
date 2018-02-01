@@ -3,6 +3,7 @@ package almeida.francisco.forestboundaries;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 public class CreateOwnerFragment extends Fragment {
@@ -20,6 +22,11 @@ public class CreateOwnerFragment extends Fragment {
         public void onUpClick();
     }
     private Listener listener;
+
+    private EditText nameTxt;
+    private EditText emailTxt;
+    private EditText passwordTxt;
+    private FloatingActionButton doneFAB;
 
     public CreateOwnerFragment() {}
 
@@ -33,6 +40,15 @@ public class CreateOwnerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_owner, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        nameTxt = (EditText) view.findViewById(R.id.owner_name);
+        emailTxt = (EditText) view.findViewById(R.id.owner_email);
+        passwordTxt = (EditText) view.findViewById(R.id.owner_password);
+        doneFAB = (FloatingActionButton) view.findViewById(R.id.save_owner_floating_btn);
+        doneFAB.setOnClickListener(new MyOnClickListener());
     }
 
     @Override
@@ -57,6 +73,13 @@ public class CreateOwnerFragment extends Fragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class MyOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+
         }
     }
 }
