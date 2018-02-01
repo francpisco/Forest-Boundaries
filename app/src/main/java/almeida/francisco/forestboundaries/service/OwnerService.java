@@ -37,8 +37,14 @@ public class OwnerService {
     }
 
     public void loadOwners() {
-        Owner owner1 = new Owner().setName("Manel");
-        Owner owner2 = new Owner().setName("Lourdes");
+        Owner owner1 = new Owner()
+                .setName("Manel")
+                .setEmail("manel@mail.com")
+                .setPassword("123456");
+        Owner owner2 = new Owner()
+                .setName("Lourdes")
+                .setEmail("lourdes@mail.com")
+                .setPassword("abcdef");
         createOwner(owner1);
         createOwner(owner2);
     }

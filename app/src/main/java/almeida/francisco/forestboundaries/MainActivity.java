@@ -64,20 +64,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
             ownerId = savedInstanceState.getLong(OWNER_ID);
         }
 
-        new PopulateTables().execute();
-        db = MyHelper.getHelper(this).getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM " +
-                MyHelper.TABLE_OWNERS, null);
         ownersList = (ListView) findViewById(R.id.owners_list);
-
-        listAdapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_single_choice,
-                cursor,
-                new String[]{MyHelper.O_NAME},
-                new int[]{android.R.id.text1},
-                0);
-        ownersList.setAdapter(listAdapter);
         ownersList.setOnItemClickListener(new OwnersOnItemClickListener());
+
+        new PopulateTables().execute();
+
+        populateOwners();
 
         getSupportFragmentManager()
                 .addOnBackStackChangedListener(new MyOnBackStackChangedListener());
@@ -95,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     public void onRestart() {
         super.onRestart();
         loadRecyclerFragment(false);
+        populateOwners();
     }
 
     //not sure this is needed
@@ -157,6 +150,19 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
             intent.putExtra(PropertyDetailActivity.PROP_ID, propertyId);
             startActivity(intent);
         }
+    }
+
+    private void populateOwners() {
+        db = MyHelper.getHelper(this).getReadableDatabase();
+        cursor = db.rawQuery("SELECT * FROM " +
+                MyHelper.TABLE_OWNERS, null);
+        listAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_single_choice,
+                cursor,
+                new String[]{MyHelper.O_NAME},
+                new int[]{android.R.id.text1},
+                0);
+        ownersList.setAdapter(listAdapter);
     }
 
     private void selectOwner(long ownerId) {
@@ -242,8 +248,14 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
     private class MyOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this, CreateOwnerActivity.class);
-            startActivity(intent);
+            switch (view.getId()) {
+                case R.id.add_owner:
+                    Intent intent = new Intent(MainActivity.this, CreateOwnerActivity.class);
+                    startActivity(intent);
+                    return;
+                default:
+                    return;
+            }
         }
     }
 }

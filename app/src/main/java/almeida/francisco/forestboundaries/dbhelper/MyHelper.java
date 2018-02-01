@@ -16,11 +16,13 @@ public class MyHelper extends SQLiteOpenHelper {
     private static MyHelper instance;
 
     private static final String DB_NAME = "forest_boundaries";
-    private static final int DB_VERSION = 20;
+    private static final int DB_VERSION = 23;
 
     public static final String _ID = "_id";
     public static final String TABLE_OWNERS = "owners";
     public static final String O_NAME = "name";
+    public static final String O_EMAIL = "email";
+    public static final String O_PASSWORD = "password";
     public static final String TABLE_PROPERTIES = "properties";
     public static final String P_OWNER_ID = "owner_id";
     public static final String P_DESCRIP = "description";
@@ -57,7 +59,9 @@ public class MyHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_OWNERS + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                O_NAME + " TEXT UNIQUE NOT NULL);");
+                O_NAME + " TEXT UNIQUE NOT NULL, " +
+                O_EMAIL + " TEXT, " +
+                O_PASSWORD + " TEXT);");
 
         db.execSQL("CREATE TABLE " + TABLE_PROPERTIES + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

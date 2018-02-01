@@ -57,7 +57,11 @@
             android:name=".EditMarkersActivity"
             android:label="@string/edit_markers_activity"
             android:parentActivityName=".PropertyDetailActivity" />
-        <activity android:name=".CreateOwnerActivity"></activity>
+        <activity
+            android:name=".CreateOwnerActivity"
+            android:label="@string/create_owner"
+            android:parentActivityName=".MainActivity"/>
+
     </application>
 
 </manifest>

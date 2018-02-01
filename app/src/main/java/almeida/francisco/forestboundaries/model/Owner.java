@@ -11,13 +11,8 @@ public class Owner {
 
     private long id;
     private String name;
-
-    public static List<Owner> ownerList = new ArrayList<>();
-
-    static {
-        ownerList.add(new Owner().setName("Manel"));
-        ownerList.add(new Owner().setName("Lourdes"));
-    }
+    private String email;
+    private String password;
 
     public String getName() {
         return name;
@@ -27,6 +22,14 @@ public class Owner {
         return id;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     public Owner setName(String name) {
         this.name = name;
         return this;
@@ -34,6 +37,16 @@ public class Owner {
 
     public Owner setId(long id) {
         this.id = id;
+        return this;
+    }
+
+    public Owner setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Owner setPassword(String password) {
+        this.password = password;
         return this;
     }
 

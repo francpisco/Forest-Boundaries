@@ -48,6 +48,7 @@
     <string name="open_drawer">Open drawer</string>
     <string name="close_drawer">Close drawer</string>
     <string name="add_owner">Adicionar Propriertário</string>
+    <string name="create_owner">Novo Proprietário</string>
 
     <string-array name="land_uses">
         <item></item> <!--placehoder for hint.-->

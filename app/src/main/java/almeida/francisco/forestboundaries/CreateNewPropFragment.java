@@ -60,6 +60,12 @@ public class CreateNewPropFragment extends Fragment {
     public CreateNewPropFragment() {}
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (Listener) context;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_new_prop, container, false);
@@ -132,12 +138,6 @@ public class CreateNewPropFragment extends Fragment {
 
             nextFAB.setOnClickListener(new MyOnClickListener());
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        listener = (Listener) context;
     }
 
     @Override
