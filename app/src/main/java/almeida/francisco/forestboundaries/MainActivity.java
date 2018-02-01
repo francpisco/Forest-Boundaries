@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        View addOwnerView = findViewById(R.id.add_owner);
+        addOwnerView.setOnClickListener(new MyOnClickListener());
+
         drawerLayout = findViewById(R.id.drawer_layout);
 
         drawerToggle = new ActionBarDrawerToggle(this,
@@ -218,7 +221,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
         }
     }
 
-    private class MyOnBackStackChangedListener implements FragmentManager.OnBackStackChangedListener{
+    private class MyOnBackStackChangedListener
+            implements FragmentManager.OnBackStackChangedListener{
         @Override
         public void onBackStackChanged() {
             Fragment fragment = getSupportFragmentManager()
@@ -232,6 +236,14 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerFragm
                     ownersList.setItemChecked((int) ownerId - 1, true);
                 }
             }
+        }
+    }
+
+    private class MyOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, CreateOwnerActivity.class);
+            startActivity(intent);
         }
     }
 }
