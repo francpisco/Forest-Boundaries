@@ -52,6 +52,10 @@
     <string name="owner_name">Nome</string>
     <string name="owner_email">E-mail</string>
     <string name="owner_password">Password</string>
+    <string name="owner_name_error">O nome não pode estar vazio</string>
+    <string name="owner_email_error">indique um email valido</string>
+    <string name="owner_password_error">A password não pode estar vazia</string>
+    <string name="owner_email_already_exists_error">O email que indicou já está a ser usado</string>
 
     <string-array name="land_uses">
         <item></item> <!--placehoder for hint.-->

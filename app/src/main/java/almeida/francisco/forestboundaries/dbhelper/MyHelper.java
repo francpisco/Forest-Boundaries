@@ -59,7 +59,7 @@ public class MyHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_OWNERS + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                O_NAME + " TEXT UNIQUE NOT NULL, " +
+                O_NAME + " TEXT NOT NULL, " +
                 O_EMAIL + " TEXT, " +
                 O_PASSWORD + " TEXT);");
 

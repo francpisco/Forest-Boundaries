@@ -15,4 +15,9 @@ public class CreateOwnerActivity extends AppCompatActivity implements CreateOwne
     public void onUpClick() {
         finish();
     }
+
+    @Override
+    public void done() {
+        finish();
+    }
 }

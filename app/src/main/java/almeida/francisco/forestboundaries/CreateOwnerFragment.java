@@ -3,6 +3,8 @@ package almeida.francisco.forestboundaries;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import almeida.francisco.forestboundaries.model.Owner;
+import almeida.francisco.forestboundaries.service.OwnerService;
+
 
 public class CreateOwnerFragment extends Fragment {
 
     public interface Listener {
-        public void onUpClick();
+        void onUpClick();
+        void done();
     }
     private Listener listener;
 
@@ -76,10 +82,47 @@ public class CreateOwnerFragment extends Fragment {
         }
     }
 
+    private void done() {
+        String nameStr = nameTxt.getText().toString();
+        if (nameStr.isEmpty()) {
+            nameTxt.setError(getString(R.string.owner_name_error));
+            return;
+        }
+        String emailStr = emailTxt.getText().toString();
+        if (emailStr.isEmpty() || !isEmailValid(emailStr)) {
+            emailTxt.setError(getString(R.string.owner_email_error));
+            return;
+        }
+        if (isEmailAlreadyInDB(emailStr)) {
+            emailTxt.setError(getString(R.string.owner_email_already_exists_error));
+            return;
+        }
+        String passwordStr = passwordTxt.getText().toString();
+        if (passwordStr.isEmpty()) {
+            passwordTxt.setError(getString(R.string.owner_password_error));
+            return;
+        }
+        OwnerService ownerService = new OwnerService(getActivity());
+        Owner o = new Owner().setName(nameStr).setEmail(emailStr).setPassword(passwordStr);
+        ownerService.createOwner(o);
+        listener.done();
+    }
+
+    private boolean isEmailAlreadyInDB(String emailStr) {
+        Owner owner = null;
+        OwnerService ownerService = new OwnerService(getActivity());
+        owner = ownerService.findByEmail(emailStr);
+        return owner != null;
+    }
+
+    private boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
     private class MyOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-
+            done();
         }
     }
 }

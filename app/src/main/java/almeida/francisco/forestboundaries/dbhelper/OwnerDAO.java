@@ -51,6 +51,20 @@ public class OwnerDAO {
     }
 
     //cRud
+    public Owner findByEmail(String email) {
+        Owner owner = null;
+        SQLiteDatabase db = myHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + MyHelper.TABLE_OWNERS + " WHERE " +
+                MyHelper.O_EMAIL + " = ?", new String[] {email});
+        if (cursor.moveToFirst()) {
+            owner = createOwnerFromCursor(cursor);
+        }
+        cursor.close();
+        db.close();
+        return owner;
+    }
+
+    //cRud
     public List<Owner> findAll() {
         List<Owner> owners = new ArrayList<>();
         SQLiteDatabase db = myHelper.getReadableDatabase();
@@ -83,4 +97,6 @@ public class OwnerDAO {
                 .setPassword(c.getString(c.getColumnIndex(MyHelper.O_PASSWORD)));
         return owner;
     }
+
+
 }

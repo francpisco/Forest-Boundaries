@@ -31,6 +31,11 @@ public class OwnerService {
         return ownerDAO.findById(id);
     }
 
+    public Owner findByEmail(String email) {
+        OwnerDAO ownerDAO = new OwnerDAO(context);
+        return ownerDAO.findByEmail(email);
+    }
+
     public List<Owner> findAll() {
         OwnerDAO ownerDAO = new OwnerDAO(context);
         return ownerDAO.findAll();
